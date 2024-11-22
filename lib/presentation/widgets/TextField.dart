@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class Textfield extends StatelessWidget {
-  final String text;
+  final String? text;
   final TextEditingController controller;
   final TextInputType textInputType;
   final Icon? icon;
@@ -9,7 +9,7 @@ class Textfield extends StatelessWidget {
 
   const Textfield({
     super.key,
-    required this.text,
+    this.text,
     required this.controller,
     this.icon,
     required this.textInputType,
@@ -30,7 +30,7 @@ class Textfield extends StatelessWidget {
             horizontal:width * 0.02, 
           ),
           child: Text(
-            text,
+            text ?? '',
             style: TextStyle(
               fontSize: width * 0.04,
               fontWeight: FontWeight.w500,

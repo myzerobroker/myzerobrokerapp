@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:my_zero_broker/config/routes/routes_name.dart';
 import 'package:my_zero_broker/presentation/presentaion.dart';
-import 'package:my_zero_broker/presentation/widgets/ElevatedButton.dart';
 import 'package:my_zero_broker/utils/constant/colors.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -130,19 +130,24 @@ class _LoginScreenState extends State<LoginScreen> {
                         width: width , 
                       ),
                       SizedBox(height: height * 0.02), 
-                      Text.rich(
-                        TextSpan(
-                          children: [
-                            const TextSpan(text: "Don't have an account? "),
-                            TextSpan(
-                              text: "Register",
-                              style: TextStyle(
-                                color: Colors.blue,
-                                decoration: TextDecoration.underline,
-                                fontSize: width * 0.04, 
+                      InkWell(
+                        onTap: () {
+                          Navigator.pushNamed(context, RoutesName.signUpScreen);
+                        },
+                        child: Text.rich(
+                          TextSpan(
+                            children: [
+                              const TextSpan(text: "Don't have an account? "),
+                              TextSpan(
+                                text: "Register",
+                                style: TextStyle(
+                                  color: Colors.blue,
+                                  decoration: TextDecoration.underline,
+                                  fontSize: width * 0.04, 
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ],
