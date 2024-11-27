@@ -41,6 +41,7 @@ dependencies:
   flutter_native_splash: ^2.4.3
   bloc: ^8.1.4
   flutter_bloc: ^8.1.6
+  awesome_drawer_bar: ^1.2.0
 
 dev_dependencies:
   flutter_test:

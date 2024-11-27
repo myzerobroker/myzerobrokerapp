@@ -1,15 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:my_zero_broker/config/routes/routes_name.dart';
 import 'package:my_zero_broker/presentation/presentaion.dart';
+import 'package:my_zero_broker/presentation/screens/home_screen.dart/home_screen.dart';
+
 
 class Routes {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case RoutesName.splashScreen:
         return _createRoute(const SplashScreen());
+        
+      case RoutesName.loginScreen:
+        return _createRoute(const LoginScreen());
 
       case RoutesName.signUpScreen:
         return _createRoute(const SignupScreen());
+
+      case RoutesName.homeScreen:
+        return _createRoute( HomeScreen());
 
       default:
         return _createRoute(const Scaffold(
@@ -18,13 +26,11 @@ class Routes {
     }
   }
 
-
   static PageRouteBuilder _createRoute(Widget page) {
     return PageRouteBuilder(
       pageBuilder: (context, animation, secondaryAnimation) => page,
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
-     
-        const begin = Offset(1.0, 0.0);  
+        const begin = Offset(1.0, 0.0);
         const end = Offset.zero;
         const curve = Curves.easeInOut;
 

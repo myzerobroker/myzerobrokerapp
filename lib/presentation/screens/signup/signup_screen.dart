@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_zero_broker/config/routes/routes_name.dart';
 import 'package:my_zero_broker/presentation/presentaion.dart';
 import 'package:my_zero_broker/utils/utils.dart';
 
@@ -114,7 +115,10 @@ class _SignupScreenState extends State<SignupScreen> {
                      
                       SizedBox(height: height * 0.02), 
                       Elevatedbutton(
-                        onPressed: () {},
+                        onPressed: () {
+
+                              Navigator.pushNamed(context, RoutesName.homeScreen);
+                        },
                         text: 'REGISTER',
                         height: height * 0.8,
                         width: width , 
