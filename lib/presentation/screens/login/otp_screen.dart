@@ -5,18 +5,17 @@ import 'package:my_zero_broker/config/routes/routes_name.dart';
 import 'package:my_zero_broker/presentation/widgets/TextField.dart';
 import 'package:my_zero_broker/utils/constant/colors.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class OtpScreen extends StatefulWidget {
+  const OtpScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<OtpScreen> createState() => _OtpScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _OtpScreenState extends State<OtpScreen> {
   late LoginBloc _loginBloc;
-  final TextEditingController phoneNoController = TextEditingController();
+  final TextEditingController otpController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-
   @override
   void initState() {
     super.initState();
@@ -25,7 +24,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
+   final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
 
     return Scaffold(
@@ -86,7 +85,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         SizedBox(height: height * 0.02),
                         Text(
-                          "Login",
+                          "Verify OTP",
                           style: TextStyle(
                             fontSize: width * 0.06,
                             fontWeight: FontWeight.bold,
@@ -102,27 +101,25 @@ class _LoginScreenState extends State<LoginScreen> {
                         SizedBox(height: height * 0.02),
                         BlocBuilder<LoginBloc, LoginState>(
                           buildWhen: (previous, current) =>
-                              current.phoneNo != previous.phoneNo,
+                              current.otp != previous.otp,
                           builder: (context, state) {
                             return Form(
                               key: _formKey,
                               child: Textfield(
                                 text: '+91',
-                                controller: phoneNoController,
-                                hintText: "Enter Mobile Number",
-                                textInputType: TextInputType.phone,
+                                controller: otpController,
+                                hintText: "Enter OTP",
+                                textInputType: TextInputType.number,
                                 onChanged: (value) {
                                   context
                                       .read<LoginBloc>()
-                                      .add(phoneNoChanged(phoneNo: value));
+                                      .add(otpChanged(otp: value));
                                 },
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
-                                    return "Please enter a phone number";
+                                    return "Please enter OTP";
                                   }
-                                  if (!RegExp(r"^[0-9]{10}$").hasMatch(value)) {
-                                    return "Enter a valid phone number";
-                                  }
+                                 
                                   return null;
                                 },
                               ),
@@ -130,81 +127,54 @@ class _LoginScreenState extends State<LoginScreen> {
                           },
                         ),
                         SizedBox(height: height * 0.02),
-                        Row(
-                          children: [
-                            Checkbox(
-                              value: false,
-                              onChanged: (value) {},
-                            ),
-                            Flexible(
-                              child: Text.rich(
-                                TextSpan(
-                                  children: [
-                                    const TextSpan(text: "I agree with the "),
-                                    TextSpan(
-                                      text: "terms and conditions.",
-                                      style: TextStyle(
-                                        color: Colors.blue,
-                                        decoration: TextDecoration.underline,
-                                        fontSize: width * 0.04,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: height * 0.02),
+                       
                         BlocListener<LoginBloc, LoginState>(
                           listener: (context, state) {
-                            if (state.loginStatus == LoginStatus.error) {
-                              ScaffoldMessenger.of(context)
-                                ..hideCurrentSnackBar()
-                                ..showSnackBar(SnackBar(
-                                    content: Text(state.message.toString())));
-                            }
-                            if (state.loginStatus == LoginStatus.loading) {
-                              ScaffoldMessenger.of(context)
-                                ..hideCurrentSnackBar()
-                                ..showSnackBar(
-                                    SnackBar(content: Text('Submitting')));
-                            }
+                            if (state.loginStatus ==
+                                    LoginStatus.otpVerificationSuccess) {
+                                  // OTP verification success
+                                  Navigator.pushNamed(
+                                      context, RoutesName.homeScreen);
+                                } else if (state.loginStatus ==
+                                    LoginStatus.otpVerificationFailure) {
+                                  // OTP verification failure
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                        content: Text(
+                                            'OTP verification failed: ${state.message}')),
+                                  );
+                                }
+                              },
 
-                            if (state.loginStatus == LoginStatus.success) {
-                              ScaffoldMessenger.of(context)
-                                ..hideCurrentSnackBar()
-                                ..showSnackBar(
-                                    SnackBar(content: Text('Successful')));
-                            }
-                          },
                           child: BlocBuilder<LoginBloc, LoginState>(
                             builder: (context, state) {
                               return ElevatedButton(
                                 onPressed: () {
   if (_formKey.currentState?.validate() ?? false) {
     // Convert the phone number to a string (instead of an integer)
-    final phoneNo = phoneNoController.text;
+   final otp =
+                                        int.tryParse(otpController.text);
+                                    if (otp != null) {
+                                      // Pass OTP and trigger event
+                                      context.read<LoginBloc>().add(otpChanged(
+                                          otp: otp
+                                              .toString())); // Pass integer OTP
+                                      context
+                                          .read<LoginBloc>()
+                                          .add(VerifyOtpApi());
+                                    } else {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                            content: Text(
+                                                'Invalid OTP. Please enter a valid number.')),
+                                      );
+                                    }
+                                  }
+                                },
 
-    if (phoneNo.isNotEmpty) {
-      // Pass the phone number as a String
-      context.read<LoginBloc>().add(
-        phoneNoChanged(phoneNo: phoneNo),
-      );
-      context.read<LoginBloc>().add(LoginApi());
 
-      // Navigate to OTP screen after login initiation
-      Navigator.pushNamed(context, RoutesName.otpScreen);
-    } else {
-      // Handle invalid phone number input (empty or invalid number)
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please enter a valid phone number.')),
-      );
-    }
-  }
-},
-
-                                child: Text('SEND OTP'),
+                                child: Text('VERIFY OTP'),
                                 style: ElevatedButton.styleFrom(
                                   minimumSize: Size(width, height * 0.08),
                                 ),
@@ -216,7 +186,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         InkWell(
                           onTap: () {
                             Navigator.pushNamed(
-                                context, RoutesName.signUpScreen);
+                                context, RoutesName.homeScreen);
                           },
                           child: Text.rich(
                             TextSpan(

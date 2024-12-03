@@ -1,23 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:my_zero_broker/config/routes/routes_name.dart';
 import 'package:my_zero_broker/presentation/presentaion.dart';
-import 'package:my_zero_broker/presentation/screens/home_screen.dart/home_screen.dart';
-
+import 'package:my_zero_broker/presentation/screens/login/otp_screen.dart';
 
 class Routes {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case RoutesName.splashScreen:
         return _createRoute(const SplashScreen());
-        
+
       case RoutesName.loginScreen:
         return _createRoute(const LoginScreen());
 
-      case RoutesName.signUpScreen:
-        return _createRoute(const SignupScreen());
+      case RoutesName.otpScreen:  // New route for OTP screen
+        return _createRoute(const OtpScreen());
 
-      case RoutesName.homeScreen:
-        return _createRoute( HomeScreen());
+      case RoutesName.signUpScreen:
+        return _createRoute(SignupScreen());
 
       default:
         return _createRoute(const Scaffold(

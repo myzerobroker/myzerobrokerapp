@@ -6,14 +6,19 @@ class Textfield extends StatelessWidget {
   final TextInputType textInputType;
   final Icon? icon;
   final String hintText;
+  final String? Function(String?)? validator;
+
+  final void Function(String)? onChanged;
 
   const Textfield({
     super.key,
     this.text,
+   
+     this.onChanged,
     required this.controller,
     this.icon,
     required this.textInputType,
-    required this.hintText,
+    required this.hintText, this.validator, 
   });
 
   @override
@@ -21,7 +26,9 @@ class Textfield extends StatelessWidget {
  
     final width = MediaQuery.of(context).size.width;
 
-    return TextField(
+    return TextFormField(
+      onChanged:onChanged ,
+       validator: validator,
       controller: controller,
       keyboardType: textInputType,
       decoration: InputDecoration(
