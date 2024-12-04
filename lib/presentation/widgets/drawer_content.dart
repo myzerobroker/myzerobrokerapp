@@ -12,7 +12,7 @@ class DrawerContent extends StatelessWidget {
       child: ListView(
         children: [
           _drawerItem(context, 'Home', RoutesName.homeScreen),
-          _drawerItem(context, 'Post Property For Free', RoutesName.loginScreen),
+          _drawerItem(context, 'Post Property For Free', RoutesName.postpropertyScreen),
           _drawerItem(context, 'Plans', RoutesName.signUpScreen),
           _drawerItem(context, 'Log In', RoutesName.loginScreen),
           _drawerItem(context, 'New User', RoutesName.signUpScreen),

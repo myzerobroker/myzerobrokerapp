@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:my_zero_broker/config/routes/routes_name.dart';
 import 'package:my_zero_broker/presentation/presentaion.dart';
+import 'package:my_zero_broker/presentation/screens/home_screen.dart/home_screen.dart';
 import 'package:my_zero_broker/presentation/screens/login/otp_screen.dart';
+import 'package:my_zero_broker/presentation/screens/post_property/post_property.dart';
 
 class Routes {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -17,6 +19,12 @@ class Routes {
 
       case RoutesName.signUpScreen:
         return _createRoute(SignupScreen());
+
+      case RoutesName.homeScreen:
+        return _createRoute(HomeScreen());
+
+      case RoutesName.postpropertyScreen:
+        return _createRoute(PropertyFormScreen());  
 
       default:
         return _createRoute(const Scaffold(

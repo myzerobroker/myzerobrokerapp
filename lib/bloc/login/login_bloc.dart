@@ -35,26 +35,41 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     emit(state.copyWith(loginStatus: LoginStatus.loading));
 
     Map data = {
-      'phone': state.phoneNo.toString(),
+      'mobile_no': state.phoneNo.toString(),
     };
 
     try {
       final response = await http.post(
-        Uri.parse('https://myzerobroker.com/login'), // Change to your backend URL
+        Uri.parse('https://myzerobroker.com/login'), // Ensure this is the correct URL
         body: data,
       );
 
-      var responseData = jsonDecode(response.body);
-
-      if (response.statusCode == 200) {
-        emit(state.copyWith(
-          loginStatus: LoginStatus.success,
-          message: 'OTP sent successfully. Please enter it.',
-        ));
-      } else {
+      // Check content type before decoding
+      if (response.headers['content-type']?.contains('html') ?? false) {
+        // If the response is HTML (could be a login page or error page)
         emit(state.copyWith(
           loginStatus: LoginStatus.error,
-          message: responseData['message'] ?? 'Failed to send OTP',
+          message: 'Received HTML response, check the login URL or server config.',
+        ));
+      } else if (response.headers['content-type']?.contains('json') ?? false) {
+        // Parse the JSON response
+        var responseData = jsonDecode(response.body);
+        if (response.statusCode == 200) {
+          emit(state.copyWith(
+            loginStatus: LoginStatus.success,
+            message: 'OTP sent successfully. Please enter it.',
+          ));
+        } else {
+          emit(state.copyWith(
+            loginStatus: LoginStatus.error,
+            message: responseData['message'] ?? 'Failed to send OTP',
+          ));
+        }
+      } else {
+        // Handle unexpected content types (e.g., plain text)
+        emit(state.copyWith(
+          loginStatus: LoginStatus.error,
+          message: 'Unexpected response type: ${response.headers['content-type']}',
         ));
       }
     } catch (e) {
@@ -64,39 +79,54 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       ));
     }
   }
-void _onVerifyOtpApi(VerifyOtpApi event, Emitter<LoginState> emit) async {
-  emit(state.copyWith(loginStatus: LoginStatus.loading));
 
-   Map data = {
-    'phone': state.phoneNo.toString(),
-    'otp': state.otp.toString(),
-  };
+  void _onVerifyOtpApi(VerifyOtpApi event, Emitter<LoginState> emit) async {
+    emit(state.copyWith(loginStatus: LoginStatus.loading));
 
-  try {
-    final response = await http.post(
-      Uri.parse('https://myzerobroker.com/verifyOtp'), // Change to your backend URL
-      body: data,
-    );
+    Map data = {
+      'phone': state.phoneNo.toString(),
+      'otp': state.otp.toString(),
+    };
 
-    var responseData = jsonDecode(response.body);
+    try {
+      final response = await http.post(
+        Uri.parse('https://myzerobroker.com/verifyOtp'), // Ensure this is the correct URL
+        body: data,
+      );
 
-    if (response.statusCode == 200) {
-      emit(state.copyWith(
-        loginStatus: LoginStatus.otpVerificationSuccess, // Use the new status
-        message: 'OTP verified successfully.',
-      ));
-    } else {
+      // Check content type before decoding
+      if (response.headers['content-type']?.contains('html') ?? false) {
+        // If the response is HTML
+        emit(state.copyWith(
+          loginStatus: LoginStatus.otpVerificationFailure,
+          message: 'Received HTML response, check the verification URL or server config.',
+        ));
+      } else if (response.headers['content-type']?.contains('json') ?? false) {
+        // Parse the JSON response
+        var responseData = jsonDecode(response.body);
+        if (response.statusCode == 200) {
+          emit(state.copyWith(
+            loginStatus: LoginStatus.otpVerificationSuccess, // Use the new status
+            message: 'OTP verified successfully.',
+          ));
+        } else {
+          emit(state.copyWith(
+            loginStatus: LoginStatus.otpVerificationFailure, // Use the new status
+            message: responseData['message'] ?? 'OTP verification failed',
+          ));
+        }
+      } else {
+        // Handle unexpected content types
+        emit(state.copyWith(
+          loginStatus: LoginStatus.otpVerificationFailure,
+          message: 'Unexpected response type: ${response.headers['content-type']}',
+        ));
+      }
+    } catch (e) {
       emit(state.copyWith(
         loginStatus: LoginStatus.otpVerificationFailure, // Use the new status
-        message: responseData['message'] ?? 'OTP verification failed',
+        message: e.toString(),
       ));
     }
-  } catch (e) {
-    emit(state.copyWith(
-      loginStatus: LoginStatus.otpVerificationFailure, // Use the new status
-      message: e.toString(),
-    ));
   }
-}
-
 }

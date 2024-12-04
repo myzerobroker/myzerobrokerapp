@@ -216,7 +216,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         InkWell(
                           onTap: () {
                             Navigator.pushNamed(
-                                context, RoutesName.signUpScreen);
+                                context, RoutesName.postpropertyScreen);
                           },
                           child: Text.rich(
                             TextSpan(

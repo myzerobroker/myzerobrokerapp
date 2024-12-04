@@ -1,36 +1,43 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:my_zero_broker/bloc/drawer/drawer_cubit.dart';
+import 'package:my_zero_broker/config/routes/routes_name.dart';
 
-class SidebarMenu extends StatelessWidget {
+class DrawerContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.blueAccent,
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
+    return Container(
+      color: Colors.red[900],
+      child: ListView(
+        padding: EdgeInsets.zero,
         children: [
-          SizedBox(height: 60),
-          Text(
-            'Menu',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
+          DrawerHeader(
+            decoration: BoxDecoration(color: Colors.red),
+            child: Text(
+              'Menu',
+              style: TextStyle(color: Colors.white, fontSize: 24),
             ),
           ),
           ListTile(
             leading: Icon(Icons.home, color: Colors.white),
             title: Text('Home', style: TextStyle(color: Colors.white)),
-            onTap: () {},
+            onTap: () {
+              context.read<DrawerCubit>().showHome();
+            },
           ),
           ListTile(
-            leading: Icon(Icons.business, color: Colors.white),
-            title: Text('Properties', style: TextStyle(color: Colors.white)),
-            onTap: () {},
+            leading: Icon(Icons.post_add, color: Colors.white),
+            title: Text('Post Property', style: TextStyle(color: Colors.white)),
+            onTap: () {
+              Navigator.of(context).pushNamed(RoutesName.postpropertyScreen);
+            },
           ),
           ListTile(
-            leading: Icon(Icons.contact_mail, color: Colors.white),
-            title: Text('Contact Us', style: TextStyle(color: Colors.white)),
-            onTap: () {},
+            leading: Icon(Icons.settings, color: Colors.white),
+            title: Text('Settings', style: TextStyle(color: Colors.white)),
+            onTap: () {
+              context.read<DrawerCubit>().showSettings();
+            },
           ),
         ],
       ),

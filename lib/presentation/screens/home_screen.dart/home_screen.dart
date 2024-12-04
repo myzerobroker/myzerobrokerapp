@@ -13,53 +13,54 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle:true ,
-        title:  Text.rich(
-          TextSpan(
-                                children: [
-                                  TextSpan(text: "REAL ESTATE, ",
-                                  style: TextStyle(
-                                      color: const Color.fromARGB(255, 0, 0, 0),
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: width * 0.059, 
-                                      
-                                    ),),
-                                  TextSpan(
-                                    text: "SIMPLIFIED",
-                                    style: TextStyle(
-                                      color: const Color.fromARGB(255, 116, 0, 0),
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: width * 0.059, 
-                                      
-                                    ),
-                                  ),
-                                ],
-                              ),),
-        elevation: 0,
-        backgroundColor: ColorsPalette.appBarColor,
-        leading: IconButton(
-          icon: Icon(Icons.menu),
-          onPressed: () {
-            controller.toggle!();  // Toggle the drawer
-          },
+
+    return BlocProvider(
+      create: (_) => DrawerCubit(),
+      child: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text.rich(
+            TextSpan(
+              children: [
+                TextSpan(
+                  text: "REAL ESTATE, ",
+                  style: TextStyle(
+                    color: const Color.fromARGB(255, 0, 0, 0),
+                    fontWeight: FontWeight.bold,
+                    fontSize: width * 0.059,
+                  ),
+                ),
+                TextSpan(
+                  text: "SIMPLIFIED",
+                  style: TextStyle(
+                    color: const Color.fromARGB(255, 116, 0, 0),
+                    fontWeight: FontWeight.bold,
+                    fontSize: width * 0.059,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          elevation: 0,
+          backgroundColor: ColorsPalette.appBarColor,
+          leading: IconButton(
+            icon: Icon(Icons.menu),
+            onPressed: () {
+              controller.toggle!(); // Toggle the drawer
+            },
+          ),
         ),
-      ),
-      body: BlocProvider(
-        create: (_) => DrawerCubit(),
-        child: BlocBuilder<DrawerCubit, DrawerEvent>(
+        body: BlocBuilder<DrawerCubit, DrawerEvent>(
           builder: (context, state) {
             return ResponsiveLayout(
               mobileScreen: AwesomeDrawerBar(
                 controller: controller,
-                menuScreen: DrawerContent(),
+                menuScreen: DrawerContent(), // Drawer content widget
                 mainScreen: _buildMainScreen(state),
                 borderRadius: 24.0,
                 showShadow: true,
-                angle: -20.0,  // Angle for the drawer when open
+                angle: -20.0,
                 backgroundColor: const Color.fromARGB(255, 81, 9, 9),
               ),
               tabletScreen: AwesomeDrawerBar(
@@ -81,27 +82,50 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  // Main screen with a rotation effect based on drawer state
+  /// Builds the main screen based on the drawer state
   Widget _buildMainScreen(DrawerEvent state) {
-    double angle = 50.0;
+    // Define content for different states
+    Widget mainContent;
 
-    if (state == DrawerEvent.home) {
-      angle = 0.0;
-    } else if (state == DrawerEvent.postProperty) {
-      angle = 120.0;  // Angle when drawer is open
+    switch (state) {
+      case DrawerEvent.home:
+        mainContent = Column(
+          children: [
+            HeaderWidget(), // Header widget
+            SearchForm(),   // Search form widget
+          ],
+        );
+        break;
+      case DrawerEvent.postProperty:
+        mainContent = Center(
+          child: Text(
+            'Post Property Screen',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+        );
+        break;
+      case DrawerEvent.settings:
+        mainContent = Center(
+          child: Text(
+            'Settings Screen',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+        );
+        break;
+      default:
+        mainContent = Center(
+          child: Text(
+            'Welcome to Real Estate Simplified!',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+        );
     }
 
-    return Transform(
-      transform: Matrix4.rotationY(angle * 3.14 / 180),  // Apply rotation
-      alignment: Alignment.center,
-      child:  SingleChildScrollView(
-      child: Column(
-        children: [
-          HeaderWidget(), // Header (Logo + Title)
-          SearchForm(),   // Main search form
-        ],
+    return SingleChildScrollView(
+      child: AnimatedSwitcher(
+        duration: Duration(milliseconds: 300),
+        child: mainContent,
       ),
-    )
     );
   }
 }

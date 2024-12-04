@@ -32,5 +32,8 @@ class ColorsPalette {
 
   // Placeholder Colors
   static const Color placeholderColor = Colors.grey; // Placeholder text color in TextField
-  static const Color hintTextColor = Colors.grey; // For hint text in TextField
+  static const Color hintTextColor = Colors.grey;
+  
+  
+  static const Color postPropertycardcolor = Color.fromARGB(255, 236, 95, 95); // For hint text in TextField
 }
