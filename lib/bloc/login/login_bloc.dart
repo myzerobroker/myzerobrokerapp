@@ -40,7 +40,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
     try {
       final response = await http.post(
-        Uri.parse('https://myzerobroker.com/login'), // Ensure this is the correct URL
+        Uri.parse('https://myzerobroker.com/api/login'), // Ensure this is the correct URL
         body: data,
       );
 
@@ -90,7 +90,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
     try {
       final response = await http.post(
-        Uri.parse('https://myzerobroker.com/verifyOtp'), // Ensure this is the correct URL
+        Uri.parse('https://myzerobroker.com/api/verifyOtp'), // Ensure this is the correct URL
         body: data,
       );
 

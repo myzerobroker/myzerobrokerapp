@@ -19,6 +19,7 @@ class HomeScreen extends StatelessWidget {
       create: (_) => DrawerCubit(),
       child: Scaffold(
         appBar: AppBar(
+          
           centerTitle: true,
           title: Text.rich(
             TextSpan(

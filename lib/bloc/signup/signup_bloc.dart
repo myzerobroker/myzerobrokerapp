@@ -60,7 +60,7 @@ class SignupBloc extends Bloc<SignupEvent, SignUpState> {
         final cookies = getResponse.headers['set-cookie'];
 
         final response = await http.post(
-          Uri.parse('https://myzerobroker.com/register'),
+          Uri.parse('https://myzerobroker.com/api/register'),
           headers: {
             'Content-Type': 'application/json',
             'X-CSRF-TOKEN': csrfToken,
