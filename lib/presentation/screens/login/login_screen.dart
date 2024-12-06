@@ -32,7 +32,7 @@ class _LoginScreenState extends State<LoginScreen> {
       listener: (context, state) {
         
         if (state.loginStatus == LoginStatus.success) {
-          Navigator.pushNamed(context, RoutesName.otpScreen);
+          
         }
       },
       child: Scaffold(
@@ -180,6 +180,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ..hideCurrentSnackBar()
                                   ..showSnackBar(
                                       SnackBar(content: Text('Successful')));
+                                      Navigator.pushNamed(context, RoutesName.otpScreen);
                               }
                             },
                             child: BlocBuilder<LoginBloc, LoginState>(
