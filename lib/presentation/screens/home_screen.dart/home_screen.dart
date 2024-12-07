@@ -13,52 +13,17 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-
     return BlocProvider(
       create: (_) => DrawerCubit(),
       child: Scaffold(
-        appBar: AppBar(
-          
-          centerTitle: true,
-          title: Text.rich(
-            TextSpan(
-              children: [
-                TextSpan(
-                  text: "REAL ESTATE, ",
-                  style: TextStyle(
-                    color: const Color.fromARGB(255, 0, 0, 0),
-                    fontWeight: FontWeight.bold,
-                    fontSize: width * 0.059,
-                  ),
-                ),
-                TextSpan(
-                  text: "SIMPLIFIED",
-                  style: TextStyle(
-                    color: const Color.fromARGB(255, 116, 0, 0),
-                    fontWeight: FontWeight.bold,
-                    fontSize: width * 0.059,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          elevation: 0,
-          backgroundColor: ColorsPalette.appBarColor,
-          leading: IconButton(
-            icon: Icon(Icons.menu),
-            onPressed: () {
-              controller.toggle!(); // Toggle the drawer
-            },
-          ),
-        ),
+        backgroundColor: Colors.white,
         body: BlocBuilder<DrawerCubit, DrawerEvent>(
           builder: (context, state) {
             return ResponsiveLayout(
               mobileScreen: AwesomeDrawerBar(
                 controller: controller,
-                menuScreen: DrawerContent(), // Drawer content widget
-                mainScreen: _buildMainScreen(state),
+                menuScreen: DrawerContent(),
+                mainScreen: _buildMainScreenWithScrollableAppBar(state),
                 borderRadius: 24.0,
                 showShadow: true,
                 angle: -20.0,
@@ -67,13 +32,13 @@ class HomeScreen extends StatelessWidget {
               tabletScreen: AwesomeDrawerBar(
                 controller: controller,
                 menuScreen: DrawerContent(),
-                mainScreen: _buildMainScreen(state),
+                mainScreen: _buildMainScreenWithScrollableAppBar(state),
                 backgroundColor: Colors.blue,
               ),
               desktopScreen: AwesomeDrawerBar(
                 controller: controller,
                 menuScreen: DrawerContent(),
-                mainScreen: _buildMainScreen(state),
+                mainScreen: _buildMainScreenWithScrollableAppBar(state),
                 backgroundColor: Colors.blue,
               ),
             );
@@ -83,50 +48,92 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  /// Builds the main screen based on the drawer state
-  Widget _buildMainScreen(DrawerEvent state) {
-    // Define content for different states
-    Widget mainContent;
+  /// Builds the main screen with a scrollable AppBar
+  Widget _buildMainScreenWithScrollableAppBar(DrawerEvent state) {
+    return CustomScrollView(
+      slivers: [
+        SliverAppBar(
+          expandedHeight: 100.0,
+          pinned: true,
+          elevation: 10,
+          floating: true,
+          backgroundColor: Colors.white,
+          flexibleSpace: FlexibleSpaceBar(
+            title: Text.rich(
+              TextSpan(
+                children: [
+                  TextSpan(
+                    text: "REAL ESTATE, ",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
+                  TextSpan(
+                    text: "SIMPLIFIED",
+                    style: TextStyle(
+                      color: const Color.fromARGB(255, 116, 0, 0),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
+                ],
+              ),
+              textAlign: TextAlign.center,
+            ),
+            centerTitle: true,
+          ),
+          leading: IconButton(
+            icon: Icon(Icons.menu),
+            onPressed: () {
+              controller.toggle!(); // Toggle the drawer
+            },
+          ),
+        ),
+        SliverToBoxAdapter(
+          child: SingleChildScrollView(
+            child: AnimatedSwitcher(
+              duration: Duration(milliseconds: 300),
+              child: _buildMainContent(state),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
 
+  /// Builds the main content based on the drawer state
+  Widget _buildMainContent(DrawerEvent state) {
     switch (state) {
       case DrawerEvent.home:
-        mainContent = Column(
+        return Column(
           children: [
-            HeaderWidget(), // Header widget
-            SearchForm(),   // Search form widget
+            HeaderWidget(),
+            SearchForm(),
           ],
         );
-        break;
       case DrawerEvent.postProperty:
-        mainContent = Center(
+        return Center(
           child: Text(
             'Post Property Screen',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
         );
-        break;
       case DrawerEvent.settings:
-        mainContent = Center(
+        return Center(
           child: Text(
             'Settings Screen',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
         );
-        break;
       default:
-        mainContent = Center(
+        return Center(
           child: Text(
             'Welcome to Real Estate Simplified!',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
         );
     }
-
-    return SingleChildScrollView(
-      child: AnimatedSwitcher(
-        duration: Duration(milliseconds: 300),
-        child: mainContent,
-      ),
-    );
   }
 }
