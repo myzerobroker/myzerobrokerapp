@@ -8,7 +8,7 @@ import 'package:my_zero_broker/presentation/widgets/custom_snack_bar.dart';
 import 'package:my_zero_broker/utils/constant/colors.dart';
 
 class OtpScreen extends StatefulWidget {
-  const OtpScreen({super.key});
+  const OtpScreen({super.key });
 
   @override
   State<OtpScreen> createState() => _OtpScreenState();
@@ -136,8 +136,9 @@ class _OtpScreenState extends State<OtpScreen> {
                               return Elevatedbutton(
                                 onPressed: () {
                                   if (_formKey.currentState?.validate() ?? false) {
+                                    
                                     String otp = otpController.text; // Treat OTP as string
-                                    context.read<LoginBloc>().add(VerifyOtpApi());
+                                    context.read<LoginBloc>().add(VerifyOtpApi(state.userId));
                                   }
                                 },
                                 text: 'VERIFY OTP',

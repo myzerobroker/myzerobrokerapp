@@ -4,6 +4,8 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:http/http.dart' as http;
+import 'package:my_zero_broker/data/user_id.dart';
+import 'package:my_zero_broker/locator.dart';
 
 part 'login_event.dart';
 part 'login_state.dart';
@@ -47,12 +49,13 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
       if (response.headers['content-type']?.contains('json') ?? false) {
         var responseData = jsonDecode(response.body);
-        print(responseData);
+
         if (response.statusCode == 200) {
+          print(responseData);
           emit(state.copyWith(
             loginStatus: LoginStatus.success,
             message: 'OTP sent successfully. Please enter it.',
-            userId: int.tryParse(responseData['user_id'].toString()) ?? 0, // Parse user_id as integer
+            userId: int.tryParse(responseData['user_id'].toString()) ?? 0,
           ));
         } else {
           emit(state.copyWith(
@@ -63,7 +66,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       } else {
         emit(state.copyWith(
           loginStatus: LoginStatus.error,
-          message: 'Unexpected response type: ${response.headers['content-type']}',
+          message:
+              'Unexpected response type: ${response.headers['content-type']}',
         ));
       }
     } catch (e) {
@@ -80,22 +84,25 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     // Ensure OTP is sent as String and userId as Integer
     Map<String, String> data = {
       'otp': state.otp, // Send OTP as a string
-      'userId': state.userId.toString(), // Ensure userId is a string
+      'userId':
+          locator.get<UserId>().id.toString(), // Ensure userId is a string
     };
+    print(data);
 
     try {
       // Ignore SSL errors (for development only)
       HttpOverrides.global = MyHttpOverrides();
 
       // First, make a GET request to retrieve the CSRF token and cookies
-      final getResponse = await http.get(Uri.parse('https://myzerobroker.com/verifyOtp'));
-
+      final getResponse =
+          await http.get(Uri.parse('https://myzerobroker.com/login'));
 
       print('GET request status: ${getResponse.statusCode}');
-      print('GET response body: ${getResponse.body}');
+      // print('GET response body: ${getResponse.body}');
 
       if (getResponse.statusCode == 200) {
         final csrfToken = extractCsrfToken(getResponse.body);
+        print(csrfToken);
 
         if (csrfToken.isEmpty) {
           emit(state.copyWith(
@@ -106,7 +113,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         }
 
         final cookies = getResponse.headers['set-cookie'];
-
+        print(cookies);
         final response = await http.post(
           Uri.parse('https://myzerobroker.com/api/verifyOtp'),
           headers: {
@@ -161,6 +168,7 @@ class MyHttpOverrides extends HttpOverrides {
   @override
   HttpClient createHttpClient(SecurityContext? context) {
     return super.createHttpClient(context)
-      ..badCertificateCallback = (X509Certificate cert, String host, int port) => true;
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
   }
 }

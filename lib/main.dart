@@ -3,9 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_zero_broker/bloc/login/login_bloc.dart';
 import 'package:my_zero_broker/config/routes/routes.dart';
 import 'package:my_zero_broker/config/routes/routes_name.dart';
+import 'package:my_zero_broker/locator.dart';
 import 'package:my_zero_broker/presentation/screens/splash/bloc/splash_cubit.dart';
 
 void main() {
+  setupLocator(); 
   runApp(const MyApp());
 }
 

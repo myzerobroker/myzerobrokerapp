@@ -27,4 +27,8 @@ class otpChanged extends LoginEvent {
 
 class LoginApi extends LoginEvent {}
 
-class VerifyOtpApi extends LoginEvent {}  // New event for OTP verification
+class VerifyOtpApi extends LoginEvent {
+  final int  userID;
+
+  VerifyOtpApi(this.userID); 
+}  // New event for OTP verification

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
-
 class Snack {
-  static  show(String text, context) {
+  static show(String text, context) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -54,7 +53,7 @@ class _MyAnimatedContainerState extends State<MyAnimatedContainer> {
       duration: Duration(seconds: 3, milliseconds: 500),
       width: _width,
       height: 5,
-      color: Colors.orange.shade200,
+      color: Colors.blue.shade200,
     );
   }
 }
