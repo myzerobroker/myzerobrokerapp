@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_zero_broker/bloc/login/login_bloc.dart';
 import 'package:my_zero_broker/config/routes/routes_name.dart';
 import 'package:my_zero_broker/presentation/widgets/TextField.dart';
+import 'package:my_zero_broker/presentation/widgets/custom_snack_bar.dart';
 import 'package:my_zero_broker/utils/constant/colors.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -16,6 +17,7 @@ class _LoginScreenState extends State<LoginScreen> {
   late LoginBloc _loginBloc;
   final TextEditingController phoneNoController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  bool _terms = false;
 
   @override
   void initState() {
@@ -29,12 +31,7 @@ class _LoginScreenState extends State<LoginScreen> {
     final width = MediaQuery.of(context).size.width;
 
     return BlocListener<LoginBloc, LoginState>(
-      listener: (context, state) {
-        
-        if (state.loginStatus == LoginStatus.success) {
-          
-        }
-      },
+      listener: (context, state) {},
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
@@ -87,10 +84,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       padding: EdgeInsets.all(width * 0.04),
                       child: Column(
                         children: [
-                          Image.asset(
-                            'assets/images/my_zero_broker_logo (2).png',
-                            height: height * 0.06,
-                          ),
+                         
                           SizedBox(height: height * 0.02),
                           Text(
                             "Login",
@@ -137,8 +131,12 @@ class _LoginScreenState extends State<LoginScreen> {
                           Row(
                             children: [
                               Checkbox(
-                                value: false,
-                                onChanged: (value) {},
+                                value: _terms,
+                                onChanged: (value) {
+                                  setState(() {
+                                    _terms = value!;
+                                  });
+                                },
                               ),
                               Flexible(
                                 child: Text.rich(
@@ -163,24 +161,20 @@ class _LoginScreenState extends State<LoginScreen> {
                           BlocListener<LoginBloc, LoginState>(
                             listener: (context, state) {
                               if (state.loginStatus == LoginStatus.error) {
-                                ScaffoldMessenger.of(context)
-                                  ..hideCurrentSnackBar()
-                                  ..showSnackBar(SnackBar(
-                                      content: Text(state.message.toString())));
+                                Snack.show(state.message, context);
                               }
                               if (state.loginStatus == LoginStatus.loading) {
-                                ScaffoldMessenger.of(context)
-                                  ..hideCurrentSnackBar()
-                                  ..showSnackBar(
-                                      SnackBar(content: Text('Submitting')));
+                                Snack.show("Authenticating", context);
                               }
 
                               if (state.loginStatus == LoginStatus.success) {
-                                ScaffoldMessenger.of(context)
-                                  ..hideCurrentSnackBar()
-                                  ..showSnackBar(
-                                      SnackBar(content: Text('Successful')));
-                                      Navigator.pushNamed(context, RoutesName.otpScreen);
+                                Snack.show("OTP sent successfully", context);
+                                print(state.loginStatus);
+                                if (state.loginStatus == LoginStatus.success) {
+                                  Navigator.pushNamed(
+                                      context, RoutesName.otpScreen);
+                                }
+
                               }
                             },
                             child: BlocBuilder<LoginBloc, LoginState>(
@@ -189,11 +183,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                   onPressed: () {
                                     if (_formKey.currentState?.validate() ??
                                         false) {
-                                      // Convert the phone number to a string (instead of an integer)
+                                      
                                       final phoneNo = phoneNoController.text;
 
                                       if (phoneNo.isNotEmpty) {
-                                        // Pass the phone number as a String
+                                       
                                         context.read<LoginBloc>().add(
                                               phoneNoChanged(phoneNo: phoneNo),
                                             );
@@ -201,14 +195,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                             .read<LoginBloc>()
                                             .add(LoginApi());
 
-                                        // Navigate to OTP screen after login initiation
                                       } else {
-                                        // Handle invalid phone number input (empty or invalid number)
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          SnackBar(
-                                              content: Text(
-                                                  'Please enter a valid phone number.')),
+                                   
+                                        Snack.show("Please enter a valid phone number", context
                                         );
                                       }
                                     }
