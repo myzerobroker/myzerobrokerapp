@@ -84,10 +84,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       padding: EdgeInsets.all(width * 0.04),
                       child: Column(
                         children: [
-                          Image.asset(
-                            'assets/images/my_zero_broker_logo (2).png',
-                            height: height * 0.06,
-                          ),
+                         
                           SizedBox(height: height * 0.02),
                           Text(
                             "Login",
@@ -167,7 +164,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 Snack.show(state.message, context);
                               }
                               if (state.loginStatus == LoginStatus.loading) {
-                                Snack.show("Authenticating", context); 
+                                Snack.show("Authenticating", context);
                               }
 
                               if (state.loginStatus == LoginStatus.success) {
@@ -177,6 +174,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   Navigator.pushNamed(
                                       context, RoutesName.otpScreen);
                                 }
+
                               }
                             },
                             child: BlocBuilder<LoginBloc, LoginState>(
@@ -185,11 +183,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                   onPressed: () {
                                     if (_formKey.currentState?.validate() ??
                                         false) {
-                                      // Convert the phone number to a string (instead of an integer)
+                                      
                                       final phoneNo = phoneNoController.text;
 
                                       if (phoneNo.isNotEmpty) {
-                                        // Pass the phone number as a String
+                                       
                                         context.read<LoginBloc>().add(
                                               phoneNoChanged(phoneNo: phoneNo),
                                             );
@@ -197,10 +195,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                             .read<LoginBloc>()
                                             .add(LoginApi());
 
-                                        // Navigate to OTP screen after login initiation
                                       } else {
-                                        // Handle invalid phone number input (empty or invalid number)
-                                       Snack.show("Please enter a valid phone number", context
+                                   
+                                        Snack.show("Please enter a valid phone number", context
                                         );
                                       }
                                     }

@@ -69,11 +69,11 @@ class _SignupScreenState extends State<SignupScreen> {
               if (state.signupStatus == SignUpStatus.loading) {
                 Snack.show('Loading...', context);
               } else if (state.signupStatus == SignUpStatus.success) {
-                Snack.show("Registration Success!", context);
+                Snack.show(state.message, context);
 
                 Navigator.pushNamed(context, RoutesName.homeScreen);
               } else if (state.signupStatus == SignUpStatus.error) {
-                Snack.show("Registration Failed!", context);
+                Snack.show(state.message,context);
               }
             },
             child: SingleChildScrollView(
@@ -167,20 +167,26 @@ class _SignupScreenState extends State<SignupScreen> {
                               },
                             ),
                             SizedBox(height: height * 0.02),
-                            Text.rich(
-                              TextSpan(
-                                children: [
-                                  const TextSpan(
-                                      text: "Already have an account? "),
-                                  TextSpan(
-                                    text: "Login",
-                                    style: TextStyle(
-                                      color: Colors.blue,
-                                      decoration: TextDecoration.underline,
-                                      fontSize: width * 0.04,
+                            InkWell(
+                              onTap: () {
+                                Navigator.pushNamed(
+                                  context, RoutesName.loginScreen);
+                              },
+                              child: Text.rich(
+                                TextSpan(
+                                  children: [
+                                    const TextSpan(
+                                        text: "Already have an account? "),
+                                    TextSpan(
+                                      text: "Login",
+                                      style: TextStyle(
+                                        color: Colors.blue,
+                                        decoration: TextDecoration.underline,
+                                        fontSize: width * 0.04,
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
                           ],
