@@ -2,20 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_zero_broker/bloc/login/login_bloc.dart';
 import 'package:my_zero_broker/config/routes/routes_name.dart';
+import 'package:my_zero_broker/presentation/widgets/ElevatedButton.dart';
 import 'package:my_zero_broker/presentation/widgets/TextField.dart';
+import 'package:my_zero_broker/presentation/widgets/custom_snack_bar.dart';
 import 'package:my_zero_broker/utils/constant/colors.dart';
 
 class OtpScreen extends StatefulWidget {
-  const OtpScreen({super.key});
+  const OtpScreen({super.key });
 
   @override
   State<OtpScreen> createState() => _OtpScreenState();
 }
-
 class _OtpScreenState extends State<OtpScreen> {
   late LoginBloc _loginBloc;
   final TextEditingController otpController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+
   @override
   void initState() {
     super.initState();
@@ -24,7 +26,7 @@ class _OtpScreenState extends State<OtpScreen> {
 
   @override
   Widget build(BuildContext context) {
-   final height = MediaQuery.of(context).size.height;
+    final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
 
     return Scaffold(
@@ -79,10 +81,6 @@ class _OtpScreenState extends State<OtpScreen> {
                     padding: EdgeInsets.all(width * 0.04),
                     child: Column(
                       children: [
-                        Image.asset(
-                          'assets/images/my_zero_broker_logo (2).png',
-                          height: height * 0.06,
-                        ),
                         SizedBox(height: height * 0.02),
                         Text(
                           "Verify OTP",
@@ -95,8 +93,7 @@ class _OtpScreenState extends State<OtpScreen> {
                         const Text(
                           "Welcome back! Log in to continue.",
                           textAlign: TextAlign.center,
-                          style:
-                              TextStyle(color: Color.fromARGB(255, 90, 42, 42)),
+                          style: TextStyle(color: Color.fromARGB(255, 90, 42, 42)),
                         ),
                         SizedBox(height: height * 0.02),
                         BlocBuilder<LoginBloc, LoginState>(
@@ -106,20 +103,18 @@ class _OtpScreenState extends State<OtpScreen> {
                             return Form(
                               key: _formKey,
                               child: Textfield(
-                                text: '+91',
                                 controller: otpController,
                                 hintText: "Enter OTP",
                                 textInputType: TextInputType.number,
                                 onChanged: (value) {
                                   context
                                       .read<LoginBloc>()
-                                      .add(otpChanged(otp: value));
+                                      .add(otpChanged(otp: value)); // Send OTP as string
                                 },
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
                                     return "Please enter OTP";
                                   }
-                                 
                                   return null;
                                 },
                               ),
@@ -127,57 +122,28 @@ class _OtpScreenState extends State<OtpScreen> {
                           },
                         ),
                         SizedBox(height: height * 0.02),
-                       
                         BlocListener<LoginBloc, LoginState>(
                           listener: (context, state) {
-                            if (state.loginStatus ==
-                                    LoginStatus.otpVerificationSuccess) {
-                                  // OTP verification success
-                                  Navigator.pushNamed(
-                                      context, RoutesName.homeScreen);
-                                } else if (state.loginStatus ==
-                                    LoginStatus.otpVerificationFailure) {
-                                  // OTP verification failure
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                        content: Text(
-                                            'OTP verification failed: ${state.message}')),
-                                  );
-                                }
-                              },
-
+                            if (state.loginStatus == LoginStatus.otpVerificationSuccess) {
+                              Snack.show(state.message, context);
+                              Navigator.pushNamed(context, RoutesName.homeScreen);
+                            } else if (state.loginStatus == LoginStatus.otpVerificationFailure) {
+                              Snack.show(state.message, context);
+                            }
+                          },
                           child: BlocBuilder<LoginBloc, LoginState>(
                             builder: (context, state) {
-                              return ElevatedButton(
+                              return Elevatedbutton(
                                 onPressed: () {
-  if (_formKey.currentState?.validate() ?? false) {
-    // Convert the phone number to a string (instead of an integer)
-   final otp =
-                                        int.tryParse(otpController.text);
-                                    if (otp != null) {
-                                      // Pass OTP and trigger event
-                                      context.read<LoginBloc>().add(otpChanged(
-                                          otp: otp
-                                              .toString())); // Pass integer OTP
-                                      context
-                                          .read<LoginBloc>()
-                                          .add(VerifyOtpApi());
-                                    } else {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        SnackBar(
-                                            content: Text(
-                                                'Invalid OTP. Please enter a valid number.')),
-                                      );
-                                    }
+                                  if (_formKey.currentState?.validate() ?? false) {
+                                    
+                                    String otp = otpController.text; // Treat OTP as string
+                                    context.read<LoginBloc>().add(VerifyOtpApi(state.userId));
                                   }
                                 },
-
-
-                                child: Text('VERIFY OTP'),
-                                style: ElevatedButton.styleFrom(
-                                  minimumSize: Size(width, height * 0.08),
-                                ),
+                                text: 'VERIFY OTP',
+                                height: height * 0.8,
+                                width: width * 0.99999,
                               );
                             },
                           ),
@@ -185,8 +151,7 @@ class _OtpScreenState extends State<OtpScreen> {
                         SizedBox(height: height * 0.02),
                         InkWell(
                           onTap: () {
-                            Navigator.pushNamed(
-                                context, RoutesName.homeScreen);
+                            Navigator.pushNamed(context, RoutesName.homeScreen);
                           },
                           child: Text.rich(
                             TextSpan(

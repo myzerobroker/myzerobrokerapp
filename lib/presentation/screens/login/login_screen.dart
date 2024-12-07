@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_zero_broker/bloc/login/login_bloc.dart';
 import 'package:my_zero_broker/config/routes/routes_name.dart';
+import 'package:my_zero_broker/data/user_id.dart';
+import 'package:my_zero_broker/locator.dart';
 import 'package:my_zero_broker/presentation/widgets/TextField.dart';
 import 'package:my_zero_broker/presentation/widgets/custom_snack_bar.dart';
 import 'package:my_zero_broker/utils/constant/colors.dart';
@@ -84,10 +86,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       padding: EdgeInsets.all(width * 0.04),
                       child: Column(
                         children: [
-                          Image.asset(
-                            'assets/images/my_zero_broker_logo (2).png',
-                            height: height * 0.06,
-                          ),
                           SizedBox(height: height * 0.02),
                           Text(
                             "Login",
@@ -173,6 +171,9 @@ class _LoginScreenState extends State<LoginScreen> {
                               if (state.loginStatus == LoginStatus.success) {
                                 Snack.show("OTP sent successfully", context);
                                 print(state.loginStatus);
+
+                                locator.get<UserId>().id = state.userId;
+                                print(locator.get<UserId>().id);
                                 if (state.loginStatus == LoginStatus.success) {
                                   Navigator.pushNamed(
                                       context, RoutesName.otpScreen);
@@ -185,19 +186,15 @@ class _LoginScreenState extends State<LoginScreen> {
                                   onPressed: () {
                                     if (_formKey.currentState?.validate() ??
                                         false) {
-                                      // Convert the phone number to a string (instead of an integer)
                                       final phoneNo = phoneNoController.text;
 
                                       if (phoneNo.isNotEmpty) {
-                                        // Pass the phone number as a String
                                         context.read<LoginBloc>().add(
                                               phoneNoChanged(phoneNo: phoneNo),
                                             );
                                         context
                                             .read<LoginBloc>()
                                             .add(LoginApi());
-
-                                        // Navigate to OTP screen after login initiation
                                       } else {
                                         // Handle invalid phone number input (empty or invalid number)
                                         Snack.show(
