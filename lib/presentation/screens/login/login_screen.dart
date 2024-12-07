@@ -167,7 +167,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 Snack.show(state.message, context);
                               }
                               if (state.loginStatus == LoginStatus.loading) {
-                                Snack.show("Authenticating", context); 
+                                Snack.show("Authenticating", context);
                               }
 
                               if (state.loginStatus == LoginStatus.success) {
@@ -200,8 +200,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                         // Navigate to OTP screen after login initiation
                                       } else {
                                         // Handle invalid phone number input (empty or invalid number)
-                                       Snack.show("Please enter a valid phone number", context
-                                        );
+                                        Snack.show(
+                                            "Please enter a valid phone number",
+                                            context);
                                       }
                                     }
                                   },
