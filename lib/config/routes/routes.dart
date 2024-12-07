@@ -4,6 +4,7 @@ import 'package:my_zero_broker/presentation/presentaion.dart';
 import 'package:my_zero_broker/presentation/screens/home_screen.dart/home_screen.dart';
 import 'package:my_zero_broker/presentation/screens/login/otp_screen.dart';
 import 'package:my_zero_broker/presentation/screens/post_property/post_property.dart';
+import 'package:my_zero_broker/presentation/screens/post_property/propertydetails.dart';
 
 class Routes {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -25,6 +26,9 @@ class Routes {
 
       case RoutesName.postpropertyScreen:
         return _createRoute(PropertyFormScreen());  
+
+      case RoutesName.propertydetailsform:
+        return _createRoute(PropertyDetailsFormScreen());    
 
       default:
         return _createRoute(const Scaffold(

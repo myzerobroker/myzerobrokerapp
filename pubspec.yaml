@@ -44,6 +44,8 @@ dependencies:
   awesome_drawer_bar: ^1.2.0
   http: ^1.2.2
   get_it: ^8.0.2
+  image_picker: ^1.1.2
+  
 
 dev_dependencies:
   flutter_test:
