@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:my_zero_broker/presentation/screens/post_property/widgets/buildcard.dart';
 import 'package:my_zero_broker/presentation/screens/post_property/widgets/checkboxes.dart';
@@ -20,20 +18,35 @@ class _PropertyDetailsFormScreenState extends State<PropertyDetailsFormScreen> {
   final TextEditingController plotAreaController = TextEditingController();
   final TextEditingController streetAreaController = TextEditingController();
   final TextEditingController offerPriceController = TextEditingController();
-    final TextEditingController maintenanceCostController = TextEditingController();
-      final TextEditingController _dateController = TextEditingController();
-      final TextEditingController descriptionController = TextEditingController();
+  final TextEditingController maintenanceCostController = TextEditingController();
+  final TextEditingController _dateController = TextEditingController();
+  final TextEditingController descriptionController = TextEditingController();
 
+  String? selectedPropertyType;
+  String? selectedBhkType;
+  String? selectedPropertyAge;
+  String? selectedTotalFloor;
+  String? selectedOwnershipType;
+  String? selectedFacing;
+  String? selectedCity;
+  String? selectedLocality;
+  String? selectedFurnishing;
+  String? selectedParking;
+  String? selectedKitchenType;
+  String? selectedBathroom;
+  String? selectedWaterSupply;
+  String? selectedGratedSecurity;
+  String? selectedBalcony;
+  String? selectedInternetService;
+  String? selectedKhataCert;
+  String? selectedSaleDeedCertificate;
+  String? selectedPropertyTax;
+  String? selectedOccupancyCertificate;
 
-    bool _isPriceNegotiableSelected = false;
-    bool _isCurrentlyUnderLoanSelected = false;
-    
+  bool _isPriceNegotiableSelected = false;
+  bool _isCurrentlyUnderLoanSelected = false;
 
-
-    
-
-
-     Future<void> _pickDate(BuildContext context) async {
+  Future<void> _pickDate(BuildContext context) async {
     DateTime? selectedDate = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
@@ -48,357 +61,154 @@ class _PropertyDetailsFormScreenState extends State<PropertyDetailsFormScreen> {
     }
   }
 
-  
-   @override
+  @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
+    
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text("Post Property Details"),
         centerTitle: true,
-        leading:  Image.asset(
-                      'assets/images/my_zero_broker_logo (2).png',
-                      height: height * 0.08,
-                      width: width*0.5,
-                    ),
+        leading: Image.asset(
+          'assets/images/my_zero_broker_logo (2).png',
+          height: height * 0.08,
+          width: width * 0.5,
+        ),
+        backgroundColor: Colors.red,
       ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               buildCard(
                 child: Column(
                   children: [
                     const SectionTitle(title: "Property Details"),
-                    DropdownField(
-                label: "Property Type",
-                items: ["Row House","Individual Villa/Bunglow","Farm House","Flat","Twin Bunglow"],
-                fieldKey: "property_type",
-              ),
-              SizedBox(height: height * 0.01),
-              DropdownField(
-                label: "BHK Type",
-                items: ["1 RK","1 BHK", "2 BHK", "3 BHK" ,"4 or more BHK"],
-                fieldKey: "bhk",
-              ),
-               SizedBox(height: height * 0.01),
-              DropdownField(
-                label: "Property Age",
-                items: ["Under Construction/ New Construction", "Ready Possession"],
-                fieldKey: "property_age",
-              ),
-               SizedBox(height: height * 0.01),
-              Textfield(
-              controller: carpetAreaController,
-              textInputType: TextInputType.text, // Specify your input type
-              hintText: 'Carpet/BuiltUp Area (Sq. Ft.)', // Set hint text
-              onChanged: (value) {
-               
-                print(value);
-              },
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter Carpet/BuiltUp Area';
-                }
-                return null;
-              },),
-              SizedBox(height: height * 0.01),
-               DropdownField(
-                label: "Total Floor",
-                items: ["Ground Only", "Ground+1","Ground+2","Ground+3"],
-                fieldKey: "total_floor",
-              ),
-               SizedBox(height: height * 0.01),
-                DropdownField(
-                label: "Ownership Type",
-                items: ["On lease", "Self Owned"],
-                fieldKey: "ownership_type",
-              ),
-               SizedBox(height: height * 0.01),
-                DropdownField(
-                label: "Facing",
-                items: ["East", "West","North","South","East-South","East-North","West-South","West-North"],
-                fieldKey: "facing",
-              ),
-              SizedBox(height: height * 0.01),
-               Textfield(
-              controller: plotAreaController,
-              textInputType: TextInputType.text,
-              hintText: 'Enter Plot Area (Sq. Ft.)',
-              onChanged: (value) {
-               
-                print(value);
-              },
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter Enter Plot Area (Sq. Ft.)';
-                }
-                return null;
-              },),
+                    _buildDropdownField("Property Type", selectedPropertyType, ["Row House", "Individual Villa/Bunglow", "Farm House", "Flat", "Twin Bunglow"]),
+                    _buildDropdownField("BHK Type", selectedBhkType, ["1 RK", "1 BHK", "2 BHK", "3 BHK", "4 or more BHK"]),
+                    _buildDropdownField("Property Age", selectedPropertyAge, ["Under Construction/ New Construction", "Ready Possession"]),
+                    _buildTextField("Carpet/BuiltUp Area (Sq. Ft.)", carpetAreaController),
+                    _buildDropdownField("Total Floor", selectedTotalFloor, ["Ground Only", "Ground+1", "Ground+2", "Ground+3"]),
+                    _buildDropdownField("Ownership Type", selectedOwnershipType, ["On lease", "Self Owned"]),
+                    _buildDropdownField("Facing", selectedFacing, ["East", "West", "North", "South", "East-South", "East-North", "West-South", "West-North"]),
+                    _buildTextField("Plot Area (Sq. Ft.)", plotAreaController),
                   ],
                 ),
               ),
               
               SizedBox(height: height * 0.06),
-               buildCard(
-                 child: Column(
-                   children: [
-                     const SectionTitle(title: "Locality Details"),
-                      DropdownField(
-                label: "City",
-                items: ["AHMEDNAGER","PUNE"],
-                fieldKey: "city",
-              ),
-              SizedBox(height: height * 0.01),
-              DropdownField(
-                label: "Locality",
-                items: ["Select Area"],
-                fieldKey: "locality",
-              ),
-              SizedBox(height: height * 0.01),
-                Textfield(
-              controller: streetAreaController,
-              textInputType: TextInputType.text, 
-              hintText: 'Street/Area', 
-              onChanged: (value) {
-               
-                print(value);
-              },
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter street/area';
-                }
-                return null;
-              },),
-                   ],
-                 ),
-               ),
               
-
-                SizedBox(height: height * 0.06),
-
-                 Column(
-                   children: [
-                     const SectionTitle(title: "Sale/Resale Details"),
-                         Textfield(
-              controller: offerPriceController,
-              textInputType: TextInputType.text, 
-              hintText: 'Enter Expected Price ', 
-           
-              onChanged: (value) {
-               
-                print(value);
-              },
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter Expected Price ';
-                }
-                return null;
-              },),
-              SizedBox(height: height * 0.01),
-
-               Textfield(
-              controller: maintenanceCostController,
-              textInputType: TextInputType.text, 
-              hintText: 'Enter Maintenance Cost (/month)',
-              onChanged: (value) {
-               
-                print(value);
-              },
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter Maintenance Cost';
-                }
-                return null;
-              },),
-              SizedBox(height: height * 0.01),
-              CustomCheckbox(
-                            label: "Price Negotiable",
-                            initialValue: _isPriceNegotiableSelected,
-                            onChanged: (bool? value) {
-                              setState(() {
-              _isPriceNegotiableSelected = value ?? false;
-                              });
-                            },
-                          ),
-              
-                           CustomCheckbox(
-                            label: "Currently Under Loan",
-                            initialValue: _isCurrentlyUnderLoanSelected,
-                            onChanged: (bool? value) {
-                              setState(() {
-              _isCurrentlyUnderLoanSelected = value ?? false;
-                              });
-                            },
-                          ),
-              SizedBox(height: height * 0.01),
-              TextFormField(
-              controller: _dateController,
-              decoration: InputDecoration(
-                labelText: 'Available Form',
-                hintText: 'Select a date',
-                suffixIcon: Icon(Icons.calendar_today),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8.0),
+              buildCard(
+                child: Column(
+                  children: [
+                    const SectionTitle(title: "Locality Details"),
+                    _buildDropdownField("City", selectedCity, ["AHMEDNAGER", "PUNE"]),
+                    _buildDropdownField("Locality", selectedLocality, ["Select Area"]),
+                    _buildTextField("Street/Area", streetAreaController),
+                  ],
                 ),
               ),
-              readOnly: true, 
-              onTap: () => _pickDate(context), 
-            ),
-
-             SizedBox(height: height * 0.01),
-              DropdownField(
-                label: "Furnishing",
-                items: ["Fully-Furnished","Semi-Furnished","Unfurnished"],
-                fieldKey: "furnishing",
-              ),
-              SizedBox(height: height * 0.01),
-               DropdownField(
-                label: "Parking",
-                items: ["Bike","Car","Bike & Car","None"],
-                fieldKey: "parking",
-              ),
-              SizedBox(height: height * 0.01),
-               DropdownField(
-                label: "Kitchen Type",
-                
-                items: ["Modular","Covered Shelves","Open Shelves"],
-                fieldKey: "furnishing",
-              ),
-              SizedBox(height: height * 0.01),
               
-             Textfield(
-              controller: descriptionController,
-              textInputType: TextInputType.text, // Specify your input type
-              hintText: 'Description',
-              onChanged: (value) {
-               
-                print(value);
-              },
-              ),
-                   ],
-                 ),
-
+              SizedBox(height: height * 0.06),
               
-
-                 SizedBox(height: height * 0.06),
-                buildCard(
-  child: Column(
-    children: [
-      const SectionTitle(title: "Gallery"),
-      GalleryImagePicker(
-        onImagesPicked: (List<File> pickedImages) {
-
-          print('Images picked: ${pickedImages.length}');
-        },
-      ),
-    ],
-  ),
-),
-
-             
-                 
-
-                  SizedBox(height: height * 0.06),
-
+              buildCard(
+                child: Column(
+                  children: [
+                    const SectionTitle(title: "Sale/Resale Details"),
+                    _buildTextField("Expected Price", offerPriceController),
+                    _buildTextField("Maintenance Cost (/month)", maintenanceCostController),
+                    _buildCheckbox("Price Negotiable", _isPriceNegotiableSelected, (value) {
+                      setState(() {
+                        _isPriceNegotiableSelected = value ?? false;
+                      });
+                    }),
+                    _buildCheckbox("Currently Under Loan", _isCurrentlyUnderLoanSelected, (value) {
+                      setState(() {
+                        _isCurrentlyUnderLoanSelected = value ?? false;
+                      });
+                    }),
+                    _buildDateField(),
+                    _buildDropdownField("Furnishing", selectedFurnishing, ["Fully-Furnished", "Semi-Furnished", "Unfurnished"]),
+                    _buildDropdownField("Parking", selectedParking, ["Bike", "Car", "Bike & Car", "None"]),
+                    _buildDropdownField("Kitchen Type", selectedKitchenType, ["Modular", "Covered Shelves", "Open Shelves"]),
+                    _buildTextField("Description", descriptionController),
+                  ],
+                ),
+              ),
+              
+              SizedBox(height: height * 0.06),
+              
+              buildCard(
+                child: Column(
+                  children: [
+                    const SectionTitle(title: "Gallery"),
+                    GalleryImagePicker(onImagesPicked: (pickedImages) {
+                      print('Images picked: ${pickedImages.length}');
+                    }),
+                  ],
+                ),
+              ),
+              
+              SizedBox(height: height * 0.06),
+              
               buildCard(
                 child: Column(
                   children: [
                     const SectionTitle(title: "Amenities"),
-                     DropdownField(
-                label: "Bathroom(s)",
-                items: ["1", "2", "3","4","5"],
-                fieldKey: "bathroom",
-              ),
-                SizedBox(height: height * 0.01),
-              DropdownField(
-                label: "Water Supply",
-                items: ["Corporation", "Borewell","Both"],
-                fieldKey: "water_supply",
-              ),
-                SizedBox(height: height * 0.01),
-                 DropdownField(
-                label: "Grated Security",
-                items: ["Yes","No"],
-                fieldKey: "grated_security",
-              ),
-                SizedBox(height: height * 0.01),
-                 DropdownField(
-                label: "Balcony",
-                items: ["1","2","3","4","5"],
-                fieldKey: "blocony",
-              ),
-                SizedBox(height: height * 0.01),
-                  DropdownField(
-                label: "Internet Service",
-                items: ["Yes","No"],
-                fieldKey: "internet_service",
-              ),
+                    _buildDropdownField("Bathroom(s)", selectedBathroom, ["1", "2", "3", "4", "5"]),
+                    _buildDropdownField("Water Supply", selectedWaterSupply, ["Corporation", "Borewell", "Both"]),
+                    _buildDropdownField("Grated Security", selectedGratedSecurity, ["Yes", "No"]),
+                    _buildDropdownField("Balcony", selectedBalcony, ["1", "2", "3", "4", "5"]),
+                    _buildDropdownField("Internet Service", selectedInternetService, ["Yes", "No"]),
                   ],
                 ),
               ),
-             
-                SizedBox(height: height * 0.06),
+              
+              SizedBox(height: height * 0.06),
+              
               buildCard(
                 child: Column(
                   children: [
                     const SectionTitle(title: "Additional Information"),
-                         DropdownField(
-                label: "Do you have Khata Certificate (7/12)?",
-                items: ["Yes", "No","Don't Know"],
-                fieldKey: "khata_cert",
-              ),
-              SizedBox(height: height * 0.01),
-              DropdownField(
-                label: "Do you have Sale Deed Certificate?",
-                items: ["Yes", "No","Don't Know"],
-                fieldKey: "sale_deed_certificate",
-              ),
-              SizedBox(height: height * 0.01),
-              DropdownField(
-                label: "Have you paid Property Tax?",
-                items: ["Yes", "No","Don't Know"],
-                fieldKey: "property_tax",
-              ),
-              SizedBox(height: height * 0.01),
-              DropdownField(
-                label: "Do you have Occupancy Certificate?",
-                items: ["Yes", "No","Don't Know"],
-                fieldKey: "occupancy_certificate",
-              ),
+                    _buildDropdownField("Khata Certificate (7/12)", selectedKhataCert, ["Yes", "No", "Don't Know"]),
+                    _buildDropdownField("Sale Deed Certificate", selectedSaleDeedCertificate, ["Yes", "No", "Don't Know"]),
+                    _buildDropdownField("Property Tax Paid", selectedPropertyTax, ["Yes", "No", "Don't Know"]),
+                    _buildDropdownField("Occupancy Certificate", selectedOccupancyCertificate, ["Yes", "No", "Don't Know"]),
                   ],
                 ),
               ),
-         
+              
               SizedBox(height: height * 0.06),
-                 buildCard(
-                   child: Column(
-                     children: [
-                       const SectionTitle(title: "Extra Amenities"),
-                        ExtraAmenities(),
-                     ],
-                   ),
-                 ),
-
-                
-                 
-              SizedBox(height: height*0.02),
+              
+              buildCard(
+                child: Column(
+                  children: [
+                    const SectionTitle(title: "Extra Amenities"),
+                    ExtraAmenities(),
+                  ],
+                ),
+              ),
+              
+              SizedBox(height: height * 0.02),
+              
               Center(
                 child: Elevatedbutton(
                   text: 'Submit',
-                  height: height*0.7,
+                  height: height*0.8,
                   width: width,
-                  
+                  bgcolor: Colors.red,
+                  foregroundColor: Colors.white,
                   onPressed: () {
-                    // Handle form submission here
                     print("Form Submitted");
                   },
+                  ),
+                 
+                 
                 
-                ),
               ),
             ],
           ),
@@ -406,5 +216,71 @@ class _PropertyDetailsFormScreenState extends State<PropertyDetailsFormScreen> {
       ),
     );
   }
-}
 
+  Widget _buildDropdownField(String label, String? value, List<String> items) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: DropdownField(
+        value: value,
+        onChanged: (v) {
+          setState(() {
+            value = v;
+          });
+        },
+        label: label,
+        items: items,
+        fieldKey: label.toLowerCase().replaceAll(' ', '_'),
+      ),
+    );
+  }
+
+  Widget _buildTextField(String hintText, TextEditingController controller) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Textfield(
+        controller: controller,
+        textInputType: TextInputType.text,
+        hintText: hintText,
+        onChanged: (value) {
+          print(value);
+        },
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Please enter $hintText';
+          }
+          return null;
+        },
+      ),
+    );
+  }
+
+  Widget _buildCheckbox(String label, bool value, ValueChanged<bool?> onChanged) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: CustomCheckbox(
+        label: label,
+        initialValue: value,
+        onChanged: onChanged,
+      ),
+    );
+  }
+
+  Widget _buildDateField() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: TextFormField(
+        controller: _dateController,
+        decoration: InputDecoration(
+          labelText: 'Available From',
+          hintText: 'Select a date',
+          suffixIcon: Icon(Icons.calendar_today),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12.0),
+          ),
+        ),
+        readOnly: true,
+        onTap: () => _pickDate(context),
+      ),
+    );
+  }
+}
