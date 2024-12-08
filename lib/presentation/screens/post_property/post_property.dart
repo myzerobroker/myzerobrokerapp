@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_zero_broker/bloc/property_form/property_form_bloc.dart';
 import 'package:my_zero_broker/bloc/property_form/property_form_event.dart';
 import 'package:my_zero_broker/bloc/property_form/property_form_state.dart';
+import 'package:my_zero_broker/config/routes/routes_name.dart';
 import 'package:my_zero_broker/presentation/widgets/ElevatedButton.dart';
 import 'package:my_zero_broker/presentation/widgets/TextField.dart';
 import 'package:my_zero_broker/utils/constant/colors.dart';
@@ -159,7 +160,10 @@ class PropertyFormScreen extends StatelessWidget {
                             
                             SizedBox(height: height * 0.02),
                             Elevatedbutton(
-                              onPressed: () {},
+                              onPressed: () {
+                                    Navigator.pushNamed(
+                                  context, RoutesName.propertydetailsform);
+                              },
                               text: 'Start Posting Your Add',
                               height: height * 0.8,
                               width: width * 0.98,

@@ -6,5 +6,6 @@ class RoutesName {
    static const String homeScreen = 'home_screen';
    static const String otpScreen = 'otp_screen';
    static const String postpropertyScreen = 'post_property';
+   static const String propertydetailsform  = 'propertydetails';
  
 }
