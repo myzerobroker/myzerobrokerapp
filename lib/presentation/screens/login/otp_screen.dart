@@ -6,13 +6,15 @@ import 'package:my_zero_broker/presentation/widgets/ElevatedButton.dart';
 import 'package:my_zero_broker/presentation/widgets/TextField.dart';
 import 'package:my_zero_broker/presentation/widgets/custom_snack_bar.dart';
 import 'package:my_zero_broker/utils/constant/colors.dart';
+import 'package:pinput/pinput.dart';
 
 class OtpScreen extends StatefulWidget {
-  const OtpScreen({super.key });
+  const OtpScreen({super.key});
 
   @override
   State<OtpScreen> createState() => _OtpScreenState();
 }
+
 class _OtpScreenState extends State<OtpScreen> {
   late LoginBloc _loginBloc;
   final TextEditingController otpController = TextEditingController();
@@ -93,7 +95,8 @@ class _OtpScreenState extends State<OtpScreen> {
                         const Text(
                           "Welcome back! Log in to continue.",
                           textAlign: TextAlign.center,
-                          style: TextStyle(color: Color.fromARGB(255, 90, 42, 42)),
+                          style:
+                              TextStyle(color: Color.fromARGB(255, 90, 42, 42)),
                         ),
                         SizedBox(height: height * 0.02),
                         BlocBuilder<LoginBloc, LoginState>(
@@ -102,14 +105,12 @@ class _OtpScreenState extends State<OtpScreen> {
                           builder: (context, state) {
                             return Form(
                               key: _formKey,
-                              child: Textfield(
+                              child: Pinput(
                                 controller: otpController,
-                                hintText: "Enter OTP",
-                                textInputType: TextInputType.number,
+                                length: 6,
                                 onChanged: (value) {
-                                  context
-                                      .read<LoginBloc>()
-                                      .add(otpChanged(otp: value)); // Send OTP as string
+                                  context.read<LoginBloc>().add(otpChanged(
+                                      otp: value)); // Send OTP as string
                                 },
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
@@ -124,10 +125,13 @@ class _OtpScreenState extends State<OtpScreen> {
                         SizedBox(height: height * 0.02),
                         BlocListener<LoginBloc, LoginState>(
                           listener: (context, state) {
-                            if (state.loginStatus == LoginStatus.otpVerificationSuccess) {
+                            if (state.loginStatus ==
+                                LoginStatus.otpVerificationSuccess) {
                               Snack.show(state.message, context);
-                              Navigator.pushNamed(context, RoutesName.homeScreen);
-                            } else if (state.loginStatus == LoginStatus.otpVerificationFailure) {
+                              Navigator.pushNamed(
+                                  context, RoutesName.homeScreen);
+                            } else if (state.loginStatus ==
+                                LoginStatus.otpVerificationFailure) {
                               Snack.show(state.message, context);
                             }
                           },
@@ -135,10 +139,13 @@ class _OtpScreenState extends State<OtpScreen> {
                             builder: (context, state) {
                               return Elevatedbutton(
                                 onPressed: () {
-                                  if (_formKey.currentState?.validate() ?? false) {
-                                    
-                                    String otp = otpController.text; // Treat OTP as string
-                                    context.read<LoginBloc>().add(VerifyOtpApi(state.userId));
+                                  if (_formKey.currentState?.validate() ??
+                                      false) {
+                                    String otp = otpController
+                                        .text; // Treat OTP as string
+                                    context
+                                        .read<LoginBloc>()
+                                        .add(VerifyOtpApi(state.userId));
                                   }
                                 },
                                 text: 'VERIFY OTP',

@@ -52,39 +52,58 @@ class _SearchFormState extends State<SearchForm> {
   String? _selectedStatus;
   String? _selectedType;
   String? _selectedPriceRange;
-
+  int index = 0;
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
         children: [
-      
           _buildCategoryButtons(),
           SizedBox(height: 20),
-          _buildDropdownWithIcons('Search Location', _locations, _selectedLocation,
-              (String? newValue) {
-            setState(() => _selectedLocation = newValue);
-          }),
-          _buildDropdownWithIcons('Search Area', _areas, _selectedArea, (String? newValue) {
-            setState(() => _selectedArea = newValue);
-          }),
-          _buildDropdownWithIcons('BHK Type', _bhkTypes, _selectedBHK, (String? newValue) {
-            setState(() => _selectedBHK = newValue);
-          }),
-          _buildDropdownWithIcons('Property Status', _propertyStatus, _selectedStatus,
+          Container(
+            decoration: BoxDecoration(),
+            child: Column(
+              children: [
+                _buildDropdownWithIcons(
+                    'Search Location', _locations, _selectedLocation,
+                    (String? newValue) {
+                  setState(() => _selectedLocation = newValue);
+                }),
+                _buildDropdownWithIcons('Search Area', _areas, _selectedArea,
+                    (String? newValue) {
+                  setState(() => _selectedArea = newValue);
+                }),
+                _buildDropdownWithIcons('BHK Type', _bhkTypes, _selectedBHK,
+                    (String? newValue) {
+                  setState(() => _selectedBHK = newValue);
+                }),
+              ],
+            ),
+          ),
+          _buildDropdownWithIcons(
+              'Property Status', _propertyStatus, _selectedStatus,
               (String? newValue) {
             setState(() => _selectedStatus = newValue);
           }),
-          _buildDropdownWithIcons('Property Type', _propertyTypes, _selectedType,
+          _buildDropdownWithIcons(
+              'Property Type', _propertyTypes, _selectedType,
               (String? newValue) {
             setState(() => _selectedType = newValue);
           }),
-          _buildDropdownWithIcons('Price Range', _priceRanges, _selectedPriceRange,
+          _buildDropdownWithIcons(
+              'Price Range', _priceRanges, _selectedPriceRange,
               (String? newValue) {
             setState(() => _selectedPriceRange = newValue);
           }),
           SizedBox(height: 20),
           _buildSearchButton(),
+          SizedBox(height: 10),
+          _buildCustomButton(
+              Icons.person, "Builder's Plans", Colors.blue, () {}),
+          SizedBox(height: 10),
+          _buildCustomButton(
+              Icons.person, "Post your Property", Colors.red, () {}),
+          SizedBox(height: 10),
         ],
       ),
     );
@@ -118,39 +137,56 @@ class _SearchFormState extends State<SearchForm> {
   Widget _buildCategoryButtons() {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 20),
-      child: Wrap(
-        spacing: 10,
+      child: Column(
         children: [
-          _buildCategoryButton('Buy', isSelected: true),
-          _buildCategoryButton('Rent'),
-          _buildCategoryButton('Commercial'),
-          _buildCategoryButton('Open Plot / Farmland'),
+          _buildCategoryButton('Buy', isSelected: index == 0, onTap: () {
+            setState(() {
+              index = 0;
+            });
+          }),
+          _buildCategoryButton('Rent', isSelected: index == 1, onTap: () {
+            setState(() {
+              index = 1;
+            });
+          }),
+          _buildCategoryButton('Commercial', isSelected: index == 2, onTap: () {
+            setState(() {
+              index = 2;
+            });
+          }),
+          _buildCategoryButton('Open Plot / Farmland', isSelected: index == 3,
+              onTap: () {
+            setState(() {
+              index = 3;
+            });
+          }),
         ],
       ),
     );
   }
 
-  Widget _buildCategoryButton(String label, {bool isSelected = false}) {
-    return ElevatedButton(
-      onPressed: () {
-        // Handle button press
-      },
-      style: ElevatedButton.styleFrom(
-        foregroundColor: isSelected ? Colors.white : Colors.black, backgroundColor: isSelected ? Colors.blue : Colors.grey.shade200,
-        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
+  Widget _buildCategoryButton(String label,
+      {bool isSelected = false, required Function() onTap}) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: ElevatedButton(
+        onPressed: onTap,
+        style: ElevatedButton.styleFrom(
+          fixedSize: Size(200, 50),
+          foregroundColor: isSelected ? Colors.white : Colors.black,
+          backgroundColor: isSelected ? Colors.blue : Colors.grey.shade200,
+          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
         ),
+        child: Text(label),
       ),
-      child: Text(label),
     );
   }
 
-  Widget _buildDropdownWithIcons(
-      String label,
-      List<Map<String, dynamic>> items,
-      String? selectedItem,
-      ValueChanged<String?> onChanged) {
+  Widget _buildDropdownWithIcons(String label, List<Map<String, dynamic>> items,
+      String? selectedItem, ValueChanged<String?> onChanged) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
       child: Container(
@@ -165,10 +201,11 @@ class _SearchFormState extends State<SearchForm> {
             contentPadding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
           ),
           value: selectedItem,
-          icon: Icon(Icons.arrow_drop_down, color: Colors.red),
+          icon: Icon(Icons.arrow_drop_down_sharp, color: Colors.grey),
           hint: Text(label),
           onChanged: onChanged,
-          items: items.map<DropdownMenuItem<String>>((Map<String, dynamic> item) {
+          items:
+              items.map<DropdownMenuItem<String>>((Map<String, dynamic> item) {
             return DropdownMenuItem<String>(
               value: item['label'],
               child: Row(
@@ -189,14 +226,14 @@ class _SearchFormState extends State<SearchForm> {
     return ElevatedButton.icon(
       onPressed: () {
         // Handle search logic
-        _performSearch();
       },
       icon: Icon(Icons.search, color: Colors.white),
       label: Text(
         'Search',
-        style: TextStyle(fontSize: 18),
+        style: TextStyle(fontSize: 18, color: Colors.white),
       ),
       style: ElevatedButton.styleFrom(
+        fixedSize: Size(350, 60),
         backgroundColor: Colors.red,
         padding: EdgeInsets.symmetric(horizontal: 60, vertical: 15),
         shape: RoundedRectangleBorder(
@@ -204,6 +241,31 @@ class _SearchFormState extends State<SearchForm> {
         ),
       ),
     );
+  }
+
+  Widget _buildCustomButton(
+      IconData icon, String text, Color color, Function f) {
+    {
+      return ElevatedButton.icon(
+        onPressed: () {
+          // Handle search logic
+          f;
+        },
+        icon: Icon(icon, color: Colors.white),
+        label: Text(
+          text,
+          style: TextStyle(fontSize: 18, color: Colors.white),
+        ),
+        style: ElevatedButton.styleFrom(
+          fixedSize: Size(350, 60),
+          backgroundColor: color,
+          padding: EdgeInsets.symmetric(horizontal: 60, vertical: 15),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+        ),
+      );
+    }
   }
 
   void _performSearch() {

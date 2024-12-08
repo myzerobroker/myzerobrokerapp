@@ -39,6 +39,13 @@ class DrawerContent extends StatelessWidget {
               context.read<DrawerCubit>().showSettings();
             },
           ),
+          ListTile(
+            leading: Icon(Icons.settings, color: Colors.white),
+            title: Text('Contact us', style: TextStyle(color: Colors.white)),
+            onTap: () {
+              context.read<DrawerCubit>().showContacts();
+            },
+          ),
         ],
       ),
     );

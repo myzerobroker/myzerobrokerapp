@@ -26,7 +26,7 @@ class DrawerContent extends StatelessWidget {
     return ListTile(
       title: Text(title),
       onTap: () {
-        Navigator.pushReplacementNamed(context, routeName); // Navigate via routes
+        Navigator.pushNamed(context, routeName); // Navigate via routes
       },
     );
   }
