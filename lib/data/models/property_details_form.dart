@@ -1,66 +1,81 @@
 class PropertyDetailsForm {
-  final PropertyDetails propertyDetails;
-  final LocalityDetails localityDetails;
-  final SaleResaleDetails saleResaleDetails;
-  final Gallery gallery;
-  final Amenities amenities;
-  final AdditionalInformation additionalInformation;
-  final ExtraAmenities extraAmenities;
+  final PropertyDetails? propertyDetails;
+  final LocalityDetails? localityDetails;
+  final SaleResaleDetails? saleResaleDetails;
+  final Gallery? gallery;
+  final Amenities? amenities;
+  final AdditionalInformation? additionalInformation;
+  final ExtraAmenities? extraAmenities;
 
   PropertyDetailsForm({
-    required this.propertyDetails,
-    required this.localityDetails,
-    required this.saleResaleDetails,
-    required this.gallery,
-    required this.amenities,
-    required this.additionalInformation,
-    required this.extraAmenities,
+    this.propertyDetails,
+    this.localityDetails,
+    this.saleResaleDetails,
+    this.gallery,
+    this.amenities,
+    this.additionalInformation,
+    this.extraAmenities,
   });
 
   factory PropertyDetailsForm.fromJson(Map<String, dynamic> json) {
     return PropertyDetailsForm(
-      propertyDetails: PropertyDetails.fromJson(json['propertyDetails']),
-      localityDetails: LocalityDetails.fromJson(json['localityDetails']),
-      saleResaleDetails: SaleResaleDetails.fromJson(json['saleResaleDetails']),
-      gallery: Gallery.fromJson(json['gallery']),
-      amenities: Amenities.fromJson(json['amenities']),
-      additionalInformation: AdditionalInformation.fromJson(json['additionalInformation']),
-      extraAmenities: ExtraAmenities.fromJson(json['extraAmenities']),
+      propertyDetails: json['propertyDetails'] != null
+          ? PropertyDetails.fromJson(json['propertyDetails'])
+          : null,
+      localityDetails: json['localityDetails'] != null
+          ? LocalityDetails.fromJson(json['localityDetails'])
+          : null,
+      saleResaleDetails: json['saleResaleDetails'] != null
+          ? SaleResaleDetails.fromJson(json['saleResaleDetails'])
+          : null,
+      gallery:
+          json['gallery'] != null ? Gallery.fromJson(json['gallery']) : null,
+      amenities: json['amenities'] != null
+          ? Amenities.fromJson(json['amenities'])
+          : null,
+      additionalInformation: json['additionalInformation'] != null
+          ? AdditionalInformation.fromJson(json['additionalInformation'])
+          : null,
+      extraAmenities: json['extraAmenities'] != null
+          ? ExtraAmenities.fromJson(json['extraAmenities'])
+          : null,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'propertyDetails': propertyDetails.toJson(),
-      'localityDetails': localityDetails.toJson(),
-      'saleResaleDetails': saleResaleDetails.toJson(),
-      'gallery': gallery.toJson(),
-      'amenities': amenities.toJson(),
-      'additionalInformation': additionalInformation.toJson(),
-      'extraAmenities': extraAmenities.toJson(),
+      if (propertyDetails != null) 'propertyDetails': propertyDetails!.toJson(),
+      if (localityDetails != null) 'localityDetails': localityDetails!.toJson(),
+      if (saleResaleDetails != null)
+        'saleResaleDetails': saleResaleDetails!.toJson(),
+      if (gallery != null) 'gallery': gallery!.toJson(),
+      if (amenities != null) 'amenities': amenities!.toJson(),
+      if (additionalInformation != null)
+        'additionalInformation': additionalInformation!.toJson(),
+      if (extraAmenities != null) 'extraAmenities': extraAmenities!.toJson(),
     };
   }
 }
 
 class PropertyDetails {
-  final String propertyType;
-  final String bhkType;
-  final String propertyAge;
-  final int carpetArea;
-  final String totalFloor;
-  final String ownershipType;
-  final String facing;
-  final int plotArea;
+  final String? propertyType;
+  final String? bhkType;
+  final String? propertyAge;
+  final int? carpetArea;
+  final String? totalFloor;
+  final String? ownershipType;
+  final String? facing;
+  final int? plotArea;
 
   PropertyDetails({
-    required this.propertyType,
-    required this.bhkType,
-    required this.propertyAge,
-    required this.carpetArea,
-    required this.totalFloor,
-    required this.ownershipType,
-    required this.facing,
-    required this.plotArea,
+    this.propertyType,
+    this.bhkType,
+    this.propertyAge,
+    this.carpetArea,
+    this.totalFloor,
+    this.ownershipType,
+    this.facing,
+    this.plotArea,
   });
 
   factory PropertyDetails.fromJson(Map<String, dynamic> json) {
@@ -91,14 +106,14 @@ class PropertyDetails {
 }
 
 class LocalityDetails {
-  final String city;
-  final String locality;
-  final String streetArea;
+  final String? city;
+  final String? locality;
+  final String? streetArea;
 
   LocalityDetails({
-    required this.city,
-    required this.locality,
-    required this.streetArea,
+    this.city,
+    this.locality,
+    this.streetArea,
   });
 
   factory LocalityDetails.fromJson(Map<String, dynamic> json) {
@@ -119,26 +134,26 @@ class LocalityDetails {
 }
 
 class SaleResaleDetails {
-  final int expectedPrice;
-  final int maintenanceCost;
-  final bool priceNegotiable;
-  final bool currentlyUnderLoan;
-  final String availableFrom;
-  final String furnishing;
-  final String parking;
-  final String kitchenType;
-  final String description;
+  final int? expectedPrice;
+  final int? maintenanceCost;
+  final bool? priceNegotiable;
+  final bool? currentlyUnderLoan;
+  final String? availableFrom;
+  final String? furnishing;
+  final String? parking;
+  final String? kitchenType;
+  final String? description;
 
   SaleResaleDetails({
-    required this.expectedPrice,
-    required this.maintenanceCost,
-    required this.priceNegotiable,
-    required this.currentlyUnderLoan,
-    required this.availableFrom,
-    required this.furnishing,
-    required this.parking,
-    required this.kitchenType,
-    required this.description,
+    this.expectedPrice,
+    this.maintenanceCost,
+    this.priceNegotiable,
+    this.currentlyUnderLoan,
+    this.availableFrom,
+    this.furnishing,
+    this.parking,
+    this.kitchenType,
+    this.description,
   });
 
   factory SaleResaleDetails.fromJson(Map<String, dynamic> json) {
@@ -171,32 +186,36 @@ class SaleResaleDetails {
 }
 
 class Gallery {
-  final List<String> images;
+  final List<String>? images;
 
-  Gallery({required this.images});
+  Gallery({this.images});
 
   factory Gallery.fromJson(Map<String, dynamic> json) {
-    return Gallery(images: List<String>.from(json['images']));
+    return Gallery(
+        images:
+            json['images'] != null ? List<String>.from(json['images']) : null);
   }
 
   Map<String, dynamic> toJson() {
-    return {'images': images};
+    return {
+      'images': images,
+    };
   }
 }
 
 class Amenities {
-  final int bathrooms;
-  final String waterSupply;
-  final String gratedSecurity;
-  final int balcony;
-  final String internetService;
+  final int? bathrooms;
+  final String? waterSupply;
+  final String? gratedSecurity;
+  final int? balcony;
+  final String? internetService;
 
   Amenities({
-    required this.bathrooms,
-    required this.waterSupply,
-    required this.gratedSecurity,
-    required this.balcony,
-    required this.internetService,
+    this.bathrooms,
+    this.waterSupply,
+    this.gratedSecurity,
+    this.balcony,
+    this.internetService,
   });
 
   factory Amenities.fromJson(Map<String, dynamic> json) {
@@ -221,16 +240,16 @@ class Amenities {
 }
 
 class AdditionalInformation {
-  final String khataCertificate;
-  final String saleDeedCertificate;
-  final String propertyTaxPaid;
-  final String occupancyCertificate;
+  final String? khataCertificate;
+  final String? saleDeedCertificate;
+  final String? propertyTaxPaid;
+  final String? occupancyCertificate;
 
   AdditionalInformation({
-    required this.khataCertificate,
-    required this.saleDeedCertificate,
-    required this.propertyTaxPaid,
-    required this.occupancyCertificate,
+    this.khataCertificate,
+    this.saleDeedCertificate,
+    this.propertyTaxPaid,
+    this.occupancyCertificate,
   });
 
   factory AdditionalInformation.fromJson(Map<String, dynamic> json) {
@@ -253,17 +272,21 @@ class AdditionalInformation {
 }
 
 class ExtraAmenities {
-  final List<String> amenitiesList;
+  final List<String>? amenitiesList;
 
-  ExtraAmenities({required this.amenitiesList});
+  ExtraAmenities({this.amenitiesList});
 
   factory ExtraAmenities.fromJson(Map<String, dynamic> json) {
     return ExtraAmenities(
-      amenitiesList: List<String>.from(json['amenitiesList']),
+      amenitiesList: json['amenitiesList'] != null
+          ? List<String>.from(json['amenitiesList'])
+          : null,
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'amenitiesList': amenitiesList};
+    return {
+      'amenitiesList': amenitiesList,
+    };
   }
 }

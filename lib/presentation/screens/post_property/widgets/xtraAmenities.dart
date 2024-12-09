@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:my_zero_broker/presentation/screens/post_property/widgets/checkboxes.dart';
  // Import your CustomCheckbox file
 
-class ExtraAmenities extends StatefulWidget {
-  const ExtraAmenities({Key? key}) : super(key: key);
+class ExtraAmenitieWidget extends StatefulWidget {
+  const ExtraAmenitieWidget({Key? key}) : super(key: key);
 
   @override
-  _ExtraAmenitiesState createState() => _ExtraAmenitiesState();
+  _ExtraAmenitieWidgetState createState() => _ExtraAmenitieWidgetState();
 }
 
-class _ExtraAmenitiesState extends State<ExtraAmenities> {
+class _ExtraAmenitieWidgetState extends State<ExtraAmenitieWidget> {
   final List<Map<String, dynamic>> _amenities = [
     {'label': 'Lift', 'value': false},
     {'label': 'Internet Service', 'value': false},
