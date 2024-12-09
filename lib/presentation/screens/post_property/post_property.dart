@@ -160,6 +160,8 @@ class PropertyFormScreen extends StatelessWidget {
                             
                             SizedBox(height: height * 0.02),
                             Elevatedbutton(
+                              bgcolor: Colors.red,
+                              foregroundColor: Colors.white,
                               onPressed: () {
                                     Navigator.pushNamed(
                                   context, RoutesName.propertydetailsform);

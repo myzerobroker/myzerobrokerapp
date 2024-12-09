@@ -5,12 +5,16 @@ class DropdownField extends StatelessWidget {
   final String label;
   final List<String> items;
   final String fieldKey;
+  final String? value;
+  final void Function(String?)? onChanged;
 
   const DropdownField({
     required this.label,
     required this.items,
     required this.fieldKey,
-    Key? key,
+    Key? key, 
+    required this.value, 
+    this.onChanged,
   }) : super(key: key);
 
   @override
@@ -18,7 +22,8 @@ class DropdownField extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: DropdownButtonFormField<String>(
-        value: null,  // Placeholder value
+        onSaved: onChanged,
+        value: value,  // Placeholder value
         decoration: InputDecoration(
           labelText: label,
           border: OutlineInputBorder(
