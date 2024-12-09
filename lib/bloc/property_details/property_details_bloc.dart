@@ -3,8 +3,8 @@ import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:http/http.dart' as http;
-import 'package:my_zero_broker/bloc/property_details.dart/property_details_event.dart';
-import 'package:my_zero_broker/bloc/property_details.dart/property_details_state.dart';
+import 'package:my_zero_broker/bloc/property_details/property_details_event.dart';
+import 'package:my_zero_broker/bloc/property_details/property_details_state.dart';
 
 
 class PropertyBloc extends Bloc<PropertyEvent, PropertyState> {

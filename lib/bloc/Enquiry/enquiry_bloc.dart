@@ -24,7 +24,7 @@ class EnquiryBloc extends Bloc<EnquiryEvent, EnquiryState> {
       'email': state.email,
       'subject': state.subject,
       'query': state.query,
-      'phoneNumber': state.phoneNumber,
+      'mobile_no': state.phoneNumber,
     };
 
     try {
