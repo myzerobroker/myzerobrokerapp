@@ -6,7 +6,6 @@ import 'package:my_zero_broker/presentation/screens/home_screen.dart/header_widg
 import 'package:my_zero_broker/presentation/screens/home_screen.dart/responsive_layout.dart';
 import 'package:my_zero_broker/presentation/screens/home_screen.dart/search_form.dart';
 import 'package:my_zero_broker/presentation/widgets/drawer_content.dart';
-import 'package:my_zero_broker/utils/constant/colors.dart';
 
 class HomeScreen extends StatelessWidget {
   final AwesomeDrawerBarController controller = AwesomeDrawerBarController();

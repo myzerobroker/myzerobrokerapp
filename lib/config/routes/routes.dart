@@ -6,6 +6,7 @@ import 'package:my_zero_broker/presentation/screens/home_screen.dart/home_screen
 import 'package:my_zero_broker/presentation/screens/login/otp_screen.dart';
 import 'package:my_zero_broker/presentation/screens/post_property/post_property.dart';
 import 'package:my_zero_broker/presentation/screens/post_property/propertydetails.dart';
+import 'package:my_zero_broker/presentation/screens/terms&Condition/termsAndCondition.dart';
 
 class Routes {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -32,7 +33,10 @@ class Routes {
         return _createRoute(ContactsScreen());
 
       case RoutesName.propertydetailsform:
-        return _createRoute(PropertyDetailsFormScreen());    
+        return _createRoute(PropertyDetailsFormScreen());  
+
+      case RoutesName.termsAndCondition:
+        return _createRoute(TermsAndConditionsScreen());      
 
       default:
         return _createRoute(const Scaffold(

@@ -149,6 +149,8 @@ class _SignupScreenState extends State<SignupScreen> {
                                     ),
                                     SizedBox(height: height * 0.02),
                                     Elevatedbutton(
+                                       bgcolor: const Color.fromARGB(255, 209, 20, 20),
+                                  foregroundColor: Colors.white,
                                       onPressed: (state.phoneNo.isNotEmpty &&
                                               state.email.isNotEmpty &&
                                               state.fullName.isNotEmpty)
