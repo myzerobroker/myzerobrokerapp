@@ -4,6 +4,7 @@ import 'package:my_zero_broker/bloc/login/login_bloc.dart';
 import 'package:my_zero_broker/config/routes/routes_name.dart';
 import 'package:my_zero_broker/data/user_id.dart';
 import 'package:my_zero_broker/locator.dart';
+import 'package:my_zero_broker/presentation/widgets/ElevatedButton.dart';
 import 'package:my_zero_broker/presentation/widgets/TextField.dart';
 import 'package:my_zero_broker/presentation/widgets/custom_snack_bar.dart';
 import 'package:my_zero_broker/utils/constant/colors.dart';
@@ -129,35 +130,43 @@ class _LoginScreenState extends State<LoginScreen> {
                             },
                           ),
                           SizedBox(height: height * 0.02),
-                          Row(
-                            children: [
-                              Checkbox(
-                                value: _terms,
-                                onChanged: (value) {
-                                  setState(() {
-                                    _terms = value!;
-                                  });
-                                },
-                              ),
-                              Flexible(
-                                child: Text.rich(
-                                  TextSpan(
-                                    children: [
-                                      const TextSpan(text: "I agree with the "),
-                                      TextSpan(
-                                        text: "terms and conditions.",
-                                        style: TextStyle(
-                                          color: Colors.blue,
-                                          decoration: TextDecoration.underline,
-                                          fontSize: width * 0.04,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
+                         Row(
+  children: [
+    Checkbox(
+      value: _terms,
+      onChanged: (value) {
+        setState(() {
+          _terms = value!;
+        });
+      },
+    ),
+    Flexible(
+      child: Text.rich(
+        TextSpan(
+          children: [
+            const TextSpan(text: "I agree with the "),
+            WidgetSpan(
+              child: InkWell(
+                onTap: () {
+                 
+                  Navigator.pushNamed(context, RoutesName.termsAndCondition);
+                },
+                child: Text(
+                  "terms and conditions.",
+                  style: TextStyle(
+                    color: Colors.blue,
+                    decoration: TextDecoration.underline,
+                    fontSize: width * 0.04,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    ),
+  ],
+),
                           SizedBox(height: height * 0.02),
                           BlocListener<LoginBloc, LoginState>(
                             listener: (context, state) {
@@ -182,7 +191,12 @@ class _LoginScreenState extends State<LoginScreen> {
                             },
                             child: BlocBuilder<LoginBloc, LoginState>(
                               builder: (context, state) {
-                                return ElevatedButton(
+                                return Elevatedbutton(
+                                  bgcolor: const Color.fromARGB(255, 209, 20, 20),
+                                  foregroundColor: Colors.white,
+                                  text: 'SEND OTP',
+                                  height:  height * 0.8,
+                                      width: width,
                                   onPressed: () {
                                     if (_formKey.currentState?.validate() ??
                                         false) {
@@ -203,10 +217,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       }
                                     }
                                   },
-                                  child: Text('SEND OTP'),
-                                  style: ElevatedButton.styleFrom(
-                                    minimumSize: Size(width, height * 0.08),
-                                  ),
+                                 
                                 );
                               },
                             ),
