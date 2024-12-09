@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_zero_broker/bloc/login/login_bloc.dart';
+import 'package:my_zero_broker/config/routes/routes.dart';
+import 'package:my_zero_broker/config/routes/routes_name.dart';
 import 'package:my_zero_broker/locator.dart';
-import 'package:my_zero_broker/presentation/screens/home_screen.dart/home_screen.dart';
 import 'package:my_zero_broker/presentation/screens/splash/bloc/splash_cubit.dart';
 
 void main() {
@@ -29,7 +30,8 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
-        home: HomeScreen(),
+        initialRoute: RoutesName.splashScreen,
+        onGenerateRoute: Routes.generateRoute,
       ),
     );
   }

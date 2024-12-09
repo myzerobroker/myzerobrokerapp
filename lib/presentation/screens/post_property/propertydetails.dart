@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:my_zero_broker/data/models/property_details_form.dart';
 import 'package:my_zero_broker/presentation/screens/post_property/widgets/buildcard.dart';
 import 'package:my_zero_broker/presentation/screens/post_property/widgets/checkboxes.dart';
 import 'package:my_zero_broker/presentation/screens/post_property/widgets/dropdown.dart';
 import 'package:my_zero_broker/presentation/screens/post_property/widgets/image_pick.dart';
 import 'package:my_zero_broker/presentation/screens/post_property/widgets/section_title.dart';
 import 'package:my_zero_broker/presentation/screens/post_property/widgets/xtraAmenities.dart';
+
 import 'package:my_zero_broker/presentation/widgets/ElevatedButton.dart';
 import 'package:my_zero_broker/presentation/widgets/TextField.dart';
+import 'package:my_zero_broker/presentation/widgets/custom_snack_bar.dart';
 
 class PropertyDetailsFormScreen extends StatefulWidget {
   @override
@@ -65,63 +68,68 @@ class _PropertyDetailsFormScreenState extends State<PropertyDetailsFormScreen> {
     }
   }
 
-  void _submitForm() {
+  PropertyDetailsForm? _submitForm() {
     if (_formKey.currentState!.validate()) {
       // Form is valid
-      final formData = {
-        "propertyDetails": {
-          "propertyType": selectedPropertyType,
-          "bhkType": selectedBhkType,
-          "propertyAge": selectedPropertyAge,
-          "carpetArea": int.tryParse(carpetAreaController.text) ?? 0,
-          "totalFloor": selectedTotalFloor,
-          "ownershipType": selectedOwnershipType,
-          "facing": selectedFacing,
-          "plotArea": int.tryParse(plotAreaController.text) ?? 0,
-        },
-        "localityDetails": {
-          "city": selectedCity,
-          "locality": selectedLocality,
-          "streetArea": streetAreaController.text,
-        },
-        "saleResaleDetails": {
-          "expectedPrice": int.tryParse(offerPriceController.text) ?? 0,
-          "maintenanceCost": int.tryParse(maintenanceCostController.text) ?? 0,
-          "priceNegotiable": _isPriceNegotiableSelected,
-          "currentlyUnderLoan": _isCurrentlyUnderLoanSelected,
-          "availableFrom": _dateController.text,
-          "furnishing": selectedFurnishing,
-          "parking": selectedParking,
-          "kitchenType": selectedKitchenType,
-          "description": descriptionController.text,
-        },
-        "gallery": {
-          "images": [],
-        },
-        "amenities": {
-          "bathrooms": int.tryParse(selectedBathroom ?? "0"),
-          "waterSupply": selectedWaterSupply,
-          "gratedSecurity": selectedGratedSecurity,
-          "balcony": int.tryParse(selectedBalcony ?? "0"),
-          "internetService": selectedInternetService,
-        },
-        "additionalInformation": {
-          "khataCertificate": selectedKhataCert,
-          "saleDeedCertificate": selectedSaleDeedCertificate,
-          "propertyTaxPaid": selectedPropertyTax,
-          "occupancyCertificate": selectedOccupancyCertificate,
-        },
-        "extraAmenities": {
-          "amenitiesList": [],
-        },
-      };
 
-      print(formData); // Debug output JSON
+      try {
+        final formData = {
+          "propertyDetails": {
+            "propertyType": selectedPropertyType,
+            "bhkType": selectedBhkType,
+            "propertyAge": selectedPropertyAge,
+            "carpetArea": int.tryParse(carpetAreaController.text) ?? 0,
+            "totalFloor": selectedTotalFloor,
+            "ownershipType": selectedOwnershipType,
+            "facing": selectedFacing,
+            "plotArea": int.tryParse(plotAreaController.text) ?? 0,
+          },
+          "localityDetails": {
+            "city": selectedCity,
+            "locality": selectedLocality,
+            "streetArea": streetAreaController.text,
+          },
+          "saleResaleDetails": {
+            "expectedPrice": int.tryParse(offerPriceController.text) ?? 0,
+            "maintenanceCost":
+                int.tryParse(maintenanceCostController.text) ?? 0,
+            "priceNegotiable": _isPriceNegotiableSelected,
+            "currentlyUnderLoan": _isCurrentlyUnderLoanSelected,
+            "availableFrom": _dateController.text,
+            "furnishing": selectedFurnishing,
+            "parking": selectedParking,
+            "kitchenType": selectedKitchenType,
+            "description": descriptionController.text,
+          },
+          "gallery": {
+            "images": [],
+          },
+          "amenities": {
+            "bathrooms": int.tryParse(selectedBathroom ?? "0"),
+            "waterSupply": selectedWaterSupply,
+            "gratedSecurity": selectedGratedSecurity,
+            "balcony": int.tryParse(selectedBalcony ?? "0"),
+            "internetService": selectedInternetService,
+          },
+          "additionalInformation": {
+            "khataCertificate": selectedKhataCert,
+            "saleDeedCertificate": selectedSaleDeedCertificate,
+            "propertyTaxPaid": selectedPropertyTax,
+            "occupancyCertificate": selectedOccupancyCertificate,
+          },
+          "extraAmenities": {
+            "amenitiesList": [],
+          },
+        };
+
+        print(formData);
+        return PropertyDetailsForm.fromJson(formData);
+      } catch (err) {
+        print(err);
+        return null;
+      }
     } else {
-      // Form is invalid
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please correct the errors in the form')),
-      );
+      Snack.show("All Fields are Required", context);
     }
   }
 
@@ -289,7 +297,7 @@ class _PropertyDetailsFormScreenState extends State<PropertyDetailsFormScreen> {
                   child: Column(
                     children: [
                       const SectionTitle(title: "Extra Amenities"),
-                      ExtraAmenities(),
+                      ExtraAmenitieWidget()
                     ],
                   ),
                 ),
@@ -301,7 +309,9 @@ class _PropertyDetailsFormScreenState extends State<PropertyDetailsFormScreen> {
                     width: width,
                     bgcolor: Colors.red,
                     foregroundColor: Colors.white,
-                    onPressed: _submitForm,
+                    onPressed: () {
+                      final propertyDetailsForm = _submitForm();
+                    },
                   ),
                 ),
               ],
@@ -325,6 +335,12 @@ class _PropertyDetailsFormScreenState extends State<PropertyDetailsFormScreen> {
         label: label,
         fieldKey: label,
         items: items,
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Please select $label';
+          }
+          return null;
+        },
       ),
     );
   }
