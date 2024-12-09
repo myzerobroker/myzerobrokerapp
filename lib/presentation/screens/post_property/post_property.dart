@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_zero_broker/bloc/property_form/property_form_bloc.dart';
 import 'package:my_zero_broker/bloc/property_form/property_form_event.dart';
 import 'package:my_zero_broker/bloc/property_form/property_form_state.dart';
+import 'package:my_zero_broker/config/routes/routes_name.dart';
 import 'package:my_zero_broker/locator.dart';
 import 'package:my_zero_broker/presentation/widgets/ElevatedButton.dart';
 import 'package:my_zero_broker/presentation/widgets/TextField.dart';
@@ -15,6 +16,9 @@ class PropertyFormScreen extends StatelessWidget {
   TextEditingController fullNamecontroller = TextEditingController();
   TextEditingController emailcontroller = TextEditingController();
   TextEditingController phonenocontroller = TextEditingController();
+  String city = "Ahmednagar";
+  String adType = "Sale/Resale";
+  bool isResidential = true;
 
   @override
   Widget build(BuildContext context) {
@@ -107,8 +111,10 @@ class PropertyFormScreen extends StatelessWidget {
                               ),
                               child: DropdownButton<String>(
                                 value: state.form.city,
-                                onChanged: (value) =>
-                                    bloc.add(UpdateCity(value!)),
+                                onChanged: (value) {
+                                  bloc.add(UpdateCity(value!));
+                                  city = value;
+                                },
                                 isExpanded: true,
                                 underline: Container(),
                                 items: ['Ahmednagar', 'Pune', 'Mumbai']
@@ -127,8 +133,10 @@ class PropertyFormScreen extends StatelessWidget {
                                 state.form.isResidential,
                                 !state.form.isResidential
                               ],
-                              onPressed: (index) =>
-                                  bloc.add(UpdateIsResidential(index == 0)),
+                              onPressed: (index) => {
+                                bloc.add(UpdateIsResidential(index == 0)),
+                                isResidential = index == 0
+                              },
                               children: [
                                 Padding(
                                   padding: const EdgeInsets.symmetric(
@@ -154,8 +162,11 @@ class PropertyFormScreen extends StatelessWidget {
                                 state.form.adType == 'Sale/Resale',
                                 state.form.adType == 'Rent',
                               ],
-                              onPressed: (index) => bloc.add(UpdateAdType(
-                                  index == 0 ? 'Sale/Resale' : 'Rent')),
+                              onPressed: (index) {
+                                bloc.add(UpdateAdType(
+                                    index == 0 ? 'Sale/Resale' : 'Rent'));
+                                adType = index == 0 ? 'Sale/Resale' : 'Rent';
+                              },
                               children: [
                                 Padding(
                                   padding: const EdgeInsets.symmetric(
@@ -203,6 +214,30 @@ class PropertyFormScreen extends StatelessWidget {
                                     fullNamecontroller.text;
                                 locator.get<PostPropertyDependency>().phone =
                                     phonenocontroller.text;
+                                locator
+                                    .get<PostPropertyDependency>()
+                                    .isResidential = isResidential;
+                                locator.get<PostPropertyDependency>().adType =
+                                    adType;
+                                locator.get<PostPropertyDependency>().city =
+                                    city;
+                                print(
+                                    locator.get<PostPropertyDependency>().city);
+                                print(locator
+                                    .get<PostPropertyDependency>()
+                                    .adType);
+                                print(locator
+                                    .get<PostPropertyDependency>()
+                                    .isResidential);
+                                print(locator
+                                    .get<PostPropertyDependency>()
+                                    .phone);
+                                print(locator
+                                    .get<PostPropertyDependency>()
+                                    .fullname);
+
+                                Navigator.pushNamed(
+                                    context, RoutesName.propertydetailsform);
                               },
                               text: 'Start Posting Your Add',
                               height: height * 0.8,
