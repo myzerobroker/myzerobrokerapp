@@ -3,10 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_zero_broker/bloc/property_form/property_form_bloc.dart';
 import 'package:my_zero_broker/bloc/property_form/property_form_event.dart';
 import 'package:my_zero_broker/bloc/property_form/property_form_state.dart';
-import 'package:my_zero_broker/config/routes/routes_name.dart';
+import 'package:my_zero_broker/locator.dart';
 import 'package:my_zero_broker/presentation/widgets/ElevatedButton.dart';
 import 'package:my_zero_broker/presentation/widgets/TextField.dart';
+import 'package:my_zero_broker/presentation/widgets/custom_snack_bar.dart';
 import 'package:my_zero_broker/utils/constant/colors.dart';
+
+import 'post_property_depenency.dart/dependency_class.dart';
 
 class PropertyFormScreen extends StatelessWidget {
   TextEditingController fullNamecontroller = TextEditingController();
@@ -69,21 +72,24 @@ class PropertyFormScreen extends StatelessWidget {
                             ),
                             SizedBox(height: height * 0.02),
                             Textfield(
-                              onChanged: (value) => bloc.add(UpdateFullName(value)),
+                              onChanged: (value) =>
+                                  bloc.add(UpdateFullName(value)),
                               controller: fullNamecontroller,
                               textInputType: TextInputType.name,
                               hintText: 'Full Name',
                             ),
                             SizedBox(height: 16),
                             Textfield(
-                              onChanged: (value) => bloc.add(UpdateEmail(value)),
+                              onChanged: (value) =>
+                                  bloc.add(UpdateEmail(value)),
                               controller: emailcontroller,
                               textInputType: TextInputType.emailAddress,
                               hintText: 'Email Address',
                             ),
                             SizedBox(height: 16),
                             Textfield(
-                              onChanged: (value) => bloc.add(UpdatePhoneNumber(value)),
+                              onChanged: (value) =>
+                                  bloc.add(UpdatePhoneNumber(value)),
                               controller: phonenocontroller,
                               textInputType: TextInputType.name,
                               hintText: 'Phone No.',
@@ -96,11 +102,13 @@ class PropertyFormScreen extends StatelessWidget {
                               padding: EdgeInsets.symmetric(horizontal: 12.0),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(8),
-                                border: Border.all(color: Colors.grey, width: 1),
+                                border:
+                                    Border.all(color: Colors.grey, width: 1),
                               ),
                               child: DropdownButton<String>(
                                 value: state.form.city,
-                                onChanged: (value) => bloc.add(UpdateCity(value!)),
+                                onChanged: (value) =>
+                                    bloc.add(UpdateCity(value!)),
                                 isExpanded: true,
                                 underline: Container(),
                                 items: ['Ahmednagar', 'Pune', 'Mumbai']
@@ -115,15 +123,21 @@ class PropertyFormScreen extends StatelessWidget {
 
                             // Residential/Commercial Toggle Buttons
                             ToggleButtons(
-                              isSelected: [state.form.isResidential, !state.form.isResidential],
-                              onPressed: (index) => bloc.add(UpdateIsResidential(index == 0)),
+                              isSelected: [
+                                state.form.isResidential,
+                                !state.form.isResidential
+                              ],
+                              onPressed: (index) =>
+                                  bloc.add(UpdateIsResidential(index == 0)),
                               children: [
                                 Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 12),
                                   child: Text('Residential'),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 12),
                                   child: Text('Commercial'),
                                 ),
                               ],
@@ -140,15 +154,17 @@ class PropertyFormScreen extends StatelessWidget {
                                 state.form.adType == 'Sale/Resale',
                                 state.form.adType == 'Rent',
                               ],
-                              onPressed: (index) =>
-                                  bloc.add(UpdateAdType(index == 0 ? 'Sale/Resale' : 'Rent')),
+                              onPressed: (index) => bloc.add(UpdateAdType(
+                                  index == 0 ? 'Sale/Resale' : 'Rent')),
                               children: [
                                 Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 12),
                                   child: Text('Sale/Resale'),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 12),
                                   child: Text('Rent'),
                                 ),
                               ],
@@ -157,14 +173,36 @@ class PropertyFormScreen extends StatelessWidget {
                               fillColor: Colors.greenAccent,
                               borderRadius: BorderRadius.circular(8),
                             ),
-                            
+
                             SizedBox(height: height * 0.02),
                             Elevatedbutton(
                               bgcolor: Colors.red,
                               foregroundColor: Colors.white,
                               onPressed: () {
-                                    Navigator.pushNamed(
-                                  context, RoutesName.propertydetailsform);
+                                if (fullNamecontroller.text.isEmpty) {
+                                  Snack.show("Full name is Required", context);
+                                  return;
+                                }
+                                if (emailcontroller.text.isEmpty ||
+                                    !RegExp(r'^[^@]+@[^@]+\.[^@]+')
+                                        .hasMatch(emailcontroller.text)) {
+                                  Snack.show("Enter a Valid Email", context);
+                                  return;
+                                }
+                                if (phonenocontroller.text.isEmpty ||
+                                    !RegExp(r'^\+?\d{10,}$')
+                                        .hasMatch(phonenocontroller.text)) {
+                                  Snack.show(
+                                      "Enter a Valid Phone number", context);
+                                  return;
+                                }
+
+                                locator.get<PostPropertyDependency>().email =
+                                    emailcontroller.text;
+                                locator.get<PostPropertyDependency>().fullname =
+                                    fullNamecontroller.text;
+                                locator.get<PostPropertyDependency>().phone =
+                                    phonenocontroller.text;
                               },
                               text: 'Start Posting Your Add',
                               height: height * 0.8,
