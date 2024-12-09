@@ -2,8 +2,8 @@ import 'dart:convert';
 
 import 'package:bloc/bloc.dart';
 import 'package:http/http.dart' as http;
-import 'package:my_zero_broker/bloc/Enquiry/enquiry_event.dart';
-import 'package:my_zero_broker/bloc/Enquiry/enquiry_state.dart';
+import 'package:my_zero_broker/bloc/enquiry/enquiry_event.dart';
+import 'package:my_zero_broker/bloc/enquiry/enquiry_state.dart';
 
 
 class EnquiryBloc extends Bloc<EnquiryEvent, EnquiryState> {
