@@ -73,7 +73,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
                 Navigator.pushNamed(context, RoutesName.homeScreen);
               } else if (state.signupStatus == SignUpStatus.error) {
-                Snack.show(state.message,context);
+                Snack.show(state.message, context);
               }
             },
             child: SingleChildScrollView(
@@ -149,8 +149,9 @@ class _SignupScreenState extends State<SignupScreen> {
                                     ),
                                     SizedBox(height: height * 0.02),
                                     Elevatedbutton(
-                                       bgcolor: const Color.fromARGB(255, 209, 20, 20),
-                                  foregroundColor: Colors.white,
+                                      bgcolor: const Color.fromARGB(
+                                          255, 209, 20, 20),
+                                      foregroundColor: Colors.white,
                                       onPressed: (state.phoneNo.isNotEmpty &&
                                               state.email.isNotEmpty &&
                                               state.fullName.isNotEmpty)
@@ -171,8 +172,8 @@ class _SignupScreenState extends State<SignupScreen> {
                             SizedBox(height: height * 0.02),
                             InkWell(
                               onTap: () {
-                                Navigator.pushNamed(
-                                  context, RoutesName.loginScreen);
+                                Navigator.pushReplacementNamed(
+                                    context, RoutesName.loginScreen);
                               },
                               child: Text.rich(
                                 TextSpan(

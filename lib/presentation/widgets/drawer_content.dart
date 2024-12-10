@@ -10,14 +10,21 @@ class DrawerContent extends StatelessWidget {
         child: Column(
           children: [
             DrawerHeader(
+                decoration: BoxDecoration(color: Colors.white, boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.shade100,
+                    blurRadius: 10.0,
+                  )
+                ]),
                 child: Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Image.asset(
-                "assets/images/my_zero_broker_logo (2).png",
-                height: 100,
-              ),
-            )),
+                  padding: const EdgeInsets.all(12.0),
+                  child: Image.asset(
+                    "assets/images/my_zero_broker_logo (2).png",
+                    height: 100,
+                  ),
+                )),
             Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 ListView(
                   physics: NeverScrollableScrollPhysics(),
@@ -38,11 +45,6 @@ class DrawerContent extends StatelessWidget {
                     Divider(
                       color: Colors.grey.shade100,
                     ),
-                    _drawerItem(context, 'New User', RoutesName.signUpScreen,
-                        Icon(Icons.person_add)),
-                    Divider(
-                      color: Colors.grey.shade100,
-                    ),
                     _drawerItem(context, 'Contacts', RoutesName.contactsScreen,
                         Icon(Icons.contact_page)),
                     Divider(
@@ -55,6 +57,9 @@ class DrawerContent extends StatelessWidget {
                     ),
                   ],
                 ),
+                Center(
+                    child: Text('Version 1.0.0',
+                        style: TextStyle(fontSize: 12, color: Colors.grey)))
               ],
             )
           ],
@@ -67,7 +72,11 @@ class DrawerContent extends StatelessWidget {
       leading: icon,
       title: Text(title),
       onTap: () {
-        Navigator.pushNamed(context, routeName); // Navigate via routes
+        if (routeName == RoutesName.homeScreen) {
+          
+          return;
+        }
+        Navigator.pushNamed(context, routeName);
       },
     );
   }

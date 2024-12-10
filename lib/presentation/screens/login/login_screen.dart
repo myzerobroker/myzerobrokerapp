@@ -225,7 +225,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           SizedBox(height: height * 0.02),
                           InkWell(
                             onTap: () {
-                              Navigator.pushNamed(
+                              Navigator.pushReplacementNamed(
                                   context, RoutesName.signUpScreen);
                             },
                             child: Text.rich(
