@@ -50,7 +50,7 @@ class DrawerContent extends StatelessWidget {
                     Divider(
                       color: Colors.grey.shade100,
                     ),
-                    _drawerItem(context, 'Log Out', RoutesName.loginScreen,
+                    _drawerItem(context, 'Log In', RoutesName.loginScreen,
                         Icon(Icons.login)),
                     Divider(
                       color: Colors.grey.shade100,
