@@ -10,6 +10,8 @@ sealed class PostPropertyDetailsState extends Equatable {
 final class PostPropertyDetailsInitial extends PostPropertyDetailsState {}
 final class PostPropertyDetailsLoading extends PostPropertyDetailsState{}
 final class PostPropertyDetailsSuccessState extends PostPropertyDetailsState{
+  final String successMessage;
+  PostPropertyDetailsSuccessState({required this.successMessage});
   
 }
 final class PostPropertyDetailsFailureState extends PostPropertyDetailsState{
