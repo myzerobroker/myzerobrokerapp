@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_zero_broker/bloc/signup/signup_bloc.dart';
@@ -73,7 +74,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
                 Navigator.pushNamed(context, RoutesName.homeScreen);
               } else if (state.signupStatus == SignUpStatus.error) {
-                Snack.show(state.message,context);
+                Snack.show(state.message, context);
               }
             },
             child: SingleChildScrollView(
@@ -149,8 +150,9 @@ class _SignupScreenState extends State<SignupScreen> {
                                     ),
                                     SizedBox(height: height * 0.02),
                                     Elevatedbutton(
-                                       bgcolor: const Color.fromARGB(255, 209, 20, 20),
-                                  foregroundColor: Colors.white,
+                                      bgcolor: const Color.fromARGB(
+                                          255, 209, 20, 20),
+                                      foregroundColor: Colors.white,
                                       onPressed: (state.phoneNo.isNotEmpty &&
                                               state.email.isNotEmpty &&
                                               state.fullName.isNotEmpty)
@@ -169,26 +171,31 @@ class _SignupScreenState extends State<SignupScreen> {
                               },
                             ),
                             SizedBox(height: height * 0.02),
-                            InkWell(
-                              onTap: () {
-                                Navigator.pushNamed(
-                                  context, RoutesName.loginScreen);
-                              },
-                              child: Text.rich(
-                                TextSpan(
-                                  children: [
-                                    const TextSpan(
-                                        text: "Already have an account? "),
-                                    TextSpan(
-                                      text: "Login",
-                                      style: TextStyle(
-                                        color: Colors.blue,
-                                        decoration: TextDecoration.underline,
-                                        fontSize: width * 0.04,
-                                      ),
-                                    ),
-                                  ],
+                            RichText(
+                              text: TextSpan(
+                                style: TextStyle(
+                                  fontSize: width *
+                                      0.035, 
+                                  color: Colors.black, 
                                 ),
+                                children: [
+                                  const TextSpan(
+                                      text: "Already have an account? "),
+                                  TextSpan(
+                                    text: "Login",
+                                    style: TextStyle(
+                                      color: Colors.blue,
+                                      decoration: TextDecoration.underline,
+                                      fontSize: width *
+                                          0.035, // Match font size for alignment
+                                    ),
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap = () {
+                                        Navigator.pushReplacementNamed(
+                                            context, RoutesName.loginScreen);
+                                      },
+                                  ),
+                                ],
                               ),
                             ),
                           ],
