@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_zero_broker/bloc/login/login_bloc.dart';
@@ -130,43 +131,45 @@ class _LoginScreenState extends State<LoginScreen> {
                             },
                           ),
                           SizedBox(height: height * 0.02),
-                         Row(
-  children: [
-    Checkbox(
-      value: _terms,
-      onChanged: (value) {
-        setState(() {
-          _terms = value!;
-        });
-      },
-    ),
-    Flexible(
-      child: Text.rich(
-        TextSpan(
-          children: [
-            const TextSpan(text: "I agree with the "),
-            WidgetSpan(
-              child: InkWell(
-                onTap: () {
-                 
-                  Navigator.pushNamed(context, RoutesName.termsAndCondition);
-                },
-                child: Text(
-                  "terms and conditions.",
-                  style: TextStyle(
-                    color: Colors.blue,
-                    decoration: TextDecoration.underline,
-                    fontSize: width * 0.04,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    ),
-  ],
-),
+                          Row(
+                            children: [
+                              Checkbox(
+                                value: _terms,
+                                onChanged: (value) {
+                                  setState(() {
+                                    _terms = value!;
+                                  });
+                                },
+                              ),
+                              Flexible(
+                                child: RichText(
+                                  text: TextSpan(
+                                    style: TextStyle(
+                                      fontSize: width *
+                                          0.04, // Ensure consistent font size
+                                      color: Colors
+                                          .black, // Set default text color
+                                    ),
+                                    children: [
+                                      TextSpan(text: "I agree with the "),
+                                      TextSpan(
+                                        text: "terms and conditions.",
+                                        style: TextStyle(
+                                          color: Colors.blue,
+                                          fontSize: width * 0.04,
+                                        ),
+                                        recognizer: TapGestureRecognizer()
+                                          ..onTap = () {
+                                            Navigator.pushNamed(context,
+                                                RoutesName.termsAndCondition);
+                                          },
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                           SizedBox(height: height * 0.02),
                           BlocListener<LoginBloc, LoginState>(
                             listener: (context, state) {
@@ -184,7 +187,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 locator.get<UserId>().id = state.userId;
                                 print(locator.get<UserId>().id);
                                 if (state.loginStatus == LoginStatus.success) {
-                                  Navigator.pushNamed(
+                                  Navigator.pushReplacementNamed(
                                       context, RoutesName.otpScreen);
                                 }
                               }
@@ -192,11 +195,12 @@ class _LoginScreenState extends State<LoginScreen> {
                             child: BlocBuilder<LoginBloc, LoginState>(
                               builder: (context, state) {
                                 return Elevatedbutton(
-                                  bgcolor: const Color.fromARGB(255, 209, 20, 20),
+                                  bgcolor:
+                                      const Color.fromARGB(255, 209, 20, 20),
                                   foregroundColor: Colors.white,
                                   text: 'SEND OTP',
-                                  height:  height * 0.8,
-                                      width: width,
+                                  height: height * 0.8,
+                                  width: width,
                                   onPressed: () {
                                     if (_formKey.currentState?.validate() ??
                                         false) {
@@ -217,32 +221,35 @@ class _LoginScreenState extends State<LoginScreen> {
                                       }
                                     }
                                   },
-                                 
                                 );
                               },
                             ),
                           ),
                           SizedBox(height: height * 0.02),
-                          InkWell(
-                            onTap: () {
-                              Navigator.pushReplacementNamed(
-                                  context, RoutesName.signUpScreen);
-                            },
-                            child: Text.rich(
-                              TextSpan(
-                                children: [
-                                  const TextSpan(
-                                      text: "Don't have an account? "),
-                                  TextSpan(
-                                    text: "Register",
-                                    style: TextStyle(
-                                      color: Colors.blue,
-                                      decoration: TextDecoration.underline,
-                                      fontSize: width * 0.04,
-                                    ),
-                                  ),
-                                ],
+                          RichText(
+                            text: TextSpan(
+                              style: TextStyle(
+                                fontSize: width *
+                                    0.035, // Ensure consistent font size for all text
+                                color: Colors.black, // Default text color
                               ),
+                              children: [
+                                const TextSpan(text: "Don't have an account? "),
+                                TextSpan(
+                                  text: "Register",
+                                  style: TextStyle(
+                                    color: Colors.blue,
+                                    decoration: TextDecoration.underline,
+                                    fontSize: width *
+                                        0.035, // Match font size for alignment
+                                  ),
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = () {
+                                      Navigator.pushReplacementNamed(
+                                          context, RoutesName.signUpScreen);
+                                    },
+                                ),
+                              ],
                             ),
                           ),
                         ],

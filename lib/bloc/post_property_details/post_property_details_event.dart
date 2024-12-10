@@ -8,5 +8,8 @@ sealed class PostPropertyDetailsEvent extends Equatable {
 }
 
 class PostPropertyEventToApi extends PostPropertyDetailsEvent{
-
+  final Map<String, dynamic> propertyDetails;
+  PostPropertyEventToApi({required this.propertyDetails});
+  @override
+  List<Object> get props => [propertyDetails];
 }
