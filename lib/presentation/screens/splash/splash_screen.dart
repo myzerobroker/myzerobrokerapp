@@ -1,7 +1,7 @@
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:my_zero_broker/presentation/screens/login/login_screen.dart';
+import 'package:my_zero_broker/presentation/screens/home_screen.dart/home_screen.dart';
 import 'package:my_zero_broker/presentation/screens/splash/bloc/splash_cubit.dart';
 import 'package:my_zero_broker/presentation/screens/splash/bloc/splash_state.dart';
 import 'package:page_transition/page_transition.dart';
@@ -27,7 +27,7 @@ class SplashScreen extends StatelessWidget {
                   context,
                   PageTransition(
                     type: PageTransitionType.fade,
-                    child: const LoginScreen(),
+                    child:  HomeScreen(),
                   ),
                 );
               } else {
@@ -36,7 +36,7 @@ class SplashScreen extends StatelessWidget {
                   context,
                   PageTransition(
                     type: PageTransitionType.fade,
-                    child: const LoginScreen(),
+                    child: HomeScreen(),
                   ),
                 );
               }

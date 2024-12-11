@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:my_zero_broker/bloc/location/location_bloc.dart';
 import 'package:my_zero_broker/bloc/login/login_bloc.dart';
 import 'package:my_zero_broker/bloc/post_property_details/post_property_details_bloc.dart';
 import 'package:my_zero_broker/config/routes/routes.dart';
@@ -23,7 +24,13 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => SplashCubit()),
         BlocProvider(create: (context) => LoginBloc()),
         BlocProvider(create: (context) => PostPropertyDetailsBloc()),
+    
+        BlocProvider(
+          create: (context) => LocationBloc(),
+        ),
+        // Add other providers as needed
       ],
+    
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'My Zero Broker',
