@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:my_zero_broker/utils/constant/payments_colors.dart';
 
-class OwnersPlanScreen extends StatelessWidget {
+class TenantPlanScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Owners Plan')),
+      appBar: AppBar(title: const Text('Tenant Plan')),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -22,7 +22,7 @@ class OwnersPlanScreen extends StatelessWidget {
                       padding: EdgeInsets.all(screenWidth * 0.02),
                       alignment: Alignment.center,
                       child: const Text(
-                        'OWNERS PLAN',
+                        'TENANT PLAN',
                         style: TextStyle(
                           color: PaymentsColors.headerText,
                           fontWeight: FontWeight.bold,
@@ -74,14 +74,14 @@ class OwnersPlanScreen extends StatelessWidget {
               },
               children: [
                 _buildTableRow('PLANS', 'FREE', 'PREPAID', 'POSTPAID', screenWidth),
-                _buildTableRow('VALIDITY', 'Website Only', '6 Month', '6 Month', screenWidth),
-                _buildTableRow('REGISTRATION CHARGES', '₹0/-', '₹1000 + GST', '₹1000 + GST', screenWidth),
+                _buildTableRow('VALIDITY', 'Website Only', '3 Month', '12 Month', screenWidth),
+                _buildTableRow('REGISTRATION CHARGES', '₹0/-', '₹500 + GST', '₹500 + GST', screenWidth),
                 _buildTableRow('POSTPAID CHARGES', '₹0', '₹0', '₹1 Month Rent', screenWidth),
-                _buildTableRow('Reference number or site visit', '1', '10', 'Till Deal of Property', screenWidth),
-                _buildTableRow('Photo Shoot/ Video Charges', '₹2000', '₹2000', '₹2000', screenWidth),
+                _buildTableRow('Reference number or site visit', '1', '10', 'Till RENT OF THE PROPERTY', screenWidth),
+
                 _buildIconRow('100% privacy of your data', true, true, true, screenWidth),
                 _buildIconRow('Filtration of property', true, true, true, screenWidth),
-                _buildIconRow('New property alert on mobile', true, true, true, screenWidth),
+                _buildIconRow('New property alert on mobile', false, true, true, screenWidth),
                 _buildIconRow('Home loan assistance', false, false, true, screenWidth),
                 _buildIconRow('Legal Assistance', false, false, true, screenWidth),
                 _buildButtonRow(screenWidth),

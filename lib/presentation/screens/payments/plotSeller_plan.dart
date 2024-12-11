@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:my_zero_broker/utils/constant/payments_colors.dart';
 
-class OwnersPlanScreen extends StatelessWidget {
+class PlotSellerPlanScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Owners Plan')),
+      appBar: AppBar(title: const Text('Plot Sellers Plan')),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -22,7 +22,7 @@ class OwnersPlanScreen extends StatelessWidget {
                       padding: EdgeInsets.all(screenWidth * 0.02),
                       alignment: Alignment.center,
                       child: const Text(
-                        'OWNERS PLAN',
+                        'PLOT SELLERS PLAN',
                         style: TextStyle(
                           color: PaymentsColors.headerText,
                           fontWeight: FontWeight.bold,
@@ -69,21 +69,21 @@ class OwnersPlanScreen extends StatelessWidget {
               border: TableBorder.all(color: Colors.blue, width: 1),
               columnWidths: const {
                 0: FlexColumnWidth(1),
+           
                 1: FlexColumnWidth(1),
-                2: FlexColumnWidth(1),
               },
               children: [
-                _buildTableRow('PLANS', 'FREE', 'PREPAID', 'POSTPAID', screenWidth),
-                _buildTableRow('VALIDITY', 'Website Only', '6 Month', '6 Month', screenWidth),
-                _buildTableRow('REGISTRATION CHARGES', '₹0/-', '₹1000 + GST', '₹1000 + GST', screenWidth),
-                _buildTableRow('POSTPAID CHARGES', '₹0', '₹0', '₹1 Month Rent', screenWidth),
-                _buildTableRow('Reference number or site visit', '1', '10', 'Till Deal of Property', screenWidth),
-                _buildTableRow('Photo Shoot/ Video Charges', '₹2000', '₹2000', '₹2000', screenWidth),
-                _buildIconRow('100% privacy of your data', true, true, true, screenWidth),
-                _buildIconRow('Filtration of property', true, true, true, screenWidth),
-                _buildIconRow('New property alert on mobile', true, true, true, screenWidth),
-                _buildIconRow('Home loan assistance', false, false, true, screenWidth),
-                _buildIconRow('Legal Assistance', false, false, true, screenWidth),
+                _buildTableRow('PLANS', 'FREE', 'POSTPAID', screenWidth),
+                _buildTableRow('VALIDITY', 'Website Only', '12 Month', screenWidth),
+                _buildTableRow('REGISTRATION CHARGES', '₹500/-', '₹1000 + GST', screenWidth),
+                _buildTableRow('POSTPAID CHARGES', '₹500',  '₹1% brokerage of market value', screenWidth),
+                _buildTableRow('Reference number or site visit', '1',  'TILL SALE OF THE PLOT', screenWidth),
+
+                _buildIconRow('100% privacy of your data', true, true,  screenWidth),
+                _buildIconRow('Filtration of property', true, true,  screenWidth),
+                _buildIconRow('New property alert on mobile', true, true,  screenWidth),
+                _buildIconRow('Home loan assistance', true, true,  screenWidth),
+                _buildIconRow('Legal Assistance', false, true, screenWidth),
                 _buildButtonRow(screenWidth),
               ],
             ),
@@ -93,25 +93,25 @@ class OwnersPlanScreen extends StatelessWidget {
     );
   }
 
-  TableRow _buildTableRow(String title, String col1, String col2, String col3, double screenWidth) {
+  TableRow _buildTableRow(String title, String col1, String col3, double screenWidth) {
     return TableRow(
       decoration: const BoxDecoration(color: PaymentsColors.cellBackground),
       children: [
         _buildTableCell(title, isHeader: true, screenWidth: screenWidth),
         _buildTableCell(col1, screenWidth: screenWidth),
-        _buildTableCell(col2, screenWidth: screenWidth),
+      
         _buildTableCell(col3, screenWidth: screenWidth),
       ],
     );
   }
 
-  TableRow _buildIconRow(String title, bool free, bool prepaid, bool postpaid, double screenWidth) {
+  TableRow _buildIconRow(String title, bool free, bool postpaid, double screenWidth) {
     return TableRow(
       decoration: const BoxDecoration(color: PaymentsColors.cellBackground),
       children: [
         _buildTableCell(title, screenWidth: screenWidth),
         _buildIconCell(free),
-        _buildIconCell(prepaid),
+      
         _buildIconCell(postpaid),
       ],
     );
@@ -146,7 +146,7 @@ class OwnersPlanScreen extends StatelessWidget {
     return TableRow(
       children: [
         const Padding(
-          padding: EdgeInsets.all(8.0),
+          padding: EdgeInsets.all(19.0),
           child: Text(
             'Select Plans',
             textAlign: TextAlign.center,
@@ -155,7 +155,7 @@ class OwnersPlanScreen extends StatelessWidget {
         ),
         _buildButton(screenWidth, 0),
         _buildButton(screenWidth, 1),
-        _buildButton(screenWidth, 2),
+       
       ],
     );
   }
@@ -187,9 +187,7 @@ class OwnersPlanScreen extends StatelessWidget {
       case 1:
         print("Prepaid Plan Selected");
         break;
-      case 2:
-        print("Postpaid Plan Selected");
-        break;
+    
       default:
         print("Invalid Selection");
     }

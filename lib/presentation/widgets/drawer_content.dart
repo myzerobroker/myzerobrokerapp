@@ -53,11 +53,33 @@ class DrawerContent extends StatelessWidget {
                     ),
                     Divider(color: Colors.grey.shade100),
                     ListTile(
-                      leading: Icon(Icons.info),
-                      title: Text('Other Plans'),
+                      leading: Icon(Icons.man),
+                      title: Text("Owner's Plan"),
                       onTap: () {
-                        Navigator.pushNamed(context, RoutesName.otherPlansScreen);
+                        Navigator.pushNamed(context, RoutesName.ownersPlansScreen);
                       },
+
+                      
+                    ),
+                    Divider(color: Colors.grey.shade100),
+                    ListTile(
+                      leading: Icon(Icons.person_2),
+                      title: Text("Tenant's Plan"),
+                      onTap: () {
+                        Navigator.pushNamed(context, RoutesName.tenantPlanScreen);
+                      },
+
+                      
+                    ),
+                     Divider(color: Colors.grey.shade100),
+                    ListTile(
+                      leading: Icon(Icons.person_2_outlined),
+                      title: Text("Plot Seller's Plan"),
+                      onTap: () {
+                        Navigator.pushNamed(context, RoutesName.plotSellerPlanScreen);
+                      },
+
+                      
                     ),
                   ],
                 ),
