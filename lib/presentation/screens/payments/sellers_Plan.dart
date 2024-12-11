@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:my_zero_broker/utils/constant/payments_colors.dart';
 
-class BuyersPlanScreen extends StatelessWidget {
+class SellersPlanScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Buyers Plan')),
+      appBar: AppBar(title: const Text('Sellers Plan')),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // Header
+           
             Container(
               color: PaymentsColors.headerBackground,
               child: Row(
@@ -22,7 +22,7 @@ class BuyersPlanScreen extends StatelessWidget {
                       padding: EdgeInsets.all(screenWidth * 0.02),
                       alignment: Alignment.center,
                       child: const Text(
-                        'BUYERS PLAN',
+                        'SELLERS PLAN',
                         style: TextStyle(
                           color: PaymentsColors.headerText,
                           fontWeight: FontWeight.bold,
@@ -74,15 +74,16 @@ class BuyersPlanScreen extends StatelessWidget {
               },
               children: [
                 _buildTableRow('PLANS', 'FREE', 'PREPAID', 'POSTPAID', screenWidth),
-                _buildTableRow('VALIDITY', 'Website Only', '3 Month', '6 Month', screenWidth),
-                _buildTableRow('REGISTRATION CHARGES', '₹0/-', '₹500 + GST', '₹999 + GST', screenWidth),
-                _buildTableRow('POSTPAID CHARGES', '₹0', '₹0', '1% of Property Market Price', screenWidth),
-                _buildTableRow('Reference number or site visit', '1', '11', '21', screenWidth),
+                _buildTableRow('VALIDITY', 'Website Only', '6 Month', '12 Month', screenWidth),
+                _buildTableRow('REGISTRATION CHARGES', '₹1000/-', '₹1000 + GST', '₹1000 + GST', screenWidth),
+                _buildTableRow('POSTPAID CHARGES', '₹0', '₹1000', '₹1% Brokerage of market value', screenWidth),
+                _buildTableRow('Reference number or site visit', '1', '21', 'TILL SALE', screenWidth),
+                _buildTableRow('Photo Shoot/ Video Charges', '₹2000', '₹2000', '₹2000', screenWidth),
                 _buildIconRow('100% privacy of your data', true, true, true, screenWidth),
-                _buildIconRow('Filtration of property', false, true, true, screenWidth),
-                _buildIconRow('New property alert on mobile', false, true, true, screenWidth),
-                _buildIconRow('Home loan assistance', false, false, true, screenWidth),
-                _buildIconRow('Legal Assistance', false, false, true, screenWidth),
+                _buildIconRow('Filtration of property', true, true, true, screenWidth),
+                _buildIconRow('New property alert on mobile', true, true, true, screenWidth),
+                _buildIconRow('Home loan assistance', false, true, true, screenWidth),
+                _buildIconRow('Legal Assistance', false, true, true, screenWidth),
                 _buildButtonRow(screenWidth),
               ],
             ),
@@ -124,7 +125,7 @@ class BuyersPlanScreen extends StatelessWidget {
         style: TextStyle(
           fontWeight: isHeader ? FontWeight.bold : FontWeight.normal,
           color: PaymentsColors.text,
-          fontSize: screenWidth > 600 ? 16 : 14, // Adjust font size based on screen width
+          fontSize: screenWidth > 600 ? 16 : 12, // Adjust font size based on screen width
         ),
         textAlign: TextAlign.center,
       ),

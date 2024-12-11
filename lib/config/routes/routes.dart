@@ -3,8 +3,10 @@ import 'package:my_zero_broker/config/routes/routes_name.dart';
 import 'package:my_zero_broker/presentation/presentaion.dart';
 import 'package:my_zero_broker/presentation/screens/contacts/contacts.dart';
 import 'package:my_zero_broker/presentation/screens/home_screen.dart/home_screen.dart';
+import 'package:my_zero_broker/presentation/screens/locations_fetch_widget.dart';
 import 'package:my_zero_broker/presentation/screens/login/otp_screen.dart';
-import 'package:my_zero_broker/presentation/screens/payments/payments_screen.dart';
+import 'package:my_zero_broker/presentation/screens/payments/buyers_screen.dart';
+import 'package:my_zero_broker/presentation/screens/payments/sellers_Plan.dart';
 import 'package:my_zero_broker/presentation/screens/post_property/post_property.dart';
 import 'package:my_zero_broker/presentation/screens/post_property/propertydetails.dart';
 import 'package:my_zero_broker/presentation/screens/terms&Condition/termsAndCondition.dart';
@@ -26,7 +28,8 @@ class Routes {
 
       case RoutesName.homeScreen:
         return _createRoute(HomeScreen());
-
+      case RoutesName.locationFetch:
+        return _createRoute(LocationsFetchWidget());
       case RoutesName.postpropertyScreen:
         return _createRoute(PropertyFormScreen());
 
@@ -39,8 +42,11 @@ class Routes {
       case RoutesName.termsAndCondition:
         return _createRoute(TermsAndConditionsScreen());
 
-      case RoutesName.paymentsScreen:
+      case RoutesName.buyersPlanScreen:
         return _createRoute(BuyersPlanScreen());
+
+      case RoutesName.sellersPlanScreen:
+        return _createRoute(SellersPlanScreen());
       default:
         return _createRoute(const Scaffold(
           body: Center(child: Text('No route defined')),
