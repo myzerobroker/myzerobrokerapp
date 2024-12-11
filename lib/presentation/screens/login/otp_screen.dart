@@ -129,7 +129,7 @@ class _OtpScreenState extends State<OtpScreen> {
                                 LoginStatus.otpVerificationSuccess) {
                               Snack.show(state.message, context);
                               Navigator.pushNamed(
-                                  context, RoutesName.homeScreen);
+                                  context, RoutesName.locationFetch);
                             } else if (state.loginStatus ==
                                 LoginStatus.otpVerificationFailure) {
                               Snack.show(state.message, context);

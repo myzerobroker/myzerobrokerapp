@@ -1,5 +1,11 @@
-// Define the base class for events
-abstract class LocationEvent {}
+part of 'location_bloc.dart';
 
-// Define the event for fetching locations
-class FetchLocationsEvent extends LocationEvent {}
+sealed class LocationEvent extends Equatable {
+  const LocationEvent();
+
+  @override
+  List<Object> get props => [];
+}
+class FetchLocationEvent extends LocationEvent{
+  
+}
