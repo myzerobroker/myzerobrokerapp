@@ -8,5 +8,6 @@ class RoutesName {
    static const String postpropertyScreen = 'post_property';
    static const String propertydetailsform  = 'propertydetails';
    static const String termsAndCondition = 'termsAndCondition';
+   static const String paymentsScreen = 'payments_screen';
  
 }

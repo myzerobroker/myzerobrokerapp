@@ -40,7 +40,7 @@ class DrawerContent extends StatelessWidget {
                     Divider(
                       color: Colors.grey.shade100,
                     ),
-                    _drawerItem(context, 'Plans', RoutesName.signUpScreen,
+                    _drawerItem(context, 'Plans', RoutesName.paymentsScreen,
                         Icon(Icons.payment)),
                     Divider(
                       color: Colors.grey.shade100,

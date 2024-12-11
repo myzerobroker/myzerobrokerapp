@@ -4,6 +4,7 @@ import 'package:my_zero_broker/presentation/presentaion.dart';
 import 'package:my_zero_broker/presentation/screens/contacts/contacts.dart';
 import 'package:my_zero_broker/presentation/screens/home_screen.dart/home_screen.dart';
 import 'package:my_zero_broker/presentation/screens/login/otp_screen.dart';
+import 'package:my_zero_broker/presentation/screens/payments/payments_screen.dart';
 import 'package:my_zero_broker/presentation/screens/post_property/post_property.dart';
 import 'package:my_zero_broker/presentation/screens/post_property/propertydetails.dart';
 import 'package:my_zero_broker/presentation/screens/terms&Condition/termsAndCondition.dart';
@@ -33,11 +34,13 @@ class Routes {
         return _createRoute(ContactsScreen());
 
       case RoutesName.propertydetailsform:
-        return _createRoute(PropertyDetailsFormScreen());  
+        return _createRoute(PropertyDetailsFormScreen());
 
       case RoutesName.termsAndCondition:
-        return _createRoute(TermsAndConditionsScreen());      
+        return _createRoute(TermsAndConditionsScreen());
 
+      case RoutesName.paymentsScreen:
+        return _createRoute(BuyersPlanScreen());
       default:
         return _createRoute(const Scaffold(
           body: Center(child: Text('No route defined')),
