@@ -3,6 +3,7 @@ import 'package:my_zero_broker/config/routes/routes_name.dart';
 import 'package:my_zero_broker/presentation/presentaion.dart';
 import 'package:my_zero_broker/presentation/screens/contacts/contacts.dart';
 import 'package:my_zero_broker/presentation/screens/home_screen.dart/home_screen.dart';
+import 'package:my_zero_broker/presentation/screens/locations_fetch_widget.dart';
 import 'package:my_zero_broker/presentation/screens/login/otp_screen.dart';
 import 'package:my_zero_broker/presentation/screens/post_property/post_property.dart';
 import 'package:my_zero_broker/presentation/screens/post_property/propertydetails.dart';
@@ -25,7 +26,8 @@ class Routes {
 
       case RoutesName.homeScreen:
         return _createRoute(HomeScreen());
-
+      case RoutesName.locationFetch:
+        return _createRoute(LocationsFetchWidget());
       case RoutesName.postpropertyScreen:
         return _createRoute(PropertyFormScreen());
 

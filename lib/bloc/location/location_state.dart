@@ -1,15 +1,25 @@
-abstract class LocationState {}
+part of 'location_bloc.dart';
 
-class LocationInitialState extends LocationState {}
+sealed class LocationState extends Equatable {
+  const LocationState();
 
-class LocationLoadingState extends LocationState {}
-
-class LocationLoadedState extends LocationState {
-  final List<String> locations;
-  LocationLoadedState(this.locations);
+  @override
+  List<Object> get props => [];
 }
 
-class LocationErrorState extends LocationState {
+final class LocationInitial extends LocationState {}
+
+class LocationLoading extends LocationState {}
+
+class LocationLoaded extends LocationState {
+  final List<CityDetails> cityDetails;
+
+  LocationLoaded({required this.cityDetails});
+}
+
+final class LocationError extends LocationState {
   final String message;
-  LocationErrorState(this.message);
+
+  LocationError({required this.message}); 
+
 }

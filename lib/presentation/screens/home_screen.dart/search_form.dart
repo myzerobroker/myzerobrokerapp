@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:my_zero_broker/data/area_details_dependency.dart';
+import 'package:my_zero_broker/locator.dart';
 
 class SearchForm extends StatefulWidget {
   @override
@@ -7,12 +9,11 @@ class SearchForm extends StatefulWidget {
 
 class _SearchFormState extends State<SearchForm> {
   // Dropdown values and selections with icons
-  final List<Map<String, dynamic>> _locations = [
-    {'label': 'Ahmednagar', 'icon': Icons.location_city},
-    {'label': 'Pune', 'icon': Icons.location_city},
-    {'label': 'Mumbai', 'icon': Icons.location_city},
-    {'label': 'Nagpur', 'icon': Icons.location_city},
-  ];
+
+  final locations = locator.get<AreaDetailsDependency>().cityDetails.map((e) {
+    return {"label":e.cName, "icon":Icons.location_city , "id":e.id.toString()}; 
+  }).toList(); 
+
 
   final List<Map<String, dynamic>> _areas = [
     {'label': 'Area 1', 'icon': Icons.map},
@@ -53,6 +54,9 @@ class _SearchFormState extends State<SearchForm> {
   String? _selectedType;
   String? _selectedPriceRange;
   int index = 0;
+
+
+   
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -65,11 +69,11 @@ class _SearchFormState extends State<SearchForm> {
             child: Column(
               children: [
                 _buildDropdownWithIcons(
-                    'Search Location', _locations, _selectedLocation,
+                    'Search Location', locations, _selectedLocation,
                     (String? newValue) {
                   setState(() => _selectedLocation = newValue);
                 }),
-                _buildDropdownWithIcons('Search Area', _areas, _selectedArea,
+                _buildDropdownWithIcons('Search Area', _selectedLocation == null ? []: (locator.get<AreaDetailsDependency>().areas[_selectedLocation!] as List<Map<String,dynamic>> ).map((e) => {"label": e["a_name"].toString(), "icon": Icons.map}).toList(), _selectedArea,
                     (String? newValue) {
                   setState(() => _selectedArea = newValue);
                 }),
