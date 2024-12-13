@@ -10,7 +10,18 @@ class RoutesName {
    static const String propertydetailsform  = 'propertydetails';
    static const String termsAndCondition = 'termsAndCondition';
    static const String paymentsScreen = 'payments_screen';
+   static const String locationFetch = "fetch_location ";
+
+  static const String buyersPlanScreen = 'buyers_screen';
+  static const String sellersPlanScreen = 'sellers_Plan';
+  static const String ownersPlansScreen = 'owners_plan';
+ static const String tenantPlanScreen = 'tenant_plan';
+
+  static const String plotSellerPlanScreen = 'plotseller_plan';
+
+
  
-  static const String locationFetch = "fetch_location "; 
+
+
 
 }

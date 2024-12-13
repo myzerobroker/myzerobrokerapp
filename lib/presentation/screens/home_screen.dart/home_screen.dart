@@ -6,8 +6,14 @@ import 'package:my_zero_broker/presentation/screens/home_screen.dart/header_widg
 import 'package:my_zero_broker/presentation/screens/home_screen.dart/responsive_layout.dart';
 import 'package:my_zero_broker/presentation/screens/home_screen.dart/search_form.dart';
 import 'package:my_zero_broker/presentation/widgets/drawer_content.dart';
+import 'package:my_zero_broker/presentation/widgets/yy.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   final AwesomeDrawerBarController controller = AwesomeDrawerBarController();
 
   @override
@@ -15,7 +21,7 @@ class HomeScreen extends StatelessWidget {
     return BlocProvider(
       create: (_) => DrawerCubit(),
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: const Color.fromARGB(255, 255, 254, 254),
         body: BlocBuilder<DrawerCubit, DrawerEvent>(
           builder: (context, state) {
             return ResponsiveLayout(
@@ -106,25 +112,17 @@ class HomeScreen extends StatelessWidget {
   Widget _buildMainContent(DrawerEvent state) {
     switch (state) {
       case DrawerEvent.home:
-        return Column(
+        return Stack(
           children: [
-            HeaderWidget(),
-            SearchForm(),
+             const ParticlesSpark(),
+            Column(
+              children: [
+               
+                HeaderWidget(),
+                SearchForm(),
+              ],
+            ),
           ],
-        );
-      case DrawerEvent.postProperty:
-        return Center(
-          child: Text(
-            'Post Property Screen',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-        );
-      case DrawerEvent.settings:
-        return Center(
-          child: Text(
-            'Settings Screen',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
         );
       default:
         return Center(
