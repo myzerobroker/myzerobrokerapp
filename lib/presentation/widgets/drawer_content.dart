@@ -39,11 +39,13 @@ class DrawerContent extends StatelessWidget {
                     visible: locator.get<UserDetailsDependency>().id != -1,
                     child: ListTile(
                         title: Text(
-                          '${locator.get<UserDetailsDependency>().userModel!.user!.name}',
+                          '${locator.get<UserDetailsDependency>().userModel?.user?.name}',
                           style: TextStyle(fontSize: 20),
                         ),
                         subtitle: Text(
-                          "${locator.get<UserDetailsDependency>().userModel!.user!.email}",
+
+
+                          locator.get<UserDetailsDependency>().userModel?.user?.email ?? '',
                           style: TextStyle(fontSize: 15),
                         ))),
                 _drawerItem(

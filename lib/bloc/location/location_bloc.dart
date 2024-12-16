@@ -17,7 +17,7 @@ class LocationBloc extends Bloc<LocationEvent, LocationState> {
       
 
       
-      if (citys.isNotEmpty && res != null) {
+      if (citys.isNotEmpty) {
         emit(LocationLoaded(cityDetails: citys));
       } else {
         emit(LocationError(message: "Error Fetching City Details"));

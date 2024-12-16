@@ -13,6 +13,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   setupLocator();
+  SharedPreferences sp = await SharedPreferences.getInstance();
+  sp.remove("userId");
   runApp(const MyApp());
 }
 
