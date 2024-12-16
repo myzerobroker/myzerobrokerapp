@@ -53,7 +53,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  /// Builds the main screen with a scrollable AppBar
   Widget _buildMainScreenWithScrollableAppBar(DrawerEvent state) {
     return CustomScrollView(
       slivers: [
