@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_zero_broker/bloc/login/login_bloc.dart';
+import 'package:my_zero_broker/bloc/user_details/fetch_user_details_bloc.dart';
 import 'package:my_zero_broker/config/routes/routes_name.dart';
+import 'package:my_zero_broker/data/user_id.dart';
+import 'package:my_zero_broker/locator.dart';
 import 'package:my_zero_broker/presentation/widgets/ElevatedButton.dart';
 import 'package:my_zero_broker/presentation/widgets/TextField.dart';
 import 'package:my_zero_broker/presentation/widgets/custom_snack_bar.dart';
 import 'package:my_zero_broker/utils/constant/colors.dart';
 import 'package:pinput/pinput.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class OtpScreen extends StatefulWidget {
   const OtpScreen({super.key});
@@ -123,36 +127,64 @@ class _OtpScreenState extends State<OtpScreen> {
                           },
                         ),
                         SizedBox(height: height * 0.02),
-                        BlocListener<LoginBloc, LoginState>(
+                        BlocListener<FetchUserDetailsBloc,
+                            FetchUserDetailsState>(
                           listener: (context, state) {
-                            if (state.loginStatus ==
-                                LoginStatus.otpVerificationSuccess) {
-                              Snack.show(state.message, context);
+                            if (state is FetchUserDetailsLoaded) {
+                              Snack.show(state.userDetails.message!, context);
                               Navigator.pushNamed(
                                   context, RoutesName.locationFetch);
-                            } else if (state.loginStatus ==
-                                LoginStatus.otpVerificationFailure) {
+                            } else if (state is FetchUserDetailsError) {
                               Snack.show(state.message, context);
+                            } else {
+                              showDialog(
+                                  context: context,
+                                  barrierDismissible: false,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      title: Center(
+                                        child: CircularProgressIndicator(),
+                                      ),
+                                      backgroundColor: Colors.transparent,
+                                    );
+                                  });
                             }
                           },
-                          child: BlocBuilder<LoginBloc, LoginState>(
-                            builder: (context, state) {
-                              return Elevatedbutton(
-                                onPressed: () {
-                                  if (_formKey.currentState?.validate() ??
-                                      false) {
-                                    String otp = otpController
-                                        .text; // Treat OTP as string
-                                    context
-                                        .read<LoginBloc>()
-                                        .add(VerifyOtpApi(state.userId));
-                                  }
-                                },
-                                text: 'VERIFY OTP',
-                                height: height * 0.8,
-                                width: width * 0.99999,
-                              );
+                          child: BlocListener<LoginBloc, LoginState>(
+                            listener: (context, state) async {
+                              if (state.loginStatus ==
+                                  LoginStatus.otpVerificationSuccess) {
+                                SharedPreferences sp =
+                                    await SharedPreferences.getInstance();
+                                sp.setInt("userId", locator.get<UserId>().id);
+                                print(locator.get<UserId>().id);
+                                context
+                                    .read<FetchUserDetailsBloc>()
+                                    .add(FetchDetailsEvent());
+                              } else if (state.loginStatus ==
+                                  LoginStatus.otpVerificationFailure) {
+                                Snack.show(state.message, context);
+                              }
                             },
+                            child: BlocBuilder<LoginBloc, LoginState>(
+                              builder: (context, state) {
+                                return Elevatedbutton(
+                                  onPressed: () {
+                                    if (_formKey.currentState?.validate() ??
+                                        false) {
+                                      String otp = otpController
+                                          .text; // Treat OTP as string
+                                      context
+                                          .read<LoginBloc>()
+                                          .add(VerifyOtpApi(state.userId));
+                                    }
+                                  },
+                                  text: 'VERIFY OTP',
+                                  height: height * 0.8,
+                                  width: width * 0.99999,
+                                );
+                              },
+                            ),
                           ),
                         ),
                         SizedBox(height: height * 0.02),
