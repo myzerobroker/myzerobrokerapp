@@ -12,7 +12,8 @@ class ContactBloc extends Bloc<ContactEvent, ContactState> {
     on<SendContactMessage>(_onSendContactMessage);
   }
 
-  void _onSendContactMessage(SendContactMessage event, Emitter<ContactState> emit) async {
+  void _onSendContactMessage(
+      SendContactMessage event, Emitter<ContactState> emit) async {
     emit(state.copyWith(status: ContactStatus.sending));
 
     try {
@@ -22,13 +23,17 @@ class ContactBloc extends Bloc<ContactEvent, ContactState> {
       // Step 1: Fetch CSRF token and cookies
       final getResponse = await http.get(
         Uri.parse('https://myzerobroker.com/contact-us'),
-        headers: {'Accept': 'text/html'}, // Ensure proper content type is requested
+        headers: {
+          'Accept': 'text/html'
+        }, // Ensure proper content type is requested
       );
+      print(getResponse.body);
 
       if (getResponse.statusCode != 200) {
         emit(state.copyWith(
           status: ContactStatus.failure,
-          message: 'Failed to fetch CSRF token. Status code: ${getResponse.statusCode}',
+          message:
+              'Failed to fetch CSRF token. Status code: ${getResponse.statusCode}',
         ));
         return;
       }
@@ -43,6 +48,7 @@ class ContactBloc extends Bloc<ContactEvent, ContactState> {
         ));
         return;
       }
+      print(getResponse.headers);
 
       final cookies = getResponse.headers['set-cookie'];
       if (cookies == null || cookies.isEmpty) {
@@ -52,9 +58,26 @@ class ContactBloc extends Bloc<ContactEvent, ContactState> {
         ));
         return;
       }
+      // print(cookies);
 
-      print('Extracted CSRF Token: $csrfToken');
-      print('Extracted Cookies: $cookies');
+      // print('Extracted CSRF Token: $csrfToken');
+      // print('Extracted Cookies: $cookies');
+
+      List<String> cookiesList = cookies.split(',');
+      print(cookiesList);
+
+      // Process each cookie to remove unnecessary parts (everything after the first `;`)
+      List<String> cleanedCookies = cookiesList.map((cookie) {
+        return cookie
+            .split(';')[0]
+            .trim(); // Keep only the part before the first `;`
+      }).toList();
+      cleanedCookies[1] = cleanedCookies[2];
+      cleanedCookies.removeAt(2);
+
+      // Join the cleaned cookies into a formatted string
+      String output = cleanedCookies.join(';');
+      print(output);
 
       // Step 2: Send POST request with CSRF token and cookies
       final postResponse = await http.post(
@@ -62,8 +85,7 @@ class ContactBloc extends Bloc<ContactEvent, ContactState> {
         headers: {
           'Content-Type': 'application/json',
           'X-CSRF-TOKEN': csrfToken,
-          'Cookie': cookies, // Include the cookies in the request
-          'Accept': 'application/json',
+          'Cookie': output, // Include the cookies in the request
         },
         body: jsonEncode({
           'full_name': event.name,
@@ -71,6 +93,8 @@ class ContactBloc extends Bloc<ContactEvent, ContactState> {
           'message': event.message,
         }),
       );
+
+      print(postResponse.body);
 
       // Handle POST response
       if (postResponse.statusCode == 200) {
@@ -106,6 +130,7 @@ class _CustomHttpOverrides extends HttpOverrides {
   @override
   HttpClient createHttpClient(SecurityContext? context) {
     return super.createHttpClient(context)
-      ..badCertificateCallback = (X509Certificate cert, String host, int port) => true;
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
   }
 }
