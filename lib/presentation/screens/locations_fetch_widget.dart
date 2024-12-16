@@ -32,7 +32,14 @@ class _LocationsFetchWidgetState extends State<LocationsFetchWidget> {
         } else {
           return Scaffold(
             body: Center(
-              child: CircularProgressIndicator(),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(),
+                  const SizedBox(height: 20),
+                  const Text('Fetching details...'),
+                ],
+              ),
             ),
           );
         }
