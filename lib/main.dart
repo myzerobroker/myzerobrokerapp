@@ -9,12 +9,10 @@ import 'package:my_zero_broker/config/routes/routes.dart';
 import 'package:my_zero_broker/config/routes/routes_name.dart';
 import 'package:my_zero_broker/locator.dart';
 import 'package:my_zero_broker/presentation/screens/splash/bloc/splash_cubit.dart';
-// import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   setupLocator();
-
   runApp(const MyApp());
 }
 

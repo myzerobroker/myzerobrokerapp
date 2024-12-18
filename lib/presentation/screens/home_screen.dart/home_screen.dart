@@ -2,6 +2,8 @@ import 'package:awesome_drawer_bar/awesome_drawer_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_zero_broker/bloc/drawer/drawer_cubit.dart';
+import 'package:my_zero_broker/presentation/screens/home_screen.dart/enquiry_form.dart';
+import 'package:my_zero_broker/presentation/screens/home_screen.dart/enquiry_grids.dart';
 import 'package:my_zero_broker/presentation/screens/home_screen.dart/header_widget.dart';
 import 'package:my_zero_broker/presentation/screens/home_screen.dart/responsive_layout.dart';
 import 'package:my_zero_broker/presentation/screens/home_screen.dart/search_form.dart';
@@ -119,6 +121,10 @@ class _HomeScreenState extends State<HomeScreen> {
                
                 HeaderWidget(),
                 SearchForm(),
+                     EnquiryGrids(
+              onSubjectSelected: (String subject) {
+                EnquiryFormModal.showEnquiryForm(context, subject);
+              },)
               ],
             ),
           ],
