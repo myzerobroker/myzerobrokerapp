@@ -15,46 +15,49 @@ class EnquiryBloc extends Bloc<EnquiryEvent, EnquiryState> {
     on<PhoneNumberChanged>((event, emit) => emit(state.copyWith(phoneNumber: event.phoneNumber)));
     on<SubmitEnquiry>(_onSubmitEnquiry);
   }
+Future<void> _onSubmitEnquiry(SubmitEnquiry event, Emitter<EnquiryState> emit) async {
+  emit(state.copyWith(status: EnquiryStatus.loading));
 
-  Future<void> _onSubmitEnquiry(SubmitEnquiry event, Emitter<EnquiryState> emit) async {
-    emit(state.copyWith(status: EnquiryStatus.loading));
+  final data = {
+    'name': state.name,
+    'email': state.email,
+    'subject': state.subject,
+    'query': state.query,
+    'mobile_no': state.phoneNumber,
+  };
 
-    final data = {
-      'name': state.name,
-      'email': state.email,
-      'subject': state.subject,
-      'query': state.query,
-      'mobile_no': state.phoneNumber,
-    };
+  try {
+    final response = await http.post(
+      Uri.parse('https://myzerobroker.com/api/submit-enquiry'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: jsonEncode(data),
+    );
 
-    try {
-    
-      final response = await http.post(
-        Uri.parse('https://myzerobroker.com/api/submit-enquiry'),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: jsonEncode(data),
-      );
+    print('Status Code: ${response.statusCode}');
+    print('Response Body: ${response.body}');
 
-      if (response.statusCode == 200) {
-        final responseData = jsonDecode(response.body);
-        emit(state.copyWith(
-          status: EnquiryStatus.success,
-          message: responseData['message'] ?? 'Enquiry submitted successfully.',
-        ));
-      } else {
-        final responseData = jsonDecode(response.body);
-        emit(state.copyWith(
-          status: EnquiryStatus.error,
-          message: responseData['message'] ?? 'Failed to submit enquiry.',
-        ));
-      }
-    } catch (e) {
+    if (response.statusCode == 200) {
+      final responseData = jsonDecode(response.body);
+      emit(state.copyWith(
+        status: EnquiryStatus.success,
+        message: responseData['message'] ?? 'Enquiry submitted successfully.',
+      ));
+    } else {
+      final responseData = jsonDecode(response.body);
       emit(state.copyWith(
         status: EnquiryStatus.error,
-        message: 'Error occurred: $e',
+        message: responseData['message'] ?? 'Failed to submit enquiry.',
       ));
     }
+  } catch (e) {
+    print('Exception: $e');
+    emit(state.copyWith(
+      status: EnquiryStatus.error,
+      message: 'Error occurred: $e',
+    ));
   }
+}
 }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-
 class EnquiryGrids extends StatefulWidget {
-  final Function(String) onSubjectSelected;
+  final Function(String, String) onSubjectSelected; // Update the callback to take both subject and image
 
   EnquiryGrids({required this.onSubjectSelected});
 
@@ -35,14 +34,15 @@ class _EnquiryGridsState extends State<EnquiryGrids> {
         shrinkWrap: true,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 3, // Set 3 items per row
-          crossAxisSpacing: width *0.08, // Dynamic cross spacing
+          crossAxisSpacing: width * 0.08, // Dynamic cross spacing
           mainAxisSpacing: height * 0.003, // Dynamic main spacing
-          childAspectRatio: width / (height*0.5 ), //* Adjust aspect ratio for 3 items
+          childAspectRatio: width / (height * 0.5), //* Adjust aspect ratio for 3 items
         ),
         itemCount: services.length,
         itemBuilder: (context, index) {
           return GestureDetector(
-            onTap: () => widget.onSubjectSelected(services[index]['name']),
+            onTap: () => widget.onSubjectSelected(
+                services[index]['name'], services[index]['image']), // Pass both subject and image
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
