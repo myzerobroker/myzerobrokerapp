@@ -121,10 +121,11 @@ class _HomeScreenState extends State<HomeScreen> {
                
                 HeaderWidget(),
                 SearchForm(),
-                     EnquiryGrids(
-              onSubjectSelected: (String subject) {
-                EnquiryFormModal.showEnquiryForm(context, subject);
-              },)
+                 EnquiryGrids(
+                onSubjectSelected: (String subject, String img) {
+                  EnquiryFormModal.showEnquiryForm(context, subject, img);
+                },
+              ),
               ],
             ),
           ],

@@ -3,82 +3,212 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_zero_broker/bloc/Enquiry/enquiry_bloc.dart';
 import 'package:my_zero_broker/bloc/Enquiry/enquiry_event.dart';
 import 'package:my_zero_broker/bloc/Enquiry/enquiry_state.dart';
+import 'package:my_zero_broker/presentation/widgets/ElevatedButton.dart';
 
 class EnquiryFormModal {
-  static void showEnquiryForm(BuildContext context, String subject) {
+  static void showEnquiryForm(BuildContext context, String subject ,String img) {
     showModalBottomSheet(
       context: context,
-      isScrollControlled: true,
+      isScrollControlled: false,
       builder: (BuildContext ctx) {
         return BlocProvider(
           create: (_) => EnquiryBloc(),
-          child: _EnquiryForm(subject: subject),
+          child: _EnquiryForm(subject: subject, img: img,),
         );
       },
     );
   }
 }
 
-class _EnquiryForm extends StatelessWidget {
+class _EnquiryForm extends StatefulWidget {
   final String subject;
+   final String img;
 
-  const _EnquiryForm({required this.subject});
+  const _EnquiryForm({required this.subject, required this.img});
+
+  @override
+  _EnquiryFormState createState() => _EnquiryFormState();
+}
+
+class _EnquiryFormState extends State<_EnquiryForm> {
+ 
+  late EnquiryBloc _bloc;
+
+  @override
+  void initState() {
+    super.initState();
+    _bloc = context.read<EnquiryBloc>();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _bloc.add(SubjectChanged(widget.subject)); // Moved bloc.add here to avoid calling it during build
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    final bloc = context.read<EnquiryBloc>();
+     final height = MediaQuery.of(context).size.height;
+      final width = MediaQuery.of(context).size.width;
+    return Wrap(
+      children: [
+        Stack(
+          clipBehavior: Clip.none,
+          children: [
+            SingleChildScrollView(
+              child: Container(
+                padding: const EdgeInsets.all(16.0),
+                decoration: BoxDecoration(
+                  color: const Color.fromARGB(255, 82, 94, 116), // Main background color
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(30),
+                  ),
+                  border: const Border(
+                    top: BorderSide(
+                      color: Colors.white, // The color of the border
+                      width: 10.0, // The width of the border
+                      style: BorderStyle.solid, // The style of the border (solid)
+                    ),
+                  ),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Icon(
+                          Icons.cancel,
+                          color: Colors.red,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    // Subject Section
+                    Text(
+                      'Enquiry Form',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      '${widget.subject}',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white70,
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    // Text Fields
+                    _buildTextField(
+                      label: 'Name',
+                      onChanged: (value) => _bloc.add(NameChanged(value)),
+                    ),
+                    _buildTextField(
+                      label: 'Email',
+                      onChanged: (value) => _bloc.add(EmailChanged(value)),
+                    ),
+                    _buildTextField(
+                      label: 'Phone Number',
+                      onChanged: (value) => _bloc.add(PhoneNumberChanged(value)),
+                    ),
+                    _buildTextField(
+                      label: 'Your Query',
+                      onChanged: (value) => _bloc.add(QueryChanged(value)),
+                    ),
+                    SizedBox(height: 20),
+                    _buildSubmitButton(_bloc),
+                    BlocBuilder<EnquiryBloc, EnquiryState>(
+                      builder: (context, state) {
+                        if (state.status == EnquiryStatus.loading) {
+                          return Center(child: CircularProgressIndicator());
+                        } else if (state.status == EnquiryStatus.success) {
+                          return _buildMessage(state.message, Colors.green);
+                        } else if (state.status == EnquiryStatus.error) {
+                          return _buildMessage(state.message, Colors.red);
+                        }
+                        return SizedBox.shrink();
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Positioned(
+              top: -40, // Adjust position of the avatar
+              left: MediaQuery.of(context).size.width / 2 - 40, // Center the avatar
+              child: CircleAvatar(
+                radius: 40,
+                backgroundColor: Colors.blueAccent,
+                child: CircleAvatar(
+                  radius: 35,
+                  backgroundColor: const Color(0xFF042b59),
+                  child: Image.asset('${widget.img}'), // Your logo here
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
 
+  Widget _buildTextField({
+    required String label,
+    required Function(String) onChanged,
+  }) {
     return Padding(
-      padding: EdgeInsets.only(
-        bottom: MediaQuery.of(context).viewInsets.bottom,
-        left: 16,
-        right: 16,
-        top: 20,
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: TextField(
+         style: TextStyle(
+    color: Colors.white,
+    fontWeight: FontWeight.bold // Change text color here
+  ),
+        onChanged: onChanged,
+        decoration: InputDecoration(
+          labelText: label,
+          labelStyle: TextStyle(color: Colors.white),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide(color: Colors.white),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide(color: Colors.blue),
+          ),
+          prefixIcon: Icon(Icons.text_fields, color: Colors.white),
+        ),
+         cursorColor: Colors.red,
       ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Subject: $subject',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          TextField(
-            onChanged: (value) => bloc.add(NameChanged(value)),
-            decoration: InputDecoration(labelText: 'Name'),
-          ),
-          TextField(
-            onChanged: (value) => bloc.add(EmailChanged(value)),
-            decoration: InputDecoration(labelText: 'Email'),
-          ),
-          TextField(
-            onChanged: (value) => bloc.add(PhoneNumberChanged(value)),
-            decoration: InputDecoration(labelText: 'Phone Number'),
-          ),
-          TextField(
-            onChanged: (value) => bloc.add(QueryChanged(value)),
-            decoration: InputDecoration(labelText: 'Your Query'),
-          ),
-          SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: () {
-              bloc.add(SubmitEnquiry());
-            },
-            child: Text('Submit'),
-          ),
-          BlocBuilder<EnquiryBloc, EnquiryState>(
-            builder: (context, state) {
-              if (state.status == EnquiryStatus.loading) {
-                return Center(child: CircularProgressIndicator());
-              } else if (state.status == EnquiryStatus.success) {
-                return Text('Success: ${state.message}');
-              } else if (state.status == EnquiryStatus.error) {
-                return Text('Error: ${state.message}', style: TextStyle(color: Colors.red));
-              }
-              return SizedBox.shrink();
-            },
-          ),
-        ],
+    );
+  }
+
+  Widget _buildSubmitButton(EnquiryBloc bloc) {
+     final height = MediaQuery.of(context).size.height;
+      final width = MediaQuery.of(context).size.width;
+    return Elevatedbutton(
+      text: 'Submit',
+      height:height * 0.8,
+  width:width,
+  bgcolor:const Color.fromARGB(255, 206, 49, 21),
+ foregroundColor:Colors.white,
+      onPressed: () {
+        bloc.add(SubmitEnquiry());
+      },
+      
+    );
+  }
+
+  Widget _buildMessage(String message, Color color) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 16),
+      child: Text(
+        message,
+        style: TextStyle(fontSize: 16, color: color),
       ),
     );
   }
