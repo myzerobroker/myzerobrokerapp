@@ -3,17 +3,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_zero_broker/bloc/location/location_bloc.dart';
 import 'package:my_zero_broker/bloc/login/login_bloc.dart';
 import 'package:my_zero_broker/bloc/post_property_details/post_property_details_bloc.dart';
+import 'package:my_zero_broker/bloc/search_property/search_property_bloc.dart';
 import 'package:my_zero_broker/bloc/user_details/fetch_user_details_bloc.dart';
 import 'package:my_zero_broker/config/routes/routes.dart';
 import 'package:my_zero_broker/config/routes/routes_name.dart';
 import 'package:my_zero_broker/locator.dart';
 import 'package:my_zero_broker/presentation/screens/splash/bloc/splash_cubit.dart';
 
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   setupLocator();
- 
   runApp(const MyApp());
 }
 
@@ -31,6 +30,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => LocationBloc(),
         ),
+        BlocProvider(create: (context) => SearchPropertyBloc())
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
