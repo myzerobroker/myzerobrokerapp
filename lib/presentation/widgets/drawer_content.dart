@@ -43,13 +43,19 @@ class DrawerContent extends StatelessWidget {
                           style: TextStyle(fontSize: 20),
                         ),
                         subtitle: Text(
-
-
-                          locator.get<UserDetailsDependency>().userModel?.user?.email ?? '',
+                          locator
+                                  .get<UserDetailsDependency>()
+                                  .userModel
+                                  ?.user
+                                  ?.email ??
+                              '',
                           style: TextStyle(fontSize: 15),
                         ))),
                 _drawerItem(
                     context, 'Home', RoutesName.homeScreen, Icon(Icons.home)),
+                Divider(color: Colors.grey.shade100),
+                _drawerItem(context, 'Shortlisted Property',
+                    RoutesName.shortlisted, Icon(Icons.check)),
                 Divider(color: Colors.grey.shade100),
                 _drawerItem(context, 'Post Property For Free',
                     RoutesName.postpropertyScreen, Icon(Icons.add)),

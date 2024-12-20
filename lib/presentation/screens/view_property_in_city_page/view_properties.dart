@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:my_zero_broker/data/area_details_dependency.dart';
 import 'package:my_zero_broker/data/models/property_in_cities_model.dart';
 import 'package:my_zero_broker/locator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ViewProperties extends StatefulWidget {
   const ViewProperties({super.key, required this.propertyInCityModel});
@@ -14,6 +15,23 @@ class ViewProperties extends StatefulWidget {
 }
 
 class _ViewPropertiesState extends State<ViewProperties> {
+  Future<bool> checkIfStringexist(String s) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final list = prefs.getStringList("favList") ?? [];
+    if (list.contains(s)) {
+      return true;
+    }
+    return false;
+  }
+
+  final locations = locator.get<AreaDetailsDependency>().cityDetails.map((e) {
+    return {
+      "label": e.cName,
+      "icon": Icons.location_city,
+      "id": e.id.toString()
+    };
+  }).toList();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,6 +46,18 @@ class _ViewPropertiesState extends State<ViewProperties> {
               jsonDecode(widget.propertyInCityModel.properties![index].photos!);
           print(photos);
           final property = widget.propertyInCityModel.properties![index];
+          final loc = locations
+              .firstWhere((element) =>
+                  element["id"] == property.cityId.toString())["label"]
+              .toString();
+          final areas = locator.get<AreaDetailsDependency>().areas[loc];
+          final area = areas!
+              .where(
+                  (e) => e["id"].toString() == property.localityId.toString())
+              .toList()
+              .first["a_name"];
+          print(areas);
+          print(area);
           return Center(
             child: Container(
               width: double.infinity,
@@ -71,6 +101,54 @@ class _ViewPropertiesState extends State<ViewProperties> {
                     spacing: 10,
                     runSpacing: 6,
                     children: [
+                      Row(
+                        children: [
+                          FutureBuilder(
+                              future: checkIfStringexist(
+                                  jsonEncode(property.toJson())),
+                              builder: (context, sp) {
+                                if (sp.hasData) {
+                                  if (sp.data! == false) {
+                                    return IconButton(
+                                      icon: Icon(Icons.favorite_border),
+                                      onPressed: () async {
+                                        SharedPreferences prefs =
+                                            await SharedPreferences
+                                                .getInstance();
+                                        final list =
+                                            prefs.getStringList("favList") ??
+                                                [];
+                                        list.add(jsonEncode(property.toJson()));
+                                        prefs.setStringList("favList", list);
+                                        setState(() {});
+                                      },
+                                    );
+                                  } else {
+                                    return IconButton(
+                                      icon: Icon(
+                                        Icons.favorite,
+                                        color: Colors.red,
+                                      ),
+                                      onPressed: () async {
+                                        SharedPreferences prefs =
+                                            await SharedPreferences
+                                                .getInstance();
+                                        final list =
+                                            prefs.getStringList("favList") ??
+                                                [];
+                                        list.remove(
+                                            jsonEncode(property.toJson()));
+                                        prefs.setStringList("favList", list);
+                                        setState(() {});
+                                      },
+                                    );
+                                  }
+                                } else {
+                                  return Container();
+                                }
+                              })
+                        ],
+                      ),
                       _detailRow('Property No:', "RS" + property.id.toString(),
                           Colors.blue),
                       _detailRow(
@@ -91,8 +169,7 @@ class _ViewPropertiesState extends State<ViewProperties> {
                           'Location:',
                           widget.propertyInCityModel.cityName.toString(),
                           Colors.red),
-                      _detailRow(
-                          'Road:', property.localityId.toString(), Colors.red),
+                      _detailRow('Area :', area.toString(), Colors.red),
                     ],
                   ),
                   SizedBox(height: 10),
