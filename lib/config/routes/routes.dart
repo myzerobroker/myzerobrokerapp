@@ -13,6 +13,7 @@ import 'package:my_zero_broker/presentation/screens/payments/tenant_plan.dart';
 import 'package:my_zero_broker/presentation/screens/post_property/post_property.dart';
 import 'package:my_zero_broker/presentation/screens/post_property/propertydetails.dart';
 import 'package:my_zero_broker/presentation/screens/terms&Condition/termsAndCondition.dart';
+import 'package:my_zero_broker/presentation/screens/view_shortlisted_property.dart';
 
 class Routes {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -55,6 +56,8 @@ class Routes {
         return _createRoute(OwnersPlanScreen());
       case RoutesName.tenantPlanScreen:
         return _createRoute(TenantPlanScreen());
+      case RoutesName.shortlisted:
+        return _createRoute(ViewShortlistedProperty());
 
       case RoutesName.plotSellerPlanScreen:
         return _createRoute(PlotSellerPlanScreen());
