@@ -211,7 +211,7 @@ class _SearchFormState extends State<SearchForm> {
                     (element) => element["label"] == _selectedLocation)["id"];
                 // print("Selected Location ID: $id");
                 BlocProvider.of<SearchPropertyBloc>(context).add(
-                    SearchBuyProperty(city_id: id.toString(), area_id: ""));
+                    SearchBuyProperty(city_id: id.toString(), area_id: "",));
               }
             },
             icon: Icon(Icons.search, color: Colors.white),
