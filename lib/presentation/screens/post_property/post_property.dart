@@ -4,6 +4,8 @@ import 'package:my_zero_broker/bloc/property_form/property_form_bloc.dart';
 import 'package:my_zero_broker/bloc/property_form/property_form_event.dart';
 import 'package:my_zero_broker/bloc/property_form/property_form_state.dart';
 import 'package:my_zero_broker/config/routes/routes_name.dart';
+import 'package:my_zero_broker/data/models/user_details_model.dart';
+import 'package:my_zero_broker/data/user_details_dependency.dart';
 import 'package:my_zero_broker/locator.dart';
 import 'package:my_zero_broker/presentation/widgets/ElevatedButton.dart';
 import 'package:my_zero_broker/presentation/widgets/TextField.dart';
@@ -13,6 +15,8 @@ import 'package:my_zero_broker/utils/constant/colors.dart';
 import 'post_property_depenency.dart/dependency_class.dart';
 
 class PropertyFormScreen extends StatelessWidget {
+  final user = locator.get<UserDetailsDependency>().userModel;
+
   TextEditingController fullNamecontroller = TextEditingController();
   TextEditingController emailcontroller = TextEditingController();
   TextEditingController phonenocontroller = TextEditingController();
@@ -22,6 +26,11 @@ class PropertyFormScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (user != null) {
+      fullNamecontroller.text = user!.user!.name.toString();
+      emailcontroller.text = user!.user!.email.toString();
+      phonenocontroller.text = user!.user!.mobileNo.toString();
+    }
     return BlocProvider(
       create: (_) => PropertyFormBloc(),
       child: Scaffold(
