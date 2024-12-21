@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_zero_broker/bloc/search_property/search_property_bloc.dart';
+import 'package:my_zero_broker/config/routes/routes_name.dart';
 import 'package:my_zero_broker/data/area_details_dependency.dart';
 import 'package:my_zero_broker/locator.dart';
 import 'package:my_zero_broker/presentation/screens/view_property_in_city_page/view_properties.dart';
@@ -235,6 +236,27 @@ class _SearchFormState extends State<SearchForm> {
           _buildCustomButton(
               Icons.person, "Post your Property", Colors.red, () {}),
           SizedBox(height: 10),
+            ElevatedButton.icon(
+            onPressed: () {
+             Navigator.pushNamed(
+                            context, RoutesName.postfarmland);
+            },
+            icon: Icon(Icons.search, color: Colors.white),
+            label: Text(
+              'Post your Plot',
+              style: TextStyle(fontSize: 18, color: Colors.white),
+            ),
+            style: ElevatedButton.styleFrom(
+              fixedSize: Size(350, 60),
+              backgroundColor: Colors.blue,
+              padding: EdgeInsets.symmetric(horizontal: 60, vertical: 15),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+          ),
+           
+          SizedBox(height: 10),
         ],
       ),
     );
@@ -296,6 +318,11 @@ class _SearchFormState extends State<SearchForm> {
         _buildCustomButton(
             Icons.person, "Post your Property", Colors.red, () {}),
         SizedBox(height: 10),
+         _buildCustomButton(
+              Icons.person, "Post your Plot", Colors.blue, () {   Navigator.pushNamed(
+                            context, RoutesName.postfarmland);
+                      }),
+          SizedBox(height: 10),
       ],
     );
   }
@@ -359,6 +386,11 @@ class _SearchFormState extends State<SearchForm> {
         _buildCustomButton(
             Icons.person, "Post your Property", Colors.red, () {}),
         SizedBox(height: 10),
+         _buildCustomButton(
+              Icons.person, "Post your Plot", Colors.blue, () {   Navigator.pushNamed(
+                            context, RoutesName.postfarmland);
+                      }),
+          SizedBox(height: 10),
       ],
     );
   }
@@ -416,6 +448,11 @@ class _SearchFormState extends State<SearchForm> {
         _buildCustomButton(
             Icons.person, "Post your Property", Colors.red, () {}),
         SizedBox(height: 10),
+         _buildCustomButton(
+              Icons.person, "Post your Plot", Colors.blue, () {   Navigator.pushNamed(
+                            context, RoutesName.postfarmland);
+                      }),
+          SizedBox(height: 10),
       ],
     );
   }
@@ -545,10 +582,7 @@ class _SearchFormState extends State<SearchForm> {
       IconData icon, String text, Color color, Function f) {
     {
       return ElevatedButton.icon(
-        onPressed: () {
-          // Handle search logic
-          f;
-        },
+        onPressed: () =>f,
         icon: Icon(icon, color: Colors.white),
         label: Text(
           text,

@@ -19,4 +19,5 @@ class RoutesName {
 
   static const String plotSellerPlanScreen = 'plotseller_plan';
   static const String shortlisted = "st"; 
+  static const String postfarmland = "post_farmland"; 
 }
