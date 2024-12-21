@@ -131,24 +131,12 @@ class _SearchFormState extends State<SearchForm> {
     return BlocListener<SearchPropertyBloc, SearchPropertyState>(
       listener: (context, state) {
         if (state is SearchPropertyError) {
-          Navigator.pop(context);
-          Snack.show(state.message, context);
+         
         } else if (state is SearchPropertyLoaded) {
-          Navigator.pop(context);
-          print(state.properties.propertyCount);
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => ViewProperties(
-                        propertyInCityModel: state.properties,
-                      )));
+         
+          
         } else {
-          showDialog(
-              barrierDismissible: false,
-              context: context,
-              builder: (context) {
-                return Center(child: CircularProgressIndicator());
-              });
+          
         }
       },
       child: Column(
@@ -209,9 +197,12 @@ class _SearchFormState extends State<SearchForm> {
                 print("Selected Location: $_selectedLocation");
                 final id = locations.firstWhere(
                     (element) => element["label"] == _selectedLocation)["id"];
-                // print("Selected Location ID: $id");
-                BlocProvider.of<SearchPropertyBloc>(context).add(
-                    SearchBuyProperty(city_id: id.toString(), area_id: "",));
+                Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => ViewProperties(
+                        city_id: id.toString(),
+                      )));
               }
             },
             icon: Icon(Icons.search, color: Colors.white),

@@ -47,6 +47,7 @@ dependencies:
   pinput: ^5.0.0
   image_picker: ^1.1.2
   shared_preferences: ^2.3.3
+  smooth_page_indicator: ^1.2.0+3
 
 
 dev_dependencies:
