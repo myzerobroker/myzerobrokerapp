@@ -12,6 +12,6 @@ class SearchBuyProperty extends SearchPropertyEvent {
   final String area_id;
   final int page;
 
-  SearchBuyProperty({required this.city_id, required this.area_id, this.page = 1});
+  SearchBuyProperty({required this.city_id, required this.area_id, required this.page });
 }
 
