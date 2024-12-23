@@ -10,8 +10,16 @@ import 'package:my_zero_broker/presentation/widgets/image_carousel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ViewProperties extends StatefulWidget {
-  const ViewProperties({super.key, required this.city_id});
+  const ViewProperties(
+      {super.key,
+      required this.city_id,
+      required this.status,
+      required this.bhk,
+      required this.area});
   final String city_id;
+  final String status;
+  final area;
+  final String bhk;
 
   @override
   State<ViewProperties> createState() => _ViewPropertiesState();
@@ -37,13 +45,17 @@ class _ViewPropertiesState extends State<ViewProperties> {
 
   bool show = false;
   List<dynamic> areas = [];
-  String selectedArea = "Select Area";
+  late String selectedArea;
   List<Property> props = [];
   @override
   void initState() {
     super.initState();
     BlocProvider.of<SearchPropertyBloc>(context).add(SearchBuyProperty(
-        city_id: widget.city_id, area_id: "0", page: current));
+        city_id: widget.city_id,
+        area_id: "0",
+        page: current,
+        bhk: widget.bhk,
+        status: widget.status));
     areas = locator
         .get<AreaDetailsDependency>()
         .areas[cityDetails
@@ -51,6 +63,17 @@ class _ViewPropertiesState extends State<ViewProperties> {
         .map((e) => e["a_name"])
         .toList();
     areas.add("Select Area");
+    final city = cityDetails
+        .firstWhere((element) => element["id"] == widget.city_id)["label"];
+    print(city);
+    final areaMap = locator.get<AreaDetailsDependency>().areas[city]
+        as List<Map<String, dynamic>>;
+    print(areaMap);
+
+    selectedArea = widget.area == ""
+        ? "Select Area"
+        : areaMap.firstWhere((element) =>
+            element["id"].toString() == widget.area.toString())["a_name"];
   }
 
   void animatetoIndex(int index, PageController controller) {
@@ -81,46 +104,50 @@ class _ViewPropertiesState extends State<ViewProperties> {
                       ),
                       SizedBox(
                         height: 70,
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: state.properties.pagination!.lastPage,
-                          itemBuilder: (BuildContext context, int index) {
-                            return GestureDetector(
-                              onTap: () async {
-                                setState(() {
-                                  current = index + 1;
-                                });
-                                BlocProvider.of<SearchPropertyBloc>(context)
-                                    .add(SearchBuyProperty(
-                                        city_id: widget.city_id,
-                                        area_id: "0",
-                                        page: current));
-                              },
-                              child: Container(
-                                alignment: Alignment.center,
-                                height: 50,
-                                width: 50,
-                                margin: EdgeInsets.only(
-                                    right: 10, top: 10, bottom: 10),
-                                child: Text(
-                                  (index + 1).toString(),
-                                  style: TextStyle(
-                                      color: current == index + 1
-                                          ? Colors.white
-                                          : Colors.black),
-                                ),
-                                decoration: BoxDecoration(
-                                    color: current == index + 1
-                                        ? Colors.red
-                                        : Colors.white,
-                                    borderRadius: BorderRadius.circular(10),
-                                    border: Border.all(
+                        child: Center(
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: state.properties.pagination!.lastPage,
+                            itemBuilder: (BuildContext context, int index) {
+                              return GestureDetector(
+                                onTap: () async {
+                                  setState(() {
+                                    current = index + 1;
+                                  });
+                                  BlocProvider.of<SearchPropertyBloc>(context)
+                                      .add(SearchBuyProperty(
+                                          city_id: widget.city_id,
+                                          area_id: "0",
+                                          page: current,
+                                          bhk: widget.bhk,
+                                          status: widget.status));
+                                },
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  height: 50,
+                                  width: 50,
+                                  margin: EdgeInsets.only(
+                                      right: 10, top: 10, bottom: 10),
+                                  child: Text(
+                                    (index + 1).toString(),
+                                    style: TextStyle(
                                         color: current == index + 1
-                                            ? Colors.red
-                                            : Colors.grey.shade200)),
-                              ),
-                            );
-                          },
+                                            ? Colors.white
+                                            : Colors.black),
+                                  ),
+                                  decoration: BoxDecoration(
+                                      color: current == index + 1
+                                          ? Colors.red
+                                          : Colors.white,
+                                      borderRadius: BorderRadius.circular(10),
+                                      border: Border.all(
+                                          color: current == index + 1
+                                              ? Colors.red
+                                              : Colors.grey.shade200)),
+                                ),
+                              );
+                            },
+                          ),
                         ),
                       ),
                       SizedBox(
@@ -180,11 +207,13 @@ class _ViewPropertiesState extends State<ViewProperties> {
                                             (e) => e["a_name"] == val)["id"]
                                         .toString();
 
-                                    props = state.properties.properties!
-                                        .where((property) =>
-                                            property.localityId.toString() ==
-                                            areaId)
-                                        .toList();
+                                    BlocProvider.of<SearchPropertyBloc>(context)
+                                        .add(SearchBuyProperty(
+                                            city_id: widget.city_id,
+                                            area_id: areaId,
+                                            bhk: widget.bhk,
+                                            page: current,
+                                            status: widget.status));
 
                                     print(
                                         "Filtered Properties Count: ${props.length}");
@@ -202,7 +231,13 @@ class _ViewPropertiesState extends State<ViewProperties> {
                                   show = false;
 
                                   // Reset to unfiltered properties
-                                  props = state.properties.properties!;
+                                  BlocProvider.of<SearchPropertyBloc>(context)
+                                      .add(SearchBuyProperty(
+                                          city_id: widget.city_id,
+                                          area_id: "0",
+                                          bhk: widget.bhk,
+                                          page: current,
+                                          status: widget.status));
                                   print(
                                       "Reset Properties Count: ${props.length}");
                                 });
@@ -213,234 +248,275 @@ class _ViewPropertiesState extends State<ViewProperties> {
                         ],
                       ),
 
-                      ListView.builder(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemCount: props.length,
-                        itemBuilder: (context, index) {
-                          final property = props[index];
-                          final List photos = jsonDecode(props[index].photos!);
+                      state.properties.properties!.isEmpty
+                          ? Center(
+                              child: Text("No Results Found"),
+                            )
+                          : ListView.builder(
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              itemCount: props.length,
+                              itemBuilder: (context, index) {
+                                final property = props[index];
+                                final List photos =
+                                    jsonDecode(props[index].photos!);
 
-                          final loc = cityDetails
-                              .firstWhere((element) =>
-                                  element["id"] ==
-                                  property.cityId.toString())["label"]
-                              .toString();
-                          final areas =
-                              locator.get<AreaDetailsDependency>().areas[loc];
-                          final area = areas!
-                              .where((e) =>
-                                  e["id"].toString() ==
-                                  property.localityId.toString())
-                              .toList()
-                              .first["a_name"];
+                                final loc = cityDetails
+                                    .firstWhere((element) =>
+                                        element["id"] ==
+                                        property.cityId.toString())["label"]
+                                    .toString();
+                                final areas = locator
+                                    .get<AreaDetailsDependency>()
+                                    .areas[loc];
+                                final area = areas!
+                                    .where((e) =>
+                                        e["id"].toString() ==
+                                        property.localityId.toString())
+                                    .toList()
+                                    .first["a_name"];
 
-                          return Center(
-                            child: Container(
-                              width: double.infinity,
-                              margin: EdgeInsets.symmetric(vertical: 12),
-                              padding: EdgeInsets.all(12),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(8),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black12,
-                                    blurRadius: 4,
-                                    spreadRadius: 1,
-                                    offset: Offset(0, 4),
-                                  ),
-                                ],
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  // Header: Logo & Title
-                                  photos.isEmpty
-                                      ? Image.asset(
-                                          "assets/images/my_zero_broker_logo (2).png")
-                                      : photos.length > 1
-                                          ? ImageCarousel(images: photos)
-                                          : Image.network(
-                                              "https://myzerobroker.com/public/storage/" +
-                                                  photos[0].toString(),
-                                              height: 300,
-                                              width: double.infinity,
-                                              fit: BoxFit.fitHeight,
-                                              loadingBuilder: (context, child,
-                                                  loadingProgress) {
-                                                if (loadingProgress == null) {
-                                                  return child;
-                                                }
-                                                return SizedBox(
-                                                  height: 300,
-                                                  child: Center(
-                                                      child:
-                                                          CircularProgressIndicator()),
-                                                );
-                                              },
+                                return Center(
+                                  child: Container(
+                                    width: double.infinity,
+                                    margin: EdgeInsets.symmetric(vertical: 12),
+                                    padding: EdgeInsets.all(12),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(8),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black12,
+                                          blurRadius: 4,
+                                          spreadRadius: 1,
+                                          offset: Offset(0, 4),
+                                        ),
+                                      ],
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        // Header: Logo & Title
+                                        photos.isEmpty
+                                            ? Image.asset(
+                                                "assets/images/my_zero_broker_logo (2).png")
+                                            : photos.length > 1
+                                                ? ImageCarousel(images: photos)
+                                                : Image.network(
+                                                    "https://myzerobroker.com/public/storage/" +
+                                                        photos[0].toString(),
+                                                    height: 300,
+                                                    width: double.infinity,
+                                                    fit: BoxFit.fitHeight,
+                                                    loadingBuilder: (context,
+                                                        child,
+                                                        loadingProgress) {
+                                                      if (loadingProgress ==
+                                                          null) {
+                                                        return child;
+                                                      }
+                                                      return SizedBox(
+                                                        height: 300,
+                                                        child: Center(
+                                                            child:
+                                                                CircularProgressIndicator()),
+                                                      );
+                                                    },
+                                                  ),
+                                        Divider(color: Colors.black45),
+                                        SizedBox(height: 6),
+                                        // Property Details
+                                        Wrap(
+                                          spacing: 10,
+                                          runSpacing: 6,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                FutureBuilder(
+                                                    future: checkIfStringexist(
+                                                        jsonEncode(
+                                                            property.toJson())),
+                                                    builder: (context, sp) {
+                                                      if (sp.hasData) {
+                                                        if (sp.data! == false) {
+                                                          return IconButton(
+                                                            icon: Icon(Icons
+                                                                .favorite_border),
+                                                            onPressed:
+                                                                () async {
+                                                              SharedPreferences
+                                                                  prefs =
+                                                                  await SharedPreferences
+                                                                      .getInstance();
+                                                              final list = prefs
+                                                                      .getStringList(
+                                                                          "favList") ??
+                                                                  [];
+                                                              list.add(jsonEncode(
+                                                                  property
+                                                                      .toJson()));
+                                                              prefs
+                                                                  .setStringList(
+                                                                      "favList",
+                                                                      list);
+                                                              setState(() {});
+                                                            },
+                                                          );
+                                                        } else {
+                                                          return IconButton(
+                                                            icon: Icon(
+                                                              Icons.favorite,
+                                                              color: Colors.red,
+                                                            ),
+                                                            onPressed:
+                                                                () async {
+                                                              SharedPreferences
+                                                                  prefs =
+                                                                  await SharedPreferences
+                                                                      .getInstance();
+                                                              final list = prefs
+                                                                      .getStringList(
+                                                                          "favList") ??
+                                                                  [];
+                                                              list.remove(
+                                                                  jsonEncode(
+                                                                      property
+                                                                          .toJson()));
+                                                              prefs
+                                                                  .setStringList(
+                                                                      "favList",
+                                                                      list);
+                                                              setState(() {});
+                                                            },
+                                                          );
+                                                        }
+                                                      } else {
+                                                        return Container();
+                                                      }
+                                                    })
+                                              ],
                                             ),
-                                  Divider(color: Colors.black45),
-                                  SizedBox(height: 6),
-                                  // Property Details
-                                  Wrap(
-                                    spacing: 10,
-                                    runSpacing: 6,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          FutureBuilder(
-                                              future: checkIfStringexist(
-                                                  jsonEncode(
-                                                      property.toJson())),
-                                              builder: (context, sp) {
-                                                if (sp.hasData) {
-                                                  if (sp.data! == false) {
-                                                    return IconButton(
-                                                      icon: Icon(Icons
-                                                          .favorite_border),
-                                                      onPressed: () async {
-                                                        SharedPreferences
-                                                            prefs =
-                                                            await SharedPreferences
-                                                                .getInstance();
-                                                        final list =
-                                                            prefs.getStringList(
-                                                                    "favList") ??
-                                                                [];
-                                                        list.add(jsonEncode(
-                                                            property.toJson()));
-                                                        prefs.setStringList(
-                                                            "favList", list);
-                                                        setState(() {});
-                                                      },
-                                                    );
-                                                  } else {
-                                                    return IconButton(
-                                                      icon: Icon(
-                                                        Icons.favorite,
-                                                        color: Colors.red,
-                                                      ),
-                                                      onPressed: () async {
-                                                        SharedPreferences
-                                                            prefs =
-                                                            await SharedPreferences
-                                                                .getInstance();
-                                                        final list =
-                                                            prefs.getStringList(
-                                                                    "favList") ??
-                                                                [];
-                                                        list.remove(jsonEncode(
-                                                            property.toJson()));
-                                                        prefs.setStringList(
-                                                            "favList", list);
-                                                        setState(() {});
-                                                      },
-                                                    );
-                                                  }
-                                                } else {
-                                                  return Container();
-                                                }
-                                              })
-                                        ],
-                                      ),
-                                      _detailRow(
-                                          'Property No:',
-                                          "RS" + property.id.toString(),
-                                          Colors.blue),
-                                      _detailRow(
-                                          'Posted on:',
-                                          DateTime.parse(property.createdAt
-                                                      .toString())
-                                                  .day
-                                                  .toString() +
-                                              "-" +
-                                              DateTime.parse(property.createdAt
-                                                      .toString())
-                                                  .month
-                                                  .toString() +
-                                              "-" +
-                                              DateTime.parse(property.createdAt
-                                                      .toString())
-                                                  .year
-                                                  .toString(),
-                                          Colors.red),
-                                      _detailRow(
-                                          'Location:',
-                                          state.properties.cityName.toString(),
-                                          Colors.red),
-                                      _detailRow('Area :', area.toString(),
-                                          Colors.red),
-                                    ],
-                                  ),
-                                  SizedBox(height: 10),
-                                  _detailRow(
-                                      'Plot Area:',
-                                      property.areaSqft.toString() == "null"
-                                          ? "Not Defined"
-                                          : (property.areaSqft.toString() +
-                                              ' sqFT')),
-                                  _detailRow(
-                                      'Built-Up Area:',
-                                      property.carpetAreaSqft.toString() ==
-                                              "null"
-                                          ? "Not Defined"
-                                          : (property.carpetAreaSqft
-                                                  .toString() +
-                                              ' sqFT')),
-                                  _detailRow('Property Age:',
-                                      property.propertyAge.toString()),
-                                  _detailRow('Floors:',
-                                      property.totalFloor.toString()),
-                                  _detailRow(
-                                      'Facing:', property.facing.toString()),
-                                  _detailRow(
-                                      'Offer:',
-                                      "₹" + property.expectedPrice.toString(),
-                                      Colors.green),
-                                  _detailRow(
-                                      'Maintainance:',
-                                      '₹' +
-                                          property.maintenanceCost.toString()),
-                                  _detailRow('Furnishing:',
-                                      property.furnishing.toString()),
-                                  _detailRow('Parking:',
-                                      property.parkingType.toString()),
-                                  _detailRow('Kitchen Type:',
-                                      property.kitchenType.toString()),
-                                  _detailRow('Bathrooms:',
-                                      property.bathroom.toString()),
-                                  _detailRow(
-                                      'Balcony:', property.balcony.toString()),
-                                  SizedBox(height: 6),
-                                  Text(
-                                    property.description ?? "",
-                                    style: TextStyle(
-                                      fontStyle: FontStyle.italic,
-                                      color: Colors.grey,
+                                            _detailRow(
+                                                'Property No:',
+                                                (widget.status == "Commercial"
+                                                        ? "CS"
+                                                        : widget.status ==
+                                                                "Rent"
+                                                            ? "RR"
+                                                            : widget.status ==
+                                                                    ""
+                                                                ? "RS"
+                                                                : "PR") +
+                                                    property.id.toString(),
+                                                Colors.blue),
+                                            _detailRow(
+                                                'Posted on:',
+                                                DateTime.parse(property
+                                                            .createdAt
+                                                            .toString())
+                                                        .day
+                                                        .toString() +
+                                                    "-" +
+                                                    DateTime.parse(property
+                                                            .createdAt
+                                                            .toString())
+                                                        .month
+                                                        .toString() +
+                                                    "-" +
+                                                    DateTime.parse(property
+                                                            .createdAt
+                                                            .toString())
+                                                        .year
+                                                        .toString(),
+                                                Colors.red),
+                                            _detailRow(
+                                                'Location:',
+                                                state.properties.cityName
+                                                    .toString(),
+                                                Colors.red),
+                                            _detailRow('Area :',
+                                                area.toString(), Colors.red),
+                                          ],
+                                        ),
+                                        SizedBox(height: 10),
+                                        _detailRow(
+                                            "BHK", property.bhk.toString()),
+                                        _detailRow(
+                                            'Plot Area:',
+                                            property.areaSqft.toString() ==
+                                                    "null"
+                                                ? "Not Defined"
+                                                : (property.areaSqft
+                                                        .toString() +
+                                                    ' sqFT')),
+                                        _detailRow(
+                                            'Built-Up Area:',
+                                            property.carpetAreaSqft
+                                                        .toString() ==
+                                                    "null"
+                                                ? "Not Defined"
+                                                : (property.carpetAreaSqft
+                                                        .toString() +
+                                                    ' sqFT')),
+                                        _detailRow('Property Age:',
+                                            property.propertyAge.toString()),
+                                        _detailRow('Floors:',
+                                            property.totalFloor.toString()),
+                                        _detailRow('Facing:',
+                                            property.facing.toString()),
+                                        _detailRow(
+                                            'Offer:',
+                                            "₹" +
+                                                property.expectedPrice
+                                                    .toString(),
+                                            Colors.green),
+                                        _detailRow(
+                                            'Maintainance:',
+                                            '₹' +
+                                                property.maintenanceCost
+                                                    .toString()),
+                                        _detailRow('Furnishing:',
+                                            property.furnishing.toString()),
+                                        _detailRow('Parking:',
+                                            property.parkingType.toString()),
+                                        _detailRow('Kitchen Type:',
+                                            property.kitchenType.toString()),
+                                        _detailRow('Bathrooms:',
+                                            property.bathroom.toString()),
+                                        _detailRow('Balcony:',
+                                            property.balcony.toString()),
+                                        SizedBox(height: 6),
+                                        Text(
+                                          property.description ?? "",
+                                          style: TextStyle(
+                                            fontStyle: FontStyle.italic,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                        SizedBox(height: 12),
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            // Action on press
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: Colors.black,
+                                            foregroundColor: Colors.white,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                            ),
+                                            minimumSize:
+                                                Size(double.infinity, 40),
+                                          ),
+                                          child: Text('Get Owner Details'),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                  SizedBox(height: 12),
-                                  ElevatedButton(
-                                    onPressed: () {
-                                      // Action on press
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.black,
-                                      foregroundColor: Colors.white,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                      minimumSize: Size(double.infinity, 40),
-                                    ),
-                                    child: Text('Get Owner Details'),
-                                  ),
-                                ],
-                              ),
+                                );
+                              },
                             ),
-                          );
-                        },
-                      ),
                     ],
                   ),
                 ),

@@ -132,13 +132,8 @@ class _SearchFormState extends State<SearchForm> {
     return BlocListener<SearchPropertyBloc, SearchPropertyState>(
       listener: (context, state) {
         if (state is SearchPropertyError) {
-         
         } else if (state is SearchPropertyLoaded) {
-         
-          
-        } else {
-          
-        }
+        } else {}
       },
       child: Column(
         children: [
@@ -198,12 +193,23 @@ class _SearchFormState extends State<SearchForm> {
                 print("Selected Location: $_selectedLocation");
                 final id = locations.firstWhere(
                     (element) => element["label"] == _selectedLocation)["id"];
-                Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => ViewProperties(
-                        city_id: id.toString(),
-                      )));
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  final area = _selectedArea == null
+                      ? ""
+                      : (locator
+                                  .get<AreaDetailsDependency>()
+                                  .areas[_selectedLocation!]
+                              as List<Map<String, dynamic>>)
+                          .firstWhere((element) =>
+                              element["a_name"] == _selectedArea)["id"];
+                  print(area);
+                  return ViewProperties(
+                    city_id: id.toString(),
+                    status: "",
+                    bhk:_selectedBHK == null ? "": _selectedBHK! == "4 or more BHK" ? "4BHK" : _selectedBHK!.split(" ").join(""),
+                    area: area.toString(),
+                  );
+                }));
               }
             },
             icon: Icon(Icons.search, color: Colors.white),
@@ -227,10 +233,9 @@ class _SearchFormState extends State<SearchForm> {
           _buildCustomButton(
               Icons.person, "Post your Property", Colors.red, () {}),
           SizedBox(height: 10),
-            ElevatedButton.icon(
+          ElevatedButton.icon(
             onPressed: () {
-             Navigator.pushNamed(
-                            context, RoutesName.postfarmland);
+              Navigator.pushNamed(context, RoutesName.postfarmland);
             },
             icon: Icon(Icons.search, color: Colors.white),
             label: Text(
@@ -246,7 +251,6 @@ class _SearchFormState extends State<SearchForm> {
               ),
             ),
           ),
-           
           SizedBox(height: 10),
         ],
       ),
@@ -302,18 +306,57 @@ class _SearchFormState extends State<SearchForm> {
           setState(() => _selectedPriceRange = newValue);
         }),
         SizedBox(height: 20),
-        _buildSearchButton(() {}),
+        ElevatedButton.icon(
+          onPressed: () {
+            if (_selectedLocation == null) {
+              Snack.show("Please select a Location", context);
+            } else {
+              print("Selected Location: $_selectedLocation");
+              final id = locations.firstWhere(
+                  (element) => element["label"] == _selectedLocation)["id"];
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                final area = _selectedArea == null
+                    ? ""
+                    : (locator
+                                .get<AreaDetailsDependency>()
+                                .areas[_selectedLocation!]
+                            as List<Map<String, dynamic>>)
+                        .firstWhere((element) =>
+                            element["a_name"] == _selectedArea)["id"];
+                print(area);
+                return ViewProperties(
+                  city_id: id.toString(),
+                  status: "Rent",
+                  bhk: _selectedBHK == null ? "": _selectedBHK! == "4 or more BHK" ? "4BHK" : _selectedBHK!.split(" ").join(""),
+                  area: area.toString(),
+                );
+              }));
+            }
+          },
+          icon: Icon(Icons.search, color: Colors.white),
+          label: Text(
+            'Search',
+            style: TextStyle(fontSize: 18, color: Colors.white),
+          ),
+          style: ElevatedButton.styleFrom(
+            fixedSize: Size(350, 60),
+            backgroundColor: Colors.red,
+            padding: EdgeInsets.symmetric(horizontal: 60, vertical: 15),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+          ),
+        ),
         SizedBox(height: 10),
         _buildCustomButton(Icons.person, "Builder's Plans", Colors.blue, () {}),
         SizedBox(height: 10),
         _buildCustomButton(
             Icons.person, "Post your Property", Colors.red, () {}),
         SizedBox(height: 10),
-         _buildCustomButton(
-              Icons.person, "Post your Plot", Colors.blue, () {   Navigator.pushNamed(
-                            context, RoutesName.postfarmland);
-                      }),
-          SizedBox(height: 10),
+        _buildCustomButton(Icons.person, "Post your Plot", Colors.blue, () {
+          Navigator.pushNamed(context, RoutesName.postfarmland);
+        }),
+        SizedBox(height: 10),
       ],
     );
   }
@@ -370,18 +413,57 @@ class _SearchFormState extends State<SearchForm> {
           setState(() => _selectedPriceRange = newValue);
         }),
         SizedBox(height: 20),
-        _buildSearchButton(() {}),
+        ElevatedButton.icon(
+          onPressed: () {
+            if (_selectedLocation == null) {
+              Snack.show("Please select a Location", context);
+            } else {
+              print("Selected Location: $_selectedLocation");
+              final id = locations.firstWhere(
+                  (element) => element["label"] == _selectedLocation)["id"];
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                final area = _selectedArea == null
+                    ? ""
+                    : (locator
+                                .get<AreaDetailsDependency>()
+                                .areas[_selectedLocation!]
+                            as List<Map<String, dynamic>>)
+                        .firstWhere((element) =>
+                            element["a_name"] == _selectedArea)["id"];
+                print(area);
+                return ViewProperties(
+                  city_id: id.toString(),
+                  status: "Commercial",
+                  bhk: "",
+                  area: area.toString(),
+                );
+              }));
+            }
+          },
+          icon: Icon(Icons.search, color: Colors.white),
+          label: Text(
+            'Search',
+            style: TextStyle(fontSize: 18, color: Colors.white),
+          ),
+          style: ElevatedButton.styleFrom(
+            fixedSize: Size(350, 60),
+            backgroundColor: Colors.red,
+            padding: EdgeInsets.symmetric(horizontal: 60, vertical: 15),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+          ),
+        ),
         SizedBox(height: 10),
         _buildCustomButton(Icons.person, "Builder's Plans", Colors.blue, () {}),
         SizedBox(height: 10),
         _buildCustomButton(
             Icons.person, "Post your Property", Colors.red, () {}),
         SizedBox(height: 10),
-         _buildCustomButton(
-              Icons.person, "Post your Plot", Colors.blue, () {   Navigator.pushNamed(
-                            context, RoutesName.postfarmland);
-                      }),
-          SizedBox(height: 10),
+        _buildCustomButton(Icons.person, "Post your Plot", Colors.blue, () {
+          Navigator.pushNamed(context, RoutesName.postfarmland);
+        }),
+        SizedBox(height: 10),
       ],
     );
   }
@@ -432,18 +514,57 @@ class _SearchFormState extends State<SearchForm> {
           setState(() => _selectedPriceRange = newValue);
         }),
         SizedBox(height: 20),
-        _buildSearchButton(() {}),
+        ElevatedButton.icon(
+          onPressed: () {
+            if (_selectedLocation == null) {
+              Snack.show("Please select a Location", context);
+            } else {
+              print("Selected Location: $_selectedLocation");
+              final id = locations.firstWhere(
+                  (element) => element["label"] == _selectedLocation)["id"];
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                final area = _selectedArea == null
+                    ? ""
+                    : (locator
+                                .get<AreaDetailsDependency>()
+                                .areas[_selectedLocation!]
+                            as List<Map<String, dynamic>>)
+                        .firstWhere((element) =>
+                            element["a_name"] == _selectedArea)["id"];
+                print(area);
+                return ViewProperties(
+                  city_id: id.toString(),
+                  status: "Plot_farmland",
+                  bhk: "",
+                  area: area.toString(),
+                );
+              }));
+            }
+          },
+          icon: Icon(Icons.search, color: Colors.white),
+          label: Text(
+            'Search',
+            style: TextStyle(fontSize: 18, color: Colors.white),
+          ),
+          style: ElevatedButton.styleFrom(
+            fixedSize: Size(350, 60),
+            backgroundColor: Colors.red,
+            padding: EdgeInsets.symmetric(horizontal: 60, vertical: 15),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+          ),
+        ),
         SizedBox(height: 10),
         _buildCustomButton(Icons.person, "Builder's Plans", Colors.blue, () {}),
         SizedBox(height: 10),
         _buildCustomButton(
             Icons.person, "Post your Property", Colors.red, () {}),
         SizedBox(height: 10),
-         _buildCustomButton(
-              Icons.person, "Post your Plot", Colors.blue, () {   Navigator.pushNamed(
-                            context, RoutesName.postfarmland);
-                      }),
-          SizedBox(height: 10),
+        _buildCustomButton(Icons.person, "Post your Plot", Colors.blue, () {
+          Navigator.pushNamed(context, RoutesName.postfarmland);
+        }),
+        SizedBox(height: 10),
       ],
     );
   }
@@ -573,7 +694,7 @@ class _SearchFormState extends State<SearchForm> {
       IconData icon, String text, Color color, Function f) {
     {
       return ElevatedButton.icon(
-        onPressed: () =>f,
+        onPressed: () => f,
         icon: Icon(icon, color: Colors.white),
         label: Text(
           text,
