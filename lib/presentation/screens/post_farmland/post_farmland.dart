@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:my_zero_broker/bloc/post_farmland/post_farmland_bloc.dart';
+import 'package:my_zero_broker/bloc/post_farmland/post_farmland_event.dart';
+import 'package:my_zero_broker/bloc/post_farmland/post_farmland_state.dart';
 import 'package:my_zero_broker/data/area_details_dependency.dart';
 import 'package:my_zero_broker/locator.dart';
-// Ensure the correct imports for custom widgets are here
 import 'package:my_zero_broker/presentation/screens/post_property/widgets/buildcard.dart';
 import 'package:my_zero_broker/presentation/screens/post_property/widgets/image_pick.dart';
 import 'package:my_zero_broker/presentation/screens/post_property/widgets/section_title.dart';
@@ -12,8 +15,7 @@ class PostFarmland extends StatefulWidget {
 }
 
 class _PostFarmlandState extends State<PostFarmland> {
-
-   final locations = locator.get<AreaDetailsDependency>().cityDetails.map((e) {
+  final locations = locator.get<AreaDetailsDependency>().cityDetails.map((e) {
     return {
       "label": e.cName,
       "icon": Icons.location_city,
@@ -21,9 +23,8 @@ class _PostFarmlandState extends State<PostFarmland> {
     };
   }).toList();
 
-   String? _selectedLocation;
+  String? _selectedLocation;
   String? _selectedArea;
-
 
   final _formKey = GlobalKey<FormState>();
 
@@ -38,10 +39,6 @@ class _PostFarmlandState extends State<PostFarmland> {
   String? selectedFacing;
   String? selectedPlotType;
 
-
-  // Dropdown widget
-
-  
   Widget _buildDropdownWithIcons(String label, List<Map<String, dynamic>> items,
       String? selectedItem, ValueChanged<String?> onChanged) {
     return Padding(
@@ -78,6 +75,7 @@ class _PostFarmlandState extends State<PostFarmland> {
       ),
     );
   }
+
   Widget _buildDropdownField(String label, String? value, List<String> items, Function(String?) onChanged) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -108,12 +106,11 @@ class _PostFarmlandState extends State<PostFarmland> {
     );
   }
 
-  // TextField widget
   Widget _buildTextField(String hintText, TextEditingController controller,
       [bool isRequired = false]) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: TextField(
+      child: TextFormField(
         controller: controller,
         keyboardType: TextInputType.text,
         decoration: InputDecoration(
@@ -122,12 +119,41 @@ class _PostFarmlandState extends State<PostFarmland> {
             borderRadius: BorderRadius.circular(12.0),
           ),
         ),
+        validator: (value) {
+          if (isRequired && (value == null || value.isEmpty)) {
+            return 'Please fill out this field';
+          }
+          return null;
+        },
       ),
     );
   }
 
-  // Checkbox widget
+  void _submitForm(BuildContext context) {
+    if (_formKey.currentState!.validate()) {
+      final propertyDetails = {
+        "plot_area": plotAreaController.text,
+        "plot_front": plotFrontController.text,
+        "plot_depth": plotDepthController.text,
+        "front_road": frontRoadController.text,
+        "side_road": sideRoadController.text,
+        "offer_price": offerPriceController.text,
+        "street_area": streetAreaController.text,
+        "facing": selectedFacing,
+        "plot_type": selectedPlotType,
+        "location": _selectedLocation,
+        "area": _selectedArea,
+      };
 
+      BlocProvider.of<PostFormladBloc>(context).add(
+        PostPropertyEventToApi(propertyDetails: propertyDetails),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please fill all required fields!")),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -139,64 +165,76 @@ class _PostFarmlandState extends State<PostFarmland> {
       appBar: AppBar(
         title: const Text("Post your Plot/Farmland"),
         centerTitle: true,
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.red,
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                buildCard(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SectionTitle(title: "Property Details"),
-                      _buildTextField("Plot Area (Sq. Ft.)", plotAreaController, true),
-                      _buildTextField("Plot Front (M)", plotFrontController, true),
-                      _buildTextField("Plot Depth (M)", plotDepthController, true),
-                      _buildTextField("Front Road (M)", frontRoadController, true),
-                      _buildTextField("Side Road (M)", sideRoadController, false),
-                      _buildTextField("Offer Price (in Lakhs Per Guntha)" , offerPriceController, true),
-                      _buildDropdownField("Facing", selectedFacing, ["East", "West", "North", "South" ,"East-South","East-North", "West-South","West-North"], (val) {
-                        setState(() {
-                          selectedFacing = val;
-                        });
-                      }),
-                      _buildDropdownField("Plot Type", selectedPlotType, ["Residential Plot", "Commercial Plot" ,"Amenity","Farm Land","Industrial Plot"], (val) {
-                        setState(() {
-                          selectedPlotType = val;
-                        });
-                      }),
-                    ],
+      body: BlocListener<PostFormladBloc, PostFormladState>(
+        listener: (context, state) {
+          if (state is PostFormladSuccessState) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(state.successMessage)),
+            );
+          } else if (state is PostFormladFailureState) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(state.failureMessage)),
+            );
+          }
+        },
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  buildCard(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SectionTitle(title: "Property Details"),
+                        _buildTextField("Plot Area (Sq. Ft.)", plotAreaController, true),
+                        _buildTextField("Plot Front (M)", plotFrontController, true),
+                        _buildTextField("Plot Depth (M)", plotDepthController, true),
+                        _buildTextField("Front Road (M)", frontRoadController, true),
+                        _buildTextField("Side Road (M)", sideRoadController, false),
+                        _buildTextField("Offer Price (in Lakhs Per Guntha)", offerPriceController, true),
+                        _buildDropdownField("Facing", selectedFacing, ["East", "West", "North", "South", "East-South", "East-North", "West-South", "West-North"], (val) {
+                          setState(() {
+                            selectedFacing = val;
+                          });
+                        }),
+                        _buildDropdownField("Plot Type", selectedPlotType, ["Residential Plot", "Commercial Plot", "Amenity", "Farm Land", "Industrial Plot"], (val) {
+                          setState(() {
+                            selectedPlotType = val;
+                          });
+                        }),
+                      ],
+                    ),
                   ),
-                ),
-                SizedBox(height: 20),
-                buildCard(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SectionTitle(title: "Locality Details"),
-                       _buildDropdownWithIcons(
-                  'Search Location', locations, _selectedLocation,
-                  (String? newValue) {
-                setState(() => _selectedLocation = newValue);
-              }),
-              _buildDropdownWithIcons(
-                  'Search Area',
-                  _selectedLocation == null
-                      ? []
-                      : (locator
-                                  .get<AreaDetailsDependency>()
-                                  .areas[_selectedLocation!]
-                              as List<Map<String, dynamic>>)
-                          .map((e) => {
-                                "label": e["a_name"].toString(),
-                                "icon": Icons.map
-                              })
-                          .toList(),
+                  SizedBox(height: 20),
+                  buildCard(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SectionTitle(title: "Locality Details"),
+                        _buildDropdownWithIcons(
+                            'Search Location', locations, _selectedLocation,
+                            (String? newValue) {
+                          setState(() => _selectedLocation = newValue);
+                        }),
+                        _buildDropdownWithIcons(
+                            'Search Area',
+                            _selectedLocation == null
+                                ? []
+                                : (locator
+                                        .get<AreaDetailsDependency>()
+                                        .areas[_selectedLocation!]
+                                    as List<Map<String, dynamic>>)
+                                .map((e) => {
+                                      "label": e["a_name"].toString(),
+                                      "icon": Icons.map
+                                    })
+                                .toList(),
                   _selectedArea, (String? newValue) {
                 setState(() => _selectedArea = newValue);
               }),
@@ -242,16 +280,7 @@ class _PostFarmlandState extends State<PostFarmland> {
                             minimumSize: Size(400, 60),
                           ),
                           onPressed: () {
-                             if (_formKey.currentState!.validate()) {
-                        // Handle form submission
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text("Form Submitted Successfully!")),
-                        );
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text("Please fill all required fields!")),
-                        );
-                      }
+                             final postFarmland = _submitForm(context);
                           },
                         )
                 ),
@@ -260,6 +289,6 @@ class _PostFarmlandState extends State<PostFarmland> {
           ),
         ),
       ),
-    );
+    ));
   }
 }
