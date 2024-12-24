@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_zero_broker/bloc/post_property_details/post_property_details_bloc.dart';
-import 'package:my_zero_broker/data/models/property_details_form.dart';
+import 'package:my_zero_broker/data/area_details_dependency.dart';
+// import 'package:my_zero_broker/data/models/property_details_form.dart';
 import 'package:my_zero_broker/data/user_id.dart';
 import 'package:my_zero_broker/locator.dart';
 import 'package:my_zero_broker/presentation/screens/post_property/post_property_depenency.dart/dependency_class.dart';
 import 'package:my_zero_broker/presentation/screens/post_property/widgets/buildcard.dart';
 import 'package:my_zero_broker/presentation/screens/post_property/widgets/checkboxes.dart';
-import 'package:my_zero_broker/presentation/screens/post_property/widgets/dropdown.dart';
+// import 'package:my_zero_broker/presentation/screens/post_property/widgets/dropdown.dart';
 import 'package:my_zero_broker/presentation/screens/post_property/widgets/image_pick.dart';
 import 'package:my_zero_broker/presentation/screens/post_property/widgets/section_title.dart';
 import 'package:my_zero_broker/presentation/screens/post_property/widgets/xtraAmenities.dart';
 
-import 'package:my_zero_broker/presentation/widgets/ElevatedButton.dart';
+// import 'package:my_zero_broker/presentation/widgets/ElevatedButton.dart';
 import 'package:my_zero_broker/presentation/widgets/TextField.dart';
 import 'package:my_zero_broker/presentation/widgets/custom_snack_bar.dart';
 
@@ -24,6 +25,13 @@ class PropertyDetailsFormScreen extends StatefulWidget {
 
 class _PropertyDetailsFormScreenState extends State<PropertyDetailsFormScreen> {
   final _formKey = GlobalKey<FormState>();
+  final cityDetails = locator.get<AreaDetailsDependency>().cityDetails.map((e) {
+    return {
+      "label": e.cName,
+      "icon": Icons.location_city,
+      "id": e.id.toString()
+    };
+  }).toList();
 
   final TextEditingController carpetAreaController = TextEditingController();
   final TextEditingController plotAreaController = TextEditingController();
@@ -33,7 +41,7 @@ class _PropertyDetailsFormScreenState extends State<PropertyDetailsFormScreen> {
       TextEditingController();
   final TextEditingController _dateController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
-
+  late List<Map<String, dynamic>> areas;
   String? selectedPropertyType;
   String? selectedBhkType;
   String? selectedPropertyAge;
@@ -73,6 +81,16 @@ class _PropertyDetailsFormScreenState extends State<PropertyDetailsFormScreen> {
         _dateController.text = "${selectedDate.toLocal()}".split(' ')[0];
       });
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    areas = locator
+        .get<AreaDetailsDependency>()
+        .areas[locator.get<PostPropertyDependency>().city.toUpperCase()]!
+        .toList() as List<Map<String, dynamic>>;
+    print(areas);
   }
 
   String _setFloor(String s) {
@@ -259,19 +277,45 @@ class _PropertyDetailsFormScreenState extends State<PropertyDetailsFormScreen> {
                       children: [
                         const SectionTitle(title: "Locality Details"),
                         _buildDropdownField(
-                            "City", selectedCity, ["AHMEDNAGER", "PUNE"],
-                            (val) {
+                            "City",
+                            selectedCity,
+                            locator
+                                .get<AreaDetailsDependency>()
+                                .areas
+                                .keys
+                                .toList(), (val) {
                           setState(() {
-                            final l = ["AHMEDNAGER", "PUNE"];
-                            city_id = l.indexOf(val!) + 6;
+                            final l = cityDetails
+                                .where((element) => element["label"] == val)
+                                .where((element) => element["label"] == val)
+                                .toList();
+
+                            if (val! != selectedCity) {
+                              areas = locator
+                                  .get<AreaDetailsDependency>()
+                                  .areas[val!]!
+                                  .toList() as List<Map<String, dynamic>>;
+                              selectedLocality = null;
+                            }
+
+                            city_id = int.parse(l.first["id"].toString());
                             selectedCity = val;
+                            print(city_id);
                           });
                         }),
-                        _buildDropdownField("Locality", selectedLocality,
-                            ["Select Area", "ABC Nagar"], (v) {
+                        _buildDropdownField(
+                            "Locality",
+                            selectedLocality,
+                            selectedCity == null
+                                ? []
+                                : areas
+                                    .map((e) => e["a_name"].toString())
+                                    .toList(), (v) {
                           setState(() {
-                            final l = ["Select Area", "ABC Nagar"];
-                            locality_id = l.indexOf(v!) + 7;
+                            final l = areas;
+                            locality_id = areas
+                                .where((element) => element["a_name"] == v)
+                                .first["id"];
                             selectedLocality = v;
                           });
                         }),

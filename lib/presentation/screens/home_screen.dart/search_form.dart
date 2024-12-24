@@ -206,7 +206,11 @@ class _SearchFormState extends State<SearchForm> {
                   return ViewProperties(
                     city_id: id.toString(),
                     status: "",
-                    bhk:_selectedBHK == null ? "": _selectedBHK! == "4 or more BHK" ? "4BHK" : _selectedBHK!.split(" ").join(""),
+                    bhk: _selectedBHK == null
+                        ? ""
+                        : _selectedBHK! == "4 or more BHK"
+                            ? "4BHK"
+                            : _selectedBHK!.split(" ").join(""),
                     area: area.toString(),
                   );
                 }));
@@ -227,17 +231,49 @@ class _SearchFormState extends State<SearchForm> {
             ),
           ),
           SizedBox(height: 10),
-          _buildCustomButton(
-              Icons.person, "Builder's Plans", Colors.blue, () {}),
+          ElevatedButton.icon(
+            onPressed: () {
+              Navigator.pushNamed(context, RoutesName.buyersPlanScreen);
+            },
+            icon: Icon(Icons.money, color: Colors.white),
+            label: Text(
+              "Builder's Plan",
+              style: TextStyle(fontSize: 18, color: Colors.white),
+            ),
+            style: ElevatedButton.styleFrom(
+              fixedSize: Size(350, 60),
+              backgroundColor: Colors.blue,
+              padding: EdgeInsets.symmetric(horizontal: 60, vertical: 15),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+          ),
           SizedBox(height: 10),
-          _buildCustomButton(
-              Icons.person, "Post your Property", Colors.red, () {}),
+          ElevatedButton.icon(
+            onPressed: () {
+              Navigator.pushNamed(context, RoutesName.postpropertyScreen);
+            },
+            icon: Icon(Icons.home, color: Colors.white),
+            label: Text(
+              'Post Property for Free',
+              style: TextStyle(fontSize: 18, color: Colors.white),
+            ),
+            style: ElevatedButton.styleFrom(
+              fixedSize: Size(350, 60),
+              backgroundColor: Colors.red,
+              padding: EdgeInsets.symmetric(horizontal: 60, vertical: 15),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+          ),
           SizedBox(height: 10),
           ElevatedButton.icon(
             onPressed: () {
               Navigator.pushNamed(context, RoutesName.postfarmland);
             },
-            icon: Icon(Icons.search, color: Colors.white),
+            icon: Icon(Icons.add_location_alt_rounded, color: Colors.white),
             label: Text(
               'Post your Plot',
               style: TextStyle(fontSize: 18, color: Colors.white),
@@ -327,7 +363,11 @@ class _SearchFormState extends State<SearchForm> {
                 return ViewProperties(
                   city_id: id.toString(),
                   status: "Rent",
-                  bhk: _selectedBHK == null ? "": _selectedBHK! == "4 or more BHK" ? "4BHK" : _selectedBHK!.split(" ").join(""),
+                  bhk: _selectedBHK == null
+                      ? ""
+                      : _selectedBHK! == "4 or more BHK"
+                          ? "4BHK"
+                          : _selectedBHK!.split(" ").join(""),
                   area: area.toString(),
                 );
               }));
@@ -348,10 +388,43 @@ class _SearchFormState extends State<SearchForm> {
           ),
         ),
         SizedBox(height: 10),
-        _buildCustomButton(Icons.person, "Builder's Plans", Colors.blue, () {}),
+        ElevatedButton.icon(
+          onPressed: () {
+            Navigator.pushNamed(context, RoutesName.buyersPlanScreen);
+          },
+          icon: Icon(Icons.money, color: Colors.white),
+          label: Text(
+            "Builder's Plan",
+            style: TextStyle(fontSize: 18, color: Colors.white),
+          ),
+          style: ElevatedButton.styleFrom(
+            fixedSize: Size(350, 60),
+            backgroundColor: Colors.blue,
+            padding: EdgeInsets.symmetric(horizontal: 60, vertical: 15),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+          ),
+        ),
         SizedBox(height: 10),
-        _buildCustomButton(
-            Icons.person, "Post your Property", Colors.red, () {}),
+        ElevatedButton.icon(
+          onPressed: () {
+            Navigator.pushNamed(context, RoutesName.postpropertyScreen);
+          },
+          icon: Icon(Icons.home, color: Colors.white),
+          label: Text(
+            'Post Property for Free',
+            style: TextStyle(fontSize: 18, color: Colors.white),
+          ),
+          style: ElevatedButton.styleFrom(
+            fixedSize: Size(350, 60),
+            backgroundColor: Colors.red,
+            padding: EdgeInsets.symmetric(horizontal: 60, vertical: 15),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+          ),
+        ),
         SizedBox(height: 10),
         _buildCustomButton(Icons.person, "Post your Plot", Colors.blue, () {
           Navigator.pushNamed(context, RoutesName.postfarmland);
@@ -455,10 +528,43 @@ class _SearchFormState extends State<SearchForm> {
           ),
         ),
         SizedBox(height: 10),
-        _buildCustomButton(Icons.person, "Builder's Plans", Colors.blue, () {}),
+        ElevatedButton.icon(
+          onPressed: () {
+            Navigator.pushNamed(context, RoutesName.buyersPlanScreen);
+          },
+          icon: Icon(Icons.money, color: Colors.white),
+          label: Text(
+            "Builder's Plan",
+            style: TextStyle(fontSize: 18, color: Colors.white),
+          ),
+          style: ElevatedButton.styleFrom(
+            fixedSize: Size(350, 60),
+            backgroundColor: Colors.blue,
+            padding: EdgeInsets.symmetric(horizontal: 60, vertical: 15),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+          ),
+        ),
         SizedBox(height: 10),
-        _buildCustomButton(
-            Icons.person, "Post your Property", Colors.red, () {}),
+        ElevatedButton.icon(
+          onPressed: () {
+            Navigator.pushNamed(context, RoutesName.postpropertyScreen);
+          },
+          icon: Icon(Icons.home, color: Colors.white),
+          label: Text(
+            'Post Property for Free',
+            style: TextStyle(fontSize: 18, color: Colors.white),
+          ),
+          style: ElevatedButton.styleFrom(
+            fixedSize: Size(350, 60),
+            backgroundColor: Colors.red,
+            padding: EdgeInsets.symmetric(horizontal: 60, vertical: 15),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+          ),
+        ),
         SizedBox(height: 10),
         _buildCustomButton(Icons.person, "Post your Plot", Colors.blue, () {
           Navigator.pushNamed(context, RoutesName.postfarmland);
@@ -556,10 +662,43 @@ class _SearchFormState extends State<SearchForm> {
           ),
         ),
         SizedBox(height: 10),
-        _buildCustomButton(Icons.person, "Builder's Plans", Colors.blue, () {}),
+        ElevatedButton.icon(
+          onPressed: () {
+            Navigator.pushNamed(context, RoutesName.buyersPlanScreen);
+          },
+          icon: Icon(Icons.money, color: Colors.white),
+          label: Text(
+            "Builder's Plan",
+            style: TextStyle(fontSize: 18, color: Colors.white),
+          ),
+          style: ElevatedButton.styleFrom(
+            fixedSize: Size(350, 60),
+            backgroundColor: Colors.blue,
+            padding: EdgeInsets.symmetric(horizontal: 60, vertical: 15),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+          ),
+        ),
         SizedBox(height: 10),
-        _buildCustomButton(
-            Icons.person, "Post your Property", Colors.red, () {}),
+        ElevatedButton.icon(
+          onPressed: () {
+            Navigator.pushNamed(context, RoutesName.postpropertyScreen);
+          },
+          icon: Icon(Icons.home, color: Colors.white),
+          label: Text(
+            'Post Property for Free',
+            style: TextStyle(fontSize: 18, color: Colors.white),
+          ),
+          style: ElevatedButton.styleFrom(
+            fixedSize: Size(350, 60),
+            backgroundColor: Colors.red,
+            padding: EdgeInsets.symmetric(horizontal: 60, vertical: 15),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+          ),
+        ),
         SizedBox(height: 10),
         _buildCustomButton(Icons.person, "Post your Plot", Colors.blue, () {
           Navigator.pushNamed(context, RoutesName.postfarmland);
