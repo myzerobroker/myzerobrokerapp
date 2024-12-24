@@ -8,7 +8,6 @@ import 'package:my_zero_broker/presentation/screens/home_screen.dart/header_widg
 import 'package:my_zero_broker/presentation/screens/home_screen.dart/responsive_layout.dart';
 import 'package:my_zero_broker/presentation/screens/home_screen.dart/search_form.dart';
 import 'package:my_zero_broker/presentation/widgets/drawer_content.dart';
-import 'package:my_zero_broker/presentation/widgets/yy.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -115,7 +114,7 @@ class _HomeScreenState extends State<HomeScreen> {
       case DrawerEvent.home:
         return Stack(
           children: [
-            const ParticlesSpark(),
+       
             Column(
               children: [
                 HeaderWidget(),
