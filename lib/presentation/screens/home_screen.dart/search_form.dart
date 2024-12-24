@@ -427,10 +427,25 @@ class _SearchFormState extends State<SearchForm> {
           ),
         ),
         SizedBox(height: 10),
-        _buildCustomButton(Icons.person, "Post your Plot", Colors.blue, () {
-          Navigator.pushNamed(context, RoutesName.postfarmland);
-        }),
-        SizedBox(height: 10),
+          ElevatedButton.icon(
+            onPressed: () {
+              Navigator.pushNamed(context, RoutesName.postfarmland);
+            },
+            icon: Icon(Icons.add_location_alt_rounded, color: Colors.white),
+            label: Text(
+              'Post your Plot',
+              style: TextStyle(fontSize: 18, color: Colors.white),
+            ),
+            style: ElevatedButton.styleFrom(
+              fixedSize: Size(350, 60),
+              backgroundColor: Colors.blue,
+              padding: EdgeInsets.symmetric(horizontal: 60, vertical: 15),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+          ),
+          SizedBox(height: 10),
 
       ],
     );
@@ -568,11 +583,26 @@ class _SearchFormState extends State<SearchForm> {
             ),
           ),
         ),
-        SizedBox(height: 10),
-        _buildCustomButton(Icons.person, "Post your Plot", Colors.blue, () {
-          Navigator.pushNamed(context, RoutesName.postfarmland);
-        }),
-        SizedBox(height: 10),
+       SizedBox(height: 10),
+          ElevatedButton.icon(
+            onPressed: () {
+              Navigator.pushNamed(context, RoutesName.postfarmland);
+            },
+            icon: Icon(Icons.add_location_alt_rounded, color: Colors.white),
+            label: Text(
+              'Post your Plot',
+              style: TextStyle(fontSize: 18, color: Colors.white),
+            ),
+            style: ElevatedButton.styleFrom(
+              fixedSize: Size(350, 60),
+              backgroundColor: Colors.blue,
+              padding: EdgeInsets.symmetric(horizontal: 60, vertical: 15),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+          ),
+          SizedBox(height: 10),
       ],
     );
   }
@@ -703,10 +733,25 @@ class _SearchFormState extends State<SearchForm> {
           ),
         ),
         SizedBox(height: 10),
-        _buildCustomButton(Icons.person, "Post your Plot", Colors.blue, () {
-          Navigator.pushNamed(context, RoutesName.postfarmland);
-        }),
-        SizedBox(height: 10),
+          ElevatedButton.icon(
+            onPressed: () {
+              Navigator.pushNamed(context, RoutesName.postfarmland);
+            },
+            icon: Icon(Icons.add_location_alt_rounded, color: Colors.white),
+            label: Text(
+              'Post your Plot',
+              style: TextStyle(fontSize: 18, color: Colors.white),
+            ),
+            style: ElevatedButton.styleFrom(
+              fixedSize: Size(350, 60),
+              backgroundColor: Colors.blue,
+              padding: EdgeInsets.symmetric(horizontal: 60, vertical: 15),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+          ),
+          SizedBox(height: 10),
       ],
     );
   }
