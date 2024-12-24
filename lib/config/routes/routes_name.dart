@@ -20,4 +20,6 @@ class RoutesName {
   static const String plotSellerPlanScreen = 'plotseller_plan';
   static const String shortlisted = "st"; 
   static const String postfarmland = "post_farmland"; 
+
+   static const String postfarmlandform = "post_farmland_form"; 
 }
