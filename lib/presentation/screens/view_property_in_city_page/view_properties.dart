@@ -276,6 +276,7 @@ class _ViewPropertiesState extends State<ViewProperties> {
                                     .toList()
                                     .first["a_name"];
 
+                                print(photos);
                                 return Center(
                                   child: Container(
                                     width: double.infinity,

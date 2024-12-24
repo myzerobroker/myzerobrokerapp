@@ -142,6 +142,7 @@ class DrawerContent extends StatelessWidget {
       onTap: () async {
         if (title == "Log Out") {
           locator.get<UserDetailsDependency>().id = -1;
+          locator.get<UserDetailsDependency>().userModel == null;
           SharedPreferences sp = await SharedPreferences.getInstance();
           sp.remove("userId");
           Navigator.pushNamed(context, RoutesName.homeScreen);
