@@ -126,7 +126,10 @@ class PropertyFormScreen extends StatelessWidget {
                                 },
                                 isExpanded: true,
                                 underline: Container(),
-                                items: ['Ahmednagar', 'Pune', 'Mumbai']
+                                items: [
+                                  'Ahmednagar',
+                                  'Pune',
+                                ]
                                     .map((city) => DropdownMenuItem(
                                           value: city,
                                           child: Text(city),
@@ -214,6 +217,12 @@ class PropertyFormScreen extends StatelessWidget {
                                         .hasMatch(phonenocontroller.text)) {
                                   Snack.show(
                                       "Enter a Valid Phone number", context);
+                                  return;
+                                }
+                                if (locator.get<UserDetailsDependency>().id ==
+                                    -1) {
+                                  Snack.show(
+                                      "Login to Post your Property ", context);
                                   return;
                                 }
 
