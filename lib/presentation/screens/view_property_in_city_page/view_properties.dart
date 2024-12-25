@@ -52,7 +52,7 @@ class _ViewPropertiesState extends State<ViewProperties> {
     super.initState();
     BlocProvider.of<SearchPropertyBloc>(context).add(SearchBuyProperty(
         city_id: widget.city_id,
-        area_id: "0",
+        area_id: widget.area ?? "0",
         page: current,
         bhk: widget.bhk,
         status: widget.status));
@@ -83,6 +83,7 @@ class _ViewPropertiesState extends State<ViewProperties> {
 
   @override
   Widget build(BuildContext context) {
+    print(widget.area);
     return Scaffold(
         appBar: AppBar(
           title: Text(
@@ -117,7 +118,19 @@ class _ViewPropertiesState extends State<ViewProperties> {
                                   BlocProvider.of<SearchPropertyBloc>(context)
                                       .add(SearchBuyProperty(
                                           city_id: widget.city_id,
-                                          area_id: "0",
+                                          area_id: selectedArea == "Select Area"
+                                              ? "0"
+                                              : locator
+                                                  .get<AreaDetailsDependency>()
+                                                  .areas[cityDetails.firstWhere(
+                                                          (element) =>
+                                                              element["id"] ==
+                                                              widget.city_id)[
+                                                      "label"]]!
+                                                  .firstWhere((e) =>
+                                                      e["a_name"] ==
+                                                      selectedArea)["id"]
+                                                  .toString(),
                                           page: current,
                                           bhk: widget.bhk,
                                           status: widget.status));
@@ -276,7 +289,7 @@ class _ViewPropertiesState extends State<ViewProperties> {
                                     .toList()
                                     .first["a_name"];
 
-                                print(photos);
+                                // print(photos);
                                 return Center(
                                   child: Container(
                                     width: double.infinity,

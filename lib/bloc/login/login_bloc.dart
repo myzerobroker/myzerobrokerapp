@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 import 'dart:io';
 
@@ -38,8 +37,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   void _onLoginApi(LoginApi event, Emitter<LoginState> emit) async {
     emit(state.copyWith(loginStatus: LoginStatus.loading));
 
+    print(state.phoneNo);
+
     Map data = {
-      'mobile_no': state.phoneNo.toString(),
+      'mobile_no':  "+91"+ state.phoneNo.toString(),
     };
 
     try {
