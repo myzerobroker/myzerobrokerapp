@@ -202,7 +202,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                     if (_formKey.currentState?.validate() ??
                                         false) {
                                       final phoneNo = phoneNoController.text;
-
+                                      if (_terms == false) {
+                                        Snack.show(
+                                            "Please agree to the terms and conditions",
+                                            context);
+                                      }
+                                    else
                                       if (phoneNo.isNotEmpty) {
                                         context.read<LoginBloc>().add(
                                               phoneNoChanged(phoneNo: phoneNo),
