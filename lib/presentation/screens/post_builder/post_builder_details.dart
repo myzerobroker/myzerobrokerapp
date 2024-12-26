@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:my_zero_broker/bloc/post_farmland/post_farmland_bloc.dart';
-import 'package:my_zero_broker/bloc/post_farmland/post_farmland_event.dart';
-import 'package:my_zero_broker/bloc/post_farmland/post_farmland_state.dart';
+import 'package:my_zero_broker/bloc/post_builder/post_builder_bloc.dart';
+import 'package:my_zero_broker/bloc/post_builder/post_builder_event.dart';
+import 'package:my_zero_broker/bloc/post_builder/post_builder_state.dart';
 import 'package:my_zero_broker/data/area_details_dependency.dart';
 import 'package:my_zero_broker/locator.dart';
+import 'package:my_zero_broker/presentation/screens/post_property/post_property_depenency.dart/dependency_class.dart';
 import 'package:my_zero_broker/presentation/screens/post_property/widgets/buildcard.dart';
-import 'package:my_zero_broker/presentation/screens/post_property/widgets/image_pick.dart';
 import 'package:my_zero_broker/presentation/screens/post_property/widgets/section_title.dart';
+import 'package:my_zero_broker/presentation/widgets/custom_snack_bar.dart';
 
 class PostBuilderDetails extends StatefulWidget {
   @override
@@ -131,29 +132,36 @@ class _PostBuilderDetailsState extends State<PostBuilderDetails> {
     );
   }
 
-  void _submitForm(BuildContext context) {
+_submitForm(BuildContext context) {
     if (_formKey.currentState!.validate()) {
-      final propertyDetails = {
-        "plot_area": plotAreaController.text,
-        "plot_front": plotFrontController.text,
-        "plot_depth": plotDepthController.text,
-        "front_road": frontRoadController.text,
-        "side_road": sideRoadController.text,
-        "offer_price": offerPriceController.text,
-        "street_area": streetAreaController.text,
+      final Map<String, dynamic> postbuilderDeatils = {
+
+         "user_id": 56,
+    "builder_name": builderNameController.text,
+    "city_id": _selectedLocation,
+    "locality_id": 202,
+    "area": _selectedArea,
+    "1st_contact": contactNo1Controller.text,
+    "2nd_contact": contactNo2Controller.text,
+    "email": EmailController,
+    "gst_number": gstController.text,
+    
+    "building_name": buildingNameController.text,
+    "total_floors": totalfloorsController.text,
+    "no_of_flats": numberofUnitsController.text,
        
+         "property_type": locator.get<PostPropertyDependency>().isResidential
+            ? "Residential"
+            : "Commercial",
+        "purpose": locator.get<PostPropertyDependency>().adType,
         "plot_type": selectedPlotType,
-        "location": _selectedLocation,
-        "area": _selectedArea,
+       
       };
 
-      BlocProvider.of<PostFormladBloc>(context).add(
-        PostPropertyEventToApi(propertyDetails: propertyDetails),
-      );
+        BlocProvider.of<PostBuildersDetailsBloc>(context)
+          .add(PostBuilderEventToApi(propertyDetails: postbuilderDeatils));
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Please fill all required fields!")),
-      );
+      Snack.show("All Fields are Required!!", context);
     }
   }
 
@@ -169,16 +177,12 @@ class _PostBuilderDetailsState extends State<PostBuilderDetails> {
         centerTitle: true,
         backgroundColor: Colors.red,
       ),
-      body: BlocListener<PostFormladBloc, PostFormladState>(
+      body: BlocListener<PostBuildersDetailsBloc, PostBuildersDetailsState>(
         listener: (context, state) {
-          if (state is PostFormladSuccessState) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.successMessage)),
-            );
-          } else if (state is PostFormladFailureState) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.failureMessage)),
-            );
+          if (state is PostBuilderDetailsSuccessState) {
+            Snack.show(state.successMessage, context);
+          } else if (state is PostBuilderDetailsFailureState ) {
+            Snack.show(state.failureMessage, context);
           }
         },
         child: SingleChildScrollView(
@@ -194,32 +198,8 @@ class _PostBuilderDetailsState extends State<PostBuilderDetails> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SectionTitle(title: "Provide Your Contact Information"),
-                        _buildTextField("Plot Area (Sq. Ft.)", plotAreaController, true),
-                        _buildTextField("Plot Front (M)", plotFrontController, true),
-                        _buildTextField("Plot Depth (M)", plotDepthController, true),
-                        _buildTextField("Front Road (M)", frontRoadController, true),
-                        _buildTextField("Side Road (M)", sideRoadController, false),
-                        _buildTextField("Offer Price (in Lakhs Per Guntha)", offerPriceController, true),
-                        _buildDropdownField("Facing", selectedFacing, ["East", "West", "North", "South", "East-South", "East-North", "West-South", "West-North"], (val) {
-                          setState(() {
-                            selectedFacing = val;
-                          });
-                        }),
-                        _buildDropdownField("Plot Type", selectedPlotType, ["Residential Plot", "Commercial Plot", "Amenity", "Farm Land", "Industrial Plot"], (val) {
-                          setState(() {
-                            selectedPlotType = val;
-                          });
-                        }),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  buildCard(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SectionTitle(title: "Locality Details"),
-                        _buildDropdownWithIcons(
+                        _buildTextField("Builder/Developer Name", builderNameController, true),
+                         _buildDropdownWithIcons(
                             'Search Location', locations, _selectedLocation,
                             (String? newValue) {
                           setState(() => _selectedLocation = newValue);
@@ -241,25 +221,36 @@ class _PostBuilderDetailsState extends State<PostBuilderDetails> {
                 setState(() => _selectedArea = newValue);
               }),
                       _buildTextField("Street/Area", streetAreaController, true),
-                    ],
-                  ),
-                ),
-                 SizedBox(height: height * 0.06),
-                  buildCard(
-                    child: Column(
-                      children: [
-                        const SectionTitle(title: "Gallery"),
-                        Center(child: Text("(Get 150% more responses by adding photos of your property)",
-                        style: TextStyle(
-                          color: const Color.fromARGB(255, 99, 97, 97),
-                          fontWeight: FontWeight.w500
-                        ),)),
-                        GalleryImagePicker(onImagesPicked: (pickedImages) {
-                          print('Images picked: ${pickedImages.length}');
-                        }),
+                        _buildTextField("1st Contact  Number", contactNo1Controller, true),
+                        _buildTextField("2nd Contact Number", contactNo2Controller, true),
+                        _buildTextField("Email", EmailController, true),
+                        _buildTextField("GST/TAX Number(Optional)", gstController, false),
+                     
+                        
+                        
+                        
                       ],
                     ),
                   ),
+                  SizedBox(height: 20),
+                  buildCard(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SectionTitle(title: "Provide Your Property Information"),
+                        _buildDropdownField("Plot Type", selectedPlotType, ["Flat", "Independent House/Villa", "Farm House", "Row House", "Twin Bunglow"], (val) {
+                          setState(() {
+                            selectedPlotType = val;
+                          });
+                        }),
+                      _buildTextField("Property/Apartment/Building Name", buildingNameController, false),
+                      _buildTextField("Total Floors/Stories", totalfloorsController, false),
+                      _buildTextField("Number of Units", numberofUnitsController, false),
+                    ],
+                  ),
+                ),
+              
+                  
                   SizedBox(height: height * 0.06),
                 SizedBox(height: 20),
                 Center(
@@ -282,7 +273,7 @@ class _PostBuilderDetailsState extends State<PostBuilderDetails> {
                             minimumSize: Size(400, 60),
                           ),
                           onPressed: () {
-                             final postFarmland = _submitForm(context);
+                             final postbuilder = _submitForm(context);
                           },
                         )
                 ),
