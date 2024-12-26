@@ -93,7 +93,7 @@ class _ProfileUpdateScreenState extends State<ProfileUpdateScreen> {
                     SizedBox(height: height * 0.02),
                     Image.asset(
                       'assets/images/my_zero_broker_logo (2).png',
-                      height: height * 0.06,
+                      height: height * 0.13,
                     ),
                     SizedBox(height: height * 0.02),
                     Card(
