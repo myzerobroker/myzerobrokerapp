@@ -32,7 +32,8 @@ class MyApp extends StatelessWidget {
           create: (context) => LocationBloc(),
         ),
         BlocProvider(create: (context) => SearchPropertyBloc()),
-        BlocProvider(create: (context) => PostFormladBloc()),
+          BlocProvider(create: (context) => PostFormladBloc()),
+        
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

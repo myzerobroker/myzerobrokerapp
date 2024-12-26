@@ -10,6 +10,8 @@ import 'package:my_zero_broker/presentation/screens/payments/owners_plan.dart';
 import 'package:my_zero_broker/presentation/screens/payments/plotSeller_plan.dart';
 import 'package:my_zero_broker/presentation/screens/payments/sellers_Plan.dart';
 import 'package:my_zero_broker/presentation/screens/payments/tenant_plan.dart';
+import 'package:my_zero_broker/presentation/screens/post_builder/post_builder_details.dart';
+import 'package:my_zero_broker/presentation/screens/post_builder/post_builder_form.dart';
 import 'package:my_zero_broker/presentation/screens/post_farmland/post_farmland.dart';
 import 'package:my_zero_broker/presentation/screens/post_property/post_property.dart';
 import 'package:my_zero_broker/presentation/screens/post_property/propertydetails.dart';
@@ -65,6 +67,11 @@ class Routes {
 
       case RoutesName.postfarmland:
         return _createRoute(PostFarmland());
+
+       case RoutesName.postbuilderform:
+        return _createRoute(PostBuilderForm()); 
+        case RoutesName.postbuilderDetails:
+        return _createRoute(PostBuilderDetails());
 
      
       default:

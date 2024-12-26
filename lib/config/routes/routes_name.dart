@@ -22,4 +22,7 @@ class RoutesName {
   static const String postfarmland = "post_farmland"; 
 
    static const String postfarmlandform = "post_farmland_form"; 
+
+    static const String postbuilderform = "post_builder_form"; 
+     static const String postbuilderDetails = "post_builder_details"; 
 }
