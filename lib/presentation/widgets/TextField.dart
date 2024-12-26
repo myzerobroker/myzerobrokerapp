@@ -30,6 +30,9 @@ class Textfield extends StatelessWidget {
       onChanged:onChanged ,
        validator: validator,
       controller: controller,
+      style: TextStyle(
+        fontWeight: FontWeight.bold
+      ),
       keyboardType: textInputType,
       decoration: InputDecoration(
         prefixIcon: Padding(
