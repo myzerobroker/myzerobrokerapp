@@ -233,7 +233,7 @@ class _SearchFormState extends State<SearchForm> {
           SizedBox(height: 10),
           ElevatedButton.icon(
             onPressed: () {
-              Navigator.pushNamed(context, RoutesName.buyersPlanScreen);
+              Navigator.pushNamed(context, RoutesName.postbuilderform);
             },
             icon: Icon(Icons.money, color: Colors.white),
             label: Text(
@@ -252,7 +252,7 @@ class _SearchFormState extends State<SearchForm> {
           SizedBox(height: 10),
           ElevatedButton.icon(
             onPressed: () {
-              Navigator.pushNamed(context, RoutesName.postpropertyScreen);
+              Navigator.pushNamed(context, RoutesName.postbuilderform);
             },
             icon: Icon(Icons.home, color: Colors.white),
             label: Text(
@@ -390,7 +390,7 @@ class _SearchFormState extends State<SearchForm> {
         SizedBox(height: 10),
         ElevatedButton.icon(
           onPressed: () {
-            Navigator.pushNamed(context, RoutesName.buyersPlanScreen);
+            Navigator.pushNamed(context, RoutesName.postbuilderform);
           },
           icon: Icon(Icons.money, color: Colors.white),
           label: Text(
@@ -547,7 +547,7 @@ class _SearchFormState extends State<SearchForm> {
         SizedBox(height: 10),
         ElevatedButton.icon(
           onPressed: () {
-            Navigator.pushNamed(context, RoutesName.buyersPlanScreen);
+            Navigator.pushNamed(context, RoutesName.postbuilderform);
           },
           icon: Icon(Icons.money, color: Colors.white),
           label: Text(
@@ -697,7 +697,7 @@ class _SearchFormState extends State<SearchForm> {
         SizedBox(height: 10),
         ElevatedButton.icon(
           onPressed: () {
-            Navigator.pushNamed(context, RoutesName.buyersPlanScreen);
+            Navigator.pushNamed(context, RoutesName.postbuilderform);
           },
           icon: Icon(Icons.money, color: Colors.white),
           label: Text(
