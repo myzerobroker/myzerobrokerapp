@@ -31,7 +31,7 @@ class SignupBloc extends Bloc<SignupEvent, SignUpState> {
     emit(state.copyWith(signupStatus: SignUpStatus.loading));
 
     Map<String, String> data = {
-      'mobile_no': state.phoneNo,
+      'mobile_no':"+91"+state.phoneNo,
       'name': state.fullName,
       'email': state.email,
     };

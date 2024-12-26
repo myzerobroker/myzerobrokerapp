@@ -36,9 +36,8 @@ class _PostBuilderDetailsState extends State<PostBuilderDetails> {
   final TextEditingController gstController = TextEditingController();
   final TextEditingController buildingNameController = TextEditingController();
   final TextEditingController streetAreaController = TextEditingController();
-   final TextEditingController totalfloorsController = TextEditingController();
-    final TextEditingController numberofUnitsController = TextEditingController();
-
+  final TextEditingController totalfloorsController = TextEditingController();
+  final TextEditingController numberofUnitsController = TextEditingController();
 
   String? selectedPlotType;
 
@@ -79,7 +78,8 @@ class _PostBuilderDetailsState extends State<PostBuilderDetails> {
     );
   }
 
-  Widget _buildDropdownField(String label, String? value, List<String> items, Function(String?) onChanged) {
+  Widget _buildDropdownField(String label, String? value, List<String> items,
+      Function(String?) onChanged) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: DropdownButtonFormField<String>(
@@ -132,33 +132,29 @@ class _PostBuilderDetailsState extends State<PostBuilderDetails> {
     );
   }
 
-_submitForm(BuildContext context) {
+  _submitForm(BuildContext context) {
     if (_formKey.currentState!.validate()) {
       final Map<String, dynamic> postbuilderDeatils = {
-
-         "user_id": 56,
-    "builder_name": builderNameController.text,
-    "city_id": _selectedLocation,
-    "locality_id": 202,
-    "area": _selectedArea,
-    "1st_contact": contactNo1Controller.text,
-    "2nd_contact": contactNo2Controller.text,
-    "email": EmailController,
-    "gst_number": gstController.text,
-    
-    "building_name": buildingNameController.text,
-    "total_floors": totalfloorsController.text,
-    "no_of_flats": numberofUnitsController.text,
-       
-         "property_type": locator.get<PostPropertyDependency>().isResidential
+        "user_id": 56,
+        "builder_name": builderNameController.text,
+        "city_id": _selectedLocation,
+        "locality_id": 202,
+        "area": _selectedArea,
+        "1st_contact": contactNo1Controller.text,
+        "2nd_contact": contactNo2Controller.text,
+        "email": EmailController,
+        "gst_number": gstController.text,
+        "building_name": buildingNameController.text,
+        "total_floors": totalfloorsController.text,
+        "no_of_flats": numberofUnitsController.text,
+        "property_type": locator.get<PostPropertyDependency>().isResidential
             ? "Residential"
             : "Commercial",
         "purpose": locator.get<PostPropertyDependency>().adType,
         "plot_type": selectedPlotType,
-       
       };
 
-        BlocProvider.of<PostBuildersDetailsBloc>(context)
+      BlocProvider.of<PostBuildersDetailsBloc>(context)
           .add(PostBuilderEventToApi(propertyDetails: postbuilderDeatils));
     } else {
       Snack.show("All Fields are Required!!", context);
@@ -171,117 +167,124 @@ _submitForm(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: const Text("Post your Plot/Farmland"),
-        centerTitle: true,
-        backgroundColor: Colors.red,
-      ),
-      body: BlocListener<PostBuildersDetailsBloc, PostBuildersDetailsState>(
-        listener: (context, state) {
-          if (state is PostBuilderDetailsSuccessState) {
-            Snack.show(state.successMessage, context);
-          } else if (state is PostBuilderDetailsFailureState ) {
-            Snack.show(state.failureMessage, context);
-          }
-        },
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  buildCard(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SectionTitle(title: "Provide Your Contact Information"),
-                        _buildTextField("Builder/Developer Name", builderNameController, true),
-                         _buildDropdownWithIcons(
-                            'Search Location', locations, _selectedLocation,
-                            (String? newValue) {
-                          setState(() => _selectedLocation = newValue);
-                        }),
-                        _buildDropdownWithIcons(
-                            'Search Area',
-                            _selectedLocation == null
-                                ? []
-                                : (locator
-                                        .get<AreaDetailsDependency>()
-                                        .areas[_selectedLocation!]
-                                    as List<Map<String, dynamic>>)
-                                .map((e) => {
-                                      "label": e["a_name"].toString(),
-                                      "icon": Icons.map
-                                    })
-                                .toList(),
-                  _selectedArea, (String? newValue) {
-                setState(() => _selectedArea = newValue);
-              }),
-                      _buildTextField("Street/Area", streetAreaController, true),
-                        _buildTextField("1st Contact  Number", contactNo1Controller, true),
-                        _buildTextField("2nd Contact Number", contactNo2Controller, true),
-                        _buildTextField("Email", EmailController, true),
-                        _buildTextField("GST/TAX Number(Optional)", gstController, false),
-                     
-                        
-                        
-                        
-                      ],
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          title: const Text("Builder's Plan"),
+          centerTitle: true,
+          backgroundColor: const Color.fromARGB(255, 238, 123, 152),
+        ),
+        body: BlocListener<PostBuildersDetailsBloc, PostBuildersDetailsState>(
+          listener: (context, state) {
+            if (state is PostBuilderDetailsSuccessState) {
+              Snack.show(state.successMessage, context);
+            } else if (state is PostBuilderDetailsFailureState) {
+              Snack.show(state.failureMessage, context);
+            }
+          },
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    buildCard(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SectionTitle(
+                              title: "Provide Your Contact Information"),
+                          _buildTextField("Builder/Developer Name",
+                              builderNameController, true),
+                          _buildDropdownWithIcons(
+                              'Search Location', locations, _selectedLocation,
+                              (String? newValue) {
+                            setState(() => _selectedLocation = newValue);
+                          }),
+                          _buildDropdownWithIcons(
+                              'Search Area',
+                              _selectedLocation == null
+                                  ? []
+                                  : (locator
+                                              .get<AreaDetailsDependency>()
+                                              .areas[_selectedLocation!]
+                                          as List<Map<String, dynamic>>)
+                                      .map((e) => {
+                                            "label": e["a_name"].toString(),
+                                            "icon": Icons.map
+                                          })
+                                      .toList(),
+                              _selectedArea, (String? newValue) {
+                            setState(() => _selectedArea = newValue);
+                          }),
+                          _buildTextField(
+                              "Street/Area", streetAreaController, true),
+                          _buildTextField("1st Contact  Number",
+                              contactNo1Controller, true),
+                          _buildTextField(
+                              "2nd Contact Number", contactNo2Controller, true),
+                          _buildTextField("Email", EmailController, true),
+                          _buildTextField(
+                              "GST/TAX Number(Optional)", gstController, false),
+                        ],
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 20),
-                  buildCard(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SectionTitle(title: "Provide Your Property Information"),
-                        _buildDropdownField("Plot Type", selectedPlotType, ["Flat", "Independent House/Villa", "Farm House", "Row House", "Twin Bunglow"], (val) {
-                          setState(() {
-                            selectedPlotType = val;
-                          });
-                        }),
-                      _buildTextField("Property/Apartment/Building Name", buildingNameController, false),
-                      _buildTextField("Total Floors/Stories", totalfloorsController, false),
-                      _buildTextField("Number of Units", numberofUnitsController, false),
-                    ],
-                  ),
+                    SizedBox(height: 20),
+                    buildCard(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SectionTitle(
+                              title: "Provide Your Property Information"),
+                          _buildDropdownField("Plot Type", selectedPlotType, [
+                            "Flat",
+                            "Independent House/Villa",
+                            "Farm House",
+                            "Row House",
+                            "Twin Bunglow"
+                          ], (val) {
+                            setState(() {
+                              selectedPlotType = val;
+                            });
+                          }),
+                          _buildTextField("Property/Apartment/Building Name",
+                              buildingNameController, false),
+                          _buildTextField("Total Floors/Stories",
+                              totalfloorsController, false),
+                          _buildTextField("Number of Units",
+                              numberofUnitsController, false),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: height * 0.06),
+                    SizedBox(height: 20),
+                    Center(
+                        child: ElevatedButton(
+                      child: Text(
+                        'Submit',
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.0),
+                        ),
+                        minimumSize: Size(400, 60),
+                      ),
+                      onPressed: () {
+                        final postbuilder = _submitForm(context);
+                      },
+                    )),
+                  ],
                 ),
-              
-                  
-                  SizedBox(height: height * 0.06),
-                SizedBox(height: 20),
-                Center(
-                  child:
-                 
-                    ElevatedButton(
-                          child: Text(
-                            'Submit',
-                            style: TextStyle(
-                              fontSize: 20.0,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.red,
-                            foregroundColor: Colors.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12.0),
-                            ),
-                            minimumSize: Size(400, 60),
-                          ),
-                          onPressed: () {
-                             final postbuilder = _submitForm(context);
-                          },
-                        )
-                ),
-              ],
+              ),
             ),
           ),
-        ),
-      ),
-    ));
+        ));
   }
 }

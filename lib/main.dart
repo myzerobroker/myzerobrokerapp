@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_zero_broker/bloc/location/location_bloc.dart';
 import 'package:my_zero_broker/bloc/login/login_bloc.dart';
+import 'package:my_zero_broker/bloc/post_builder/post_builder_bloc.dart';
 import 'package:my_zero_broker/bloc/post_farmland/post_farmland_bloc.dart';
 import 'package:my_zero_broker/bloc/post_property_details/post_property_details_bloc.dart';
 import 'package:my_zero_broker/bloc/search_property/search_property_bloc.dart';
@@ -33,6 +34,7 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(create: (context) => SearchPropertyBloc()),
           BlocProvider(create: (context) => PostFormladBloc()),
+            BlocProvider(create: (context) => PostBuildersDetailsBloc()),
         
       ],
       child: MaterialApp(
