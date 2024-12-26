@@ -25,4 +25,6 @@ class RoutesName {
 
     static const String postbuilderform = "post_builder_form"; 
      static const String postbuilderDetails = "post_builder_details"; 
+
+        static const String updateProfilePage = "profile_update"; 
 }

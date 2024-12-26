@@ -4,6 +4,7 @@ import 'package:my_zero_broker/bloc/post_builder/post_builder_bloc.dart';
 import 'package:my_zero_broker/bloc/post_builder/post_builder_event.dart';
 import 'package:my_zero_broker/bloc/post_builder/post_builder_state.dart';
 import 'package:my_zero_broker/data/area_details_dependency.dart';
+import 'package:my_zero_broker/data/user_id.dart';
 import 'package:my_zero_broker/locator.dart';
 import 'package:my_zero_broker/presentation/screens/post_property/post_property_depenency.dart/dependency_class.dart';
 import 'package:my_zero_broker/presentation/screens/post_property/widgets/buildcard.dart';
@@ -135,7 +136,7 @@ class _PostBuilderDetailsState extends State<PostBuilderDetails> {
   _submitForm(BuildContext context) {
     if (_formKey.currentState!.validate()) {
       final Map<String, dynamic> postbuilderDeatils = {
-        "user_id": 56,
+        "user_id": locator.get<UserId>().id,
         "builder_name": builderNameController.text,
         "city_id": _selectedLocation,
         "locality_id": 202,

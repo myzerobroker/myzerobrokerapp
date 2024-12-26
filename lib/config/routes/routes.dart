@@ -15,6 +15,7 @@ import 'package:my_zero_broker/presentation/screens/post_builder/post_builder_fo
 import 'package:my_zero_broker/presentation/screens/post_farmland/post_farmland.dart';
 import 'package:my_zero_broker/presentation/screens/post_property/post_property.dart';
 import 'package:my_zero_broker/presentation/screens/post_property/propertydetails.dart';
+import 'package:my_zero_broker/presentation/screens/profile/profile_update.dart';
 import 'package:my_zero_broker/presentation/screens/terms&Condition/termsAndCondition.dart';
 import 'package:my_zero_broker/presentation/screens/view_shortlisted_property.dart';
 
@@ -72,6 +73,9 @@ class Routes {
         return _createRoute(PostBuilderForm()); 
         case RoutesName.postbuilderDetails:
         return _createRoute(PostBuilderDetails());
+
+         case RoutesName.updateProfilePage:
+        return _createRoute(ProfileUpdateScreen());
 
      
       default:

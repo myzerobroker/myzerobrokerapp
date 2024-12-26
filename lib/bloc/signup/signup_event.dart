@@ -39,4 +39,6 @@ class EmailChanged extends SignupEvent {
 }
 class SignUpApi extends SignupEvent {}
 
+class UpdateProfileApi extends SignupEvent {}
+
 
