@@ -12,7 +12,7 @@ class PostBuildersDetailsBloc
     on<PostBuilderEventToApi>((event, emit) async {
       final data = event.propertyDetails;
       print(data);
-      final url = "https://myzerobroker.com/user/property/post-builder-property";
+      final url = "https://myzerobroker.com/api/user/property/post-builder-property";
       emit(PostBuilderDetailsLoading());
       final body = jsonEncode(data);
       // print(body.runtimeType);

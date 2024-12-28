@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_zero_broker/bloc/post_property_details/post_property_details_bloc.dart';
 import 'package:my_zero_broker/data/area_details_dependency.dart';
-// import 'package:my_zero_broker/data/models/property_details_form.dart';
-import 'package:my_zero_broker/data/user_id.dart';
+import 'package:my_zero_broker/data/user_details_dependency.dart';
 import 'package:my_zero_broker/locator.dart';
 import 'package:my_zero_broker/presentation/screens/post_property/post_property_depenency.dart/dependency_class.dart';
 import 'package:my_zero_broker/presentation/screens/post_property/widgets/buildcard.dart';
@@ -12,7 +11,6 @@ import 'package:my_zero_broker/presentation/screens/post_property/widgets/checkb
 import 'package:my_zero_broker/presentation/screens/post_property/widgets/image_pick.dart';
 import 'package:my_zero_broker/presentation/screens/post_property/widgets/section_title.dart';
 import 'package:my_zero_broker/presentation/screens/post_property/widgets/xtraAmenities.dart';
-
 // import 'package:my_zero_broker/presentation/widgets/ElevatedButton.dart';
 import 'package:my_zero_broker/presentation/widgets/TextField.dart';
 import 'package:my_zero_broker/presentation/widgets/custom_snack_bar.dart';
@@ -110,7 +108,7 @@ class _PropertyDetailsFormScreenState extends State<PropertyDetailsFormScreen> {
   _submitForm() {
     if (_formKey.currentState!.validate()) {
       final Map<String, dynamic> propertyDetails = {
-        "user_id": locator.get<UserId>().id,
+        "user_id": locator.get<UserDetailsDependency>().id,
         "bhk": selectedBhkType.toString(),
         "property": locator.get<PostPropertyDependency>().isResidential
             ? "Residential"

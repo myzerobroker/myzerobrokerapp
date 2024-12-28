@@ -160,23 +160,27 @@ class OwnersPlanScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildButton(double screenWidth, int index) {
-    return Padding(
-      padding: EdgeInsets.all(screenWidth * 0.02),
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: PaymentsColors.buttonColor,
-        ),
-        onPressed: () {
-          handleButtonPress(index);
-        },
-        child: Text(
-          'Buy now',
-          style: TextStyle(color: PaymentsColors.buttonText),
+ Widget _buildButton(double screenWidth, int index) {
+  return Padding(
+    padding: EdgeInsets.all(screenWidth * 0.02),
+    child: ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: PaymentsColors.buttonColor,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(9),  // Remove border radius to make it rectangular
         ),
       ),
-    );
-  }
+      onPressed: () {
+        handleButtonPress(index);
+      },
+      child: Text(
+        'Buy now',
+        style: TextStyle(color: PaymentsColors.buttonText,fontSize: 9),
+      ),
+    ),
+  );
+}
+
 
   void handleButtonPress(int index) {
    
