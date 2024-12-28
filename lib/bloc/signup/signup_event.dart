@@ -39,6 +39,17 @@ class EmailChanged extends SignupEvent {
 }
 class SignUpApi extends SignupEvent {}
 
-class UpdateProfileApi extends SignupEvent {}
+class UpdateProfileApi extends SignupEvent {
+  final String fullName;
+  final String email;
+  final String phoneNo;
+
+  UpdateProfileApi({
+    required this.fullName,
+    required this.email,
+    required this.phoneNo,
+  });
+}
+
 
 

@@ -27,6 +27,8 @@ class _PostFarmlandState extends State<PostFarmland> {
   String? _selectedLocation;
   String? _selectedArea;
   int? city_id;
+  int? areaId;
+  
 
   final _formKey = GlobalKey<FormState>();
 
@@ -155,7 +157,8 @@ class _PostFarmlandState extends State<PostFarmland> {
         "photos": [],
         "location": _selectedLocation,
         "area": _selectedArea,
-        "city_id": city_id.toString() ?? "0",
+        "city_id": city_id ?? 0,
+        "locality_id": areaId ?? 0,
       };
 
       BlocProvider.of<PostFormladBloc>(context).add(
