@@ -27,4 +27,5 @@ class RoutesName {
      static const String postbuilderDetails = "post_builder_details"; 
 
         static const String updateProfilePage = "profile_update"; 
+        static const String myListing = "my_listing";
 }
