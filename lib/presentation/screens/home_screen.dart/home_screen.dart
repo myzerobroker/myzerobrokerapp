@@ -2,6 +2,7 @@ import 'package:awesome_drawer_bar/awesome_drawer_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_zero_broker/bloc/drawer/drawer_cubit.dart';
+import 'package:my_zero_broker/presentation/screens/home_screen.dart/advertisements_carousel.dart';
 import 'package:my_zero_broker/presentation/screens/home_screen.dart/enquiry_form.dart'; // Ensure correct import
 import 'package:my_zero_broker/presentation/screens/home_screen.dart/enquiry_grids.dart';
 import 'package:my_zero_broker/presentation/screens/home_screen.dart/header_widget.dart';
@@ -117,6 +118,7 @@ class _HomeScreenState extends State<HomeScreen> {
        
             Column(
               children: [
+                   AdvertisementsCarousel(),
                 HeaderWidget(),
                 SearchForm(),
                 EnquiryGrids(
