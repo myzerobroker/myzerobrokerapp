@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_zero_broker/bloc/location/location_bloc.dart';
 import 'package:my_zero_broker/presentation/screens/home_screen.dart/home_screen.dart';
+import 'package:my_zero_broker/presentation/widgets/shimmer_loading_page.dart';
 
 class LocationsFetchWidget extends StatefulWidget {
   const LocationsFetchWidget({super.key});
@@ -30,18 +31,7 @@ class _LocationsFetchWidgetState extends State<LocationsFetchWidget> {
             ),
           );
         } else {
-          return Scaffold(
-            body: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CircularProgressIndicator(),
-                  const SizedBox(height: 20),
-                  const Text('Fetching details...'),
-                ],
-              ),
-            ),
-          );
+          return ShimmerLoadingPage() ; 
         }
       },
     );
