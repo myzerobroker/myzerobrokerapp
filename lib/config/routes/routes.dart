@@ -5,6 +5,7 @@ import 'package:my_zero_broker/presentation/screens/contacts/contacts.dart';
 import 'package:my_zero_broker/presentation/screens/home_screen.dart/home_screen.dart';
 import 'package:my_zero_broker/presentation/screens/locations_fetch_widget.dart';
 import 'package:my_zero_broker/presentation/screens/login/otp_screen.dart';
+import 'package:my_zero_broker/presentation/screens/my_listing_page/my_listing_page.dart';
 import 'package:my_zero_broker/presentation/screens/payments/buyers_screen.dart';
 import 'package:my_zero_broker/presentation/screens/payments/owners_plan.dart';
 import 'package:my_zero_broker/presentation/screens/payments/plotSeller_plan.dart';
@@ -76,7 +77,8 @@ class Routes {
 
          case RoutesName.updateProfilePage:
         return _createRoute(ProfileUpdateScreen());
-
+        case RoutesName.myListing:
+        return _createRoute(MyListingPage());
      
       default:
         return _createRoute(const Scaffold(

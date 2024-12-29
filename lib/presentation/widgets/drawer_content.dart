@@ -36,46 +36,49 @@ class DrawerContent extends StatelessWidget {
               shrinkWrap: true,
               children: [
                 Visibility(
-  visible: locator.get<UserDetailsDependency>().id != -1,
-  child: ListTile(
-    title: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              '${locator.get<UserDetailsDependency>().userModel?.user?.name}',
-              style: TextStyle(fontSize: 20),
-            ),
-            Text(
-              locator
-                      .get<UserDetailsDependency>()
-                      .userModel
-                      ?.user
-                      ?.email ??
-                  '',
-              style: TextStyle(fontSize: 15),
-            ),
-          ],
-        ),
-        IconButton(
-          icon: Icon(Icons.edit),
-          onPressed: () {
-            // Navigate to the profile update page
-            Navigator.pushNamed(context, RoutesName.updateProfilePage);
-          },
-        ),
-      ],
-    ),
-  ),
-),
-
+                  visible: locator.get<UserDetailsDependency>().id != -1,
+                  child: ListTile(
+                    title: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '${locator.get<UserDetailsDependency>().userModel?.user?.name}',
+                              style: TextStyle(fontSize: 20),
+                            ),
+                            Text(
+                              locator
+                                      .get<UserDetailsDependency>()
+                                      .userModel
+                                      ?.user
+                                      ?.email ??
+                                  '',
+                              style: TextStyle(fontSize: 15),
+                            ),
+                          ],
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.edit),
+                          onPressed: () {
+                            // Navigate to the profile update page
+                            Navigator.pushNamed(
+                                context, RoutesName.updateProfilePage);
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
                 _drawerItem(
                     context, 'Home', RoutesName.homeScreen, Icon(Icons.home)),
                 Divider(color: Colors.grey.shade100),
                 _drawerItem(context, 'Shortlisted Property',
                     RoutesName.shortlisted, Icon(Icons.check)),
+                Divider(color: Colors.grey.shade100),
+                _drawerItem(context, 'My Listings', RoutesName.myListing,
+                    Icon(Icons.book)),
                 Divider(color: Colors.grey.shade100),
                 _drawerItem(context, 'Post Property For Free',
                     RoutesName.postpropertyScreen, Icon(Icons.add)),
