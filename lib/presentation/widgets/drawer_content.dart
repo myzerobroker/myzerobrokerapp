@@ -4,11 +4,19 @@ import 'package:my_zero_broker/data/user_details_dependency.dart';
 import 'package:my_zero_broker/locator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class DrawerContent extends StatelessWidget {
+class DrawerContent extends StatefulWidget {
+  @override
+  State<DrawerContent> createState() => _DrawerContentState();
+}
+
+class _DrawerContentState extends State<DrawerContent> {
+  final key = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
       backgroundColor: Colors.white,
+      key: key,
       elevation: 50,
       child: Column(
         children: [
@@ -71,8 +79,11 @@ class DrawerContent extends StatelessWidget {
                     ),
                   ),
                 ),
-                _drawerItem(
-                    context, 'Home', RoutesName.homeScreen, Icon(Icons.home)),
+                GestureDetector(
+                  onTap: () => key.currentState!.closeDrawer(),
+                  child: _drawerItem(
+                      context, 'Home', RoutesName.homeScreen, Icon(Icons.home)),
+                ),
                 Divider(color: Colors.grey.shade100),
                 _drawerItem(context, 'Shortlisted Property',
                     RoutesName.shortlisted, Icon(Icons.check)),

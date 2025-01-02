@@ -15,11 +15,17 @@ class ViewProperties extends StatefulWidget {
       required this.city_id,
       required this.status,
       required this.bhk,
-      required this.area});
+      required this.area, required this.propertyType, required this.priceRange,
+
+      
+      
+      });
   final String city_id;
   final String status;
   final area;
   final String bhk;
+  final String propertyType;
+  final String priceRange; 
 
   @override
   State<ViewProperties> createState() => _ViewPropertiesState();
@@ -55,6 +61,8 @@ class _ViewPropertiesState extends State<ViewProperties> {
         area_id: widget.area ?? "0",
         page: current,
         bhk: widget.bhk,
+        priceRange: widget.priceRange ,
+        property_type: widget.propertyType,
         status: widget.status));
     areas = locator
         .get<AreaDetailsDependency>()
@@ -133,6 +141,8 @@ class _ViewPropertiesState extends State<ViewProperties> {
                                                   .toString(),
                                           page: current,
                                           bhk: widget.bhk,
+                                          priceRange: widget.priceRange ,
+        property_type: widget.propertyType,
                                           status: widget.status));
                                 },
                                 child: Container(
@@ -226,6 +236,8 @@ class _ViewPropertiesState extends State<ViewProperties> {
                                             area_id: areaId,
                                             bhk: widget.bhk,
                                             page: current,
+                                            priceRange: widget.priceRange ,
+        property_type: widget.propertyType,
                                             status: widget.status));
 
                                     print(
@@ -249,6 +261,8 @@ class _ViewPropertiesState extends State<ViewProperties> {
                                           city_id: widget.city_id,
                                           area_id: "0",
                                           bhk: widget.bhk,
+                                          priceRange: widget.priceRange ,
+        property_type: widget.propertyType,
                                           page: current,
                                           status: widget.status));
                                   print(
