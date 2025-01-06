@@ -214,7 +214,7 @@ class _SearchFormState extends State<SearchForm> {
                           .firstWhere((element) =>
                               element["a_name"] == _selectedArea)["id"];
                   print(area);
-                  print("assadsa"+id.toString());
+                  print("assadsa" + id.toString());
                   return ViewProperties(
                     city_id: id.toString(),
                     status: "",
@@ -266,7 +266,7 @@ class _SearchFormState extends State<SearchForm> {
           SizedBox(height: 10),
           ElevatedButton.icon(
             onPressed: () {
-              Navigator.pushNamed(context, RoutesName.postbuilderform);
+              Navigator.pushNamed(context, RoutesName.postpropertyScreen);
             },
             icon: Icon(Icons.home, color: Colors.white),
             label: Text(
