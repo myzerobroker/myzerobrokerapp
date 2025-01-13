@@ -117,6 +117,7 @@ class _PropertyDetailsFormScreenState extends State<PropertyDetailsFormScreen> {
           final url = await UploadImage.uploadImage(image);
           photosUrls.add(url);
         }
+        print(photosUrls);
       }
       print(photosUrls);
       final Map<String, dynamic> propertyDetails = {
