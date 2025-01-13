@@ -13,7 +13,7 @@ class UploadImage {
       ),
     );
 
-    final res = await request.send();
+    final res = await request.send().timeout(const Duration(seconds: 30));
     final response = await http.Response.fromStream(res);
     print(response.body);
     final json = jsonDecode(response.body);

@@ -11,23 +11,37 @@ class PostPropertyDetailsBloc
   PostPropertyDetailsBloc() : super(PostPropertyDetailsInitial()) {
     on<PostPropertyEventToApi>((event, emit) async {
       final data = event.propertyDetails;
-      print(data);
       final url = "https://myzerobroker.com/api/post-property";
+
+      // Emitting loading state
       emit(PostPropertyDetailsLoading());
-      final body = jsonEncode(data);
-      // print(body.runtimeType);
-      final response = await http.post(
-        Uri.parse(url),
-        headers: {"Content-Type": "application/json"},
-        body: body,
-      );
-      print(response.body);
-      if (response.statusCode == 201) {
-        emit(PostPropertyDetailsSuccessState(
-            successMessage: jsonDecode(response.body)["message"]));
-      } else {
+
+      try {
+        // Create a multipart request
+        final request = http.MultipartRequest('POST', Uri.parse(url));
+
+        // Add other fields as form fields
+        data.forEach((key, value) {
+          request.fields[key] = value.toString();
+        });
+        print(data);
+        // Send the request
+        final response = await request.send();
+
+        // Handle the response
+        final responseBody = await response.stream.bytesToString();
+        print(responseBody);
+        if (response.statusCode == 201) {
+          emit(PostPropertyDetailsSuccessState(
+              successMessage: jsonDecode(responseBody)["message"]));
+        } else {
+          emit(PostPropertyDetailsFailureState(
+              failureMessage: jsonDecode(responseBody)["message"]));
+        }
+      } catch (error) {
+        // Handle errors
         emit(PostPropertyDetailsFailureState(
-            failureMessage: jsonDecode(response.body)["message"]));
+            failureMessage: "An error occurred: $error"));
       }
     });
   }
