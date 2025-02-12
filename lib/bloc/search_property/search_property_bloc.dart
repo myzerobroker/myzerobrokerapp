@@ -15,17 +15,30 @@ class SearchPropertyBloc
       final city_id = event.city_id;
       final area_id = event.area_id;
       final page = event.page;
+      final property_type = event.property_type;
+      String range = event.priceRange;
+      final pricerange = {
+        "₹10 Lakh - ₹20 Lakh": "1000000-2000000",
+        "₹20 Lakh - ₹30 Lakh": "2000000-3000000",
+        "₹30 Lakh - ₹50 Lakh": "3000000-5000000",
+        "₹50 Lakh - ₹1 Cr": "5000000-10000000",
+        "Above ₹1 Cr": "10000000%2B",
+      };
+      print(pricerange[range]);
+      final r = range == "" ? "" : pricerange[range]; 
       emit(SearchPropertyLoading());
       try {
         final res = await http.get(Uri.parse(
-            'https://myzerobroker.com/api/search?city_id=$city_id&locality_id=$area_id&page=$page&property_status=${event.status}&bhk=${event.bhk}'));
+            'https://myzerobroker.com/api/search?city_id=$city_id&locality_id=$area_id&page=$page&property_status=${event.status}&bhk=${event.bhk}&price_range=${r}'));
         if (res.statusCode == 200) {
           final property = PropertyInCityModel.fromJson(jsonDecode(res.body));
           emit(SearchPropertyLoaded(properties: property));
         } else {
+          
           emit(SearchPropertyError(message: 'Failed to load property'));
         }
       } catch (err) {
+        print(err);
         emit(SearchPropertyError(message: "Failed to load property"));
       }
     });

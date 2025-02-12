@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_zero_broker/bloc/post_property_details/post_property_details_bloc.dart';
 import 'package:my_zero_broker/data/area_details_dependency.dart';
+import 'package:my_zero_broker/data/upload_image.dart';
 import 'package:my_zero_broker/data/user_details_dependency.dart';
 import 'package:my_zero_broker/locator.dart';
 import 'package:my_zero_broker/presentation/screens/post_property/post_property_depenency.dart/dependency_class.dart';
@@ -62,6 +65,8 @@ class _PropertyDetailsFormScreenState extends State<PropertyDetailsFormScreen> {
   String? selectedSaleDeedCertificate;
   String? selectedPropertyTax;
   String? selectedOccupancyCertificate;
+  List<String> photosUrls = [];
+  List<File> images = [];
 
   bool _isPriceNegotiableSelected = false;
   bool _isCurrentlyUnderLoanSelected = false;
@@ -105,8 +110,16 @@ class _PropertyDetailsFormScreenState extends State<PropertyDetailsFormScreen> {
     }
   }
 
-  _submitForm() {
+  _submitForm() async {
     if (_formKey.currentState!.validate()) {
+      if (images.isNotEmpty) {
+        for (File image in images) {
+          final url = await UploadImage.uploadImage(image);
+          photosUrls.add(url);
+        }
+        print(photosUrls);
+      }
+      print(photosUrls);
       final Map<String, dynamic> propertyDetails = {
         "user_id": locator.get<UserDetailsDependency>().id,
         "bhk": selectedBhkType.toString(),
@@ -150,7 +163,7 @@ class _PropertyDetailsFormScreenState extends State<PropertyDetailsFormScreen> {
         "city_id": city_id.toString() ?? "0",
         "locality_id": locality_id.toString() ?? "0",
         "street": streetAreaController.text.toString(),
-        "photos": []
+        "photos": photosUrls
       };
 
       // print(propertyDetails);
@@ -375,7 +388,7 @@ class _PropertyDetailsFormScreenState extends State<PropertyDetailsFormScreen> {
                       children: [
                         const SectionTitle(title: "Gallery"),
                         GalleryImagePicker(onImagesPicked: (pickedImages) {
-                          print('Images picked: ${pickedImages.length}');
+                          images = pickedImages;
                         }),
                       ],
                     ),

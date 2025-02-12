@@ -115,16 +115,15 @@ class _HomeScreenState extends State<HomeScreen> {
       case DrawerEvent.home:
         return Stack(
           children: [
-       
             Column(
               children: [
-                   AdvertisementsCarousel(),
                 HeaderWidget(),
                 SearchForm(),
-            
+                AdvertisementsCarousel(),
                 EnquiryGrids(
                   onSubjectSelected: (String subject, String img) {
-                    EnquiryFormDialog.showEnquiryForm(context, subject, img); // Use correct class name here
+                    EnquiryFormDialog.showEnquiryForm(
+                        context, subject, img); // Use correct class name here
                   },
                 ),
               ],

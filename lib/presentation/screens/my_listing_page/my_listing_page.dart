@@ -105,7 +105,7 @@ class _MyListingPageState extends State<MyListingPage> {
                       final area = areas!.firstWhere((e) =>
                           e["id"].toString() ==
                           property.localityId.toString())["a_name"];
-
+                      print(photos);
                       return Center(
                         child: Container(
                           width: 500,

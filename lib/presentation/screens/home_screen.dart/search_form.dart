@@ -92,7 +92,18 @@ class _SearchFormState extends State<SearchForm> {
     {'label': 'Industrial Plot', 'icon': Icons.landscape},
   ];
   // Selected values
-  String? _selectedLocation;
+  String? _selectedLocation = locator
+      .get<AreaDetailsDependency>()
+      .cityDetails
+      .map((e) {
+        return {
+          "label": e.cName,
+          "icon": Icons.location_city,
+          "id": e.id.toString()
+        };
+      })
+      .toList()
+      .first["label"] as String;
   String? _selectedArea;
   String? _selectedBHK;
   String? _selectedStatus;
@@ -203,6 +214,7 @@ class _SearchFormState extends State<SearchForm> {
                           .firstWhere((element) =>
                               element["a_name"] == _selectedArea)["id"];
                   print(area);
+                  print("assadsa" + id.toString());
                   return ViewProperties(
                     city_id: id.toString(),
                     status: "",
@@ -212,6 +224,8 @@ class _SearchFormState extends State<SearchForm> {
                             ? "4BHK"
                             : _selectedBHK!.split(" ").join(""),
                     area: area.toString(),
+                    propertyType: _selectedType ?? "",
+                    priceRange: _selectedPriceRange ?? "",
                   );
                 }));
               }
@@ -252,7 +266,7 @@ class _SearchFormState extends State<SearchForm> {
           SizedBox(height: 10),
           ElevatedButton.icon(
             onPressed: () {
-              Navigator.pushNamed(context, RoutesName.postbuilderform);
+              Navigator.pushNamed(context, RoutesName.postpropertyScreen);
             },
             icon: Icon(Icons.home, color: Colors.white),
             label: Text(
@@ -369,6 +383,8 @@ class _SearchFormState extends State<SearchForm> {
                           ? "4BHK"
                           : _selectedBHK!.split(" ").join(""),
                   area: area.toString(),
+                  propertyType: _selectedType ?? "",
+                  priceRange: _selectedPriceRange ?? "",
                 );
               }));
             }
@@ -407,7 +423,6 @@ class _SearchFormState extends State<SearchForm> {
           ),
         ),
         SizedBox(height: 10),
-
         ElevatedButton.icon(
           onPressed: () {
             Navigator.pushNamed(context, RoutesName.postpropertyScreen);
@@ -427,26 +442,25 @@ class _SearchFormState extends State<SearchForm> {
           ),
         ),
         SizedBox(height: 10),
-          ElevatedButton.icon(
-            onPressed: () {
-              Navigator.pushNamed(context, RoutesName.postfarmland);
-            },
-            icon: Icon(Icons.add_location_alt_rounded, color: Colors.white),
-            label: Text(
-              'Post your Plot',
-              style: TextStyle(fontSize: 18, color: Colors.white),
-            ),
-            style: ElevatedButton.styleFrom(
-              fixedSize: Size(350, 60),
-              backgroundColor: Colors.blue,
-              padding: EdgeInsets.symmetric(horizontal: 60, vertical: 15),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
+        ElevatedButton.icon(
+          onPressed: () {
+            Navigator.pushNamed(context, RoutesName.postfarmland);
+          },
+          icon: Icon(Icons.add_location_alt_rounded, color: Colors.white),
+          label: Text(
+            'Post your Plot',
+            style: TextStyle(fontSize: 18, color: Colors.white),
+          ),
+          style: ElevatedButton.styleFrom(
+            fixedSize: Size(350, 60),
+            backgroundColor: Colors.blue,
+            padding: EdgeInsets.symmetric(horizontal: 60, vertical: 15),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
             ),
           ),
-          SizedBox(height: 10),
-
+        ),
+        SizedBox(height: 10),
       ],
     );
   }
@@ -526,6 +540,8 @@ class _SearchFormState extends State<SearchForm> {
                   status: "Commercial",
                   bhk: "",
                   area: area.toString(),
+                  propertyType: _selectedType ?? "",
+                  priceRange: _selectedPriceRange ?? "",
                 );
               }));
             }
@@ -564,7 +580,6 @@ class _SearchFormState extends State<SearchForm> {
           ),
         ),
         SizedBox(height: 10),
-
         ElevatedButton.icon(
           onPressed: () {
             Navigator.pushNamed(context, RoutesName.postpropertyScreen);
@@ -583,26 +598,26 @@ class _SearchFormState extends State<SearchForm> {
             ),
           ),
         ),
-       SizedBox(height: 10),
-          ElevatedButton.icon(
-            onPressed: () {
-              Navigator.pushNamed(context, RoutesName.postfarmland);
-            },
-            icon: Icon(Icons.add_location_alt_rounded, color: Colors.white),
-            label: Text(
-              'Post your Plot',
-              style: TextStyle(fontSize: 18, color: Colors.white),
-            ),
-            style: ElevatedButton.styleFrom(
-              fixedSize: Size(350, 60),
-              backgroundColor: Colors.blue,
-              padding: EdgeInsets.symmetric(horizontal: 60, vertical: 15),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
+        SizedBox(height: 10),
+        ElevatedButton.icon(
+          onPressed: () {
+            Navigator.pushNamed(context, RoutesName.postfarmland);
+          },
+          icon: Icon(Icons.add_location_alt_rounded, color: Colors.white),
+          label: Text(
+            'Post your Plot',
+            style: TextStyle(fontSize: 18, color: Colors.white),
+          ),
+          style: ElevatedButton.styleFrom(
+            fixedSize: Size(350, 60),
+            backgroundColor: Colors.blue,
+            padding: EdgeInsets.symmetric(horizontal: 60, vertical: 15),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
             ),
           ),
-          SizedBox(height: 10),
+        ),
+        SizedBox(height: 10),
       ],
     );
   }
@@ -676,6 +691,8 @@ class _SearchFormState extends State<SearchForm> {
                   status: "Plot_farmland",
                   bhk: "",
                   area: area.toString(),
+                  propertyType: _selectedType ?? "",
+                  priceRange: _selectedPriceRange ?? "",
                 );
               }));
             }
@@ -733,25 +750,25 @@ class _SearchFormState extends State<SearchForm> {
           ),
         ),
         SizedBox(height: 10),
-          ElevatedButton.icon(
-            onPressed: () {
-              Navigator.pushNamed(context, RoutesName.postfarmland);
-            },
-            icon: Icon(Icons.add_location_alt_rounded, color: Colors.white),
-            label: Text(
-              'Post your Plot',
-              style: TextStyle(fontSize: 18, color: Colors.white),
-            ),
-            style: ElevatedButton.styleFrom(
-              fixedSize: Size(350, 60),
-              backgroundColor: Colors.blue,
-              padding: EdgeInsets.symmetric(horizontal: 60, vertical: 15),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
+        ElevatedButton.icon(
+          onPressed: () {
+            Navigator.pushNamed(context, RoutesName.postfarmland);
+          },
+          icon: Icon(Icons.add_location_alt_rounded, color: Colors.white),
+          label: Text(
+            'Post your Plot',
+            style: TextStyle(fontSize: 18, color: Colors.white),
+          ),
+          style: ElevatedButton.styleFrom(
+            fixedSize: Size(350, 60),
+            backgroundColor: Colors.blue,
+            padding: EdgeInsets.symmetric(horizontal: 60, vertical: 15),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
             ),
           ),
-          SizedBox(height: 10),
+        ),
+        SizedBox(height: 10),
       ],
     );
   }
