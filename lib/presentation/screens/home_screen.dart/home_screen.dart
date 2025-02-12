@@ -121,6 +121,7 @@ class _HomeScreenState extends State<HomeScreen> {
                    AdvertisementsCarousel(),
                 HeaderWidget(),
                 SearchForm(),
+            
                 EnquiryGrids(
                   onSubjectSelected: (String subject, String img) {
                     EnquiryFormDialog.showEnquiryForm(context, subject, img); // Use correct class name here

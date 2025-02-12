@@ -6,8 +6,13 @@ import 'package:bloc/bloc.dart';
 import 'package:http/http.dart' as http;
 import 'package:my_zero_broker/bloc/signup/signup_event.dart';
 import 'package:my_zero_broker/bloc/signup/signup_state.dart';
+import 'package:my_zero_broker/data/user_details_dependency.dart';
+import 'package:my_zero_broker/locator.dart';
+
+int id = locator.get<UserDetailsDependency>().id;
 
 class SignupBloc extends Bloc<SignupEvent, SignUpState> {
+
   SignupBloc() : super(const SignUpState()) {
     on<phoneNoChanged>(_onPhoneNoChanged);
     on<fullNameChanged>(_onfullNameChanged);
@@ -160,7 +165,7 @@ class SignupBloc extends Bloc<SignupEvent, SignUpState> {
         print(output);
 
         final response = await http.put(
-          Uri.parse('https://myzerobroker.com/api/user/profile/update'),
+          Uri.parse('https://myzerobroker.com/user/profile/update/user_id=$id'),
           headers: {
             'Content-Type': 'application/json',
             'X-CSRF-TOKEN': csrfToken,
@@ -181,9 +186,11 @@ class SignupBloc extends Bloc<SignupEvent, SignUpState> {
           ));
         } else {
           var responseData = jsonDecode(response.body);
+          print(responseData['message']);
           emit(state.copyWith(
             updateStatus: UpdateStatus.error,
             message: responseData['message'] ?? 'Failed to update profile.',
+            
           ));
         }
       } else {

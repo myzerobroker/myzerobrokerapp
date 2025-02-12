@@ -108,7 +108,7 @@ class PostBuilderForm extends StatelessWidget {
                               controller: phonenocontroller,
                               textInputType: TextInputType.name,
                               hintText: 'Phone No.',
-                              text: '+91',
+                            
                             ),
                             SizedBox(height: 16),
 
