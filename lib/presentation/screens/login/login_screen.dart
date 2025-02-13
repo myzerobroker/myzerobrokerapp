@@ -208,7 +208,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                             context);
                                       }
                                     else
-                                      if (phoneNo.isNotEmpty) {
+                                      if (phoneNo.isNotEmpty && _terms == true) {
                                         context.read<LoginBloc>().add(
                                               phoneNoChanged(phoneNo: phoneNo),
                                             );

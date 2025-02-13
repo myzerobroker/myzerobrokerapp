@@ -4,7 +4,6 @@ import 'package:my_zero_broker/bloc/property_form/property_form_bloc.dart';
 import 'package:my_zero_broker/bloc/property_form/property_form_event.dart';
 import 'package:my_zero_broker/bloc/property_form/property_form_state.dart';
 import 'package:my_zero_broker/config/routes/routes_name.dart';
-import 'package:my_zero_broker/data/models/user_details_model.dart';
 import 'package:my_zero_broker/data/user_details_dependency.dart';
 import 'package:my_zero_broker/locator.dart';
 import 'package:my_zero_broker/presentation/widgets/ElevatedButton.dart';
@@ -106,7 +105,7 @@ class PropertyFormScreen extends StatelessWidget {
                               controller: phonenocontroller,
                               textInputType: TextInputType.name,
                               hintText: 'Phone No.',
-                              text: '+91',
+                            
                             ),
                             SizedBox(height: 16),
 
