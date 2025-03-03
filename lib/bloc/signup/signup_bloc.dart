@@ -165,7 +165,7 @@ class SignupBloc extends Bloc<SignupEvent, SignUpState> {
         print(output);
 
         final response = await http.put(
-          Uri.parse('https://myzerobroker.com/user/profile/update/user_id=$id'),
+          Uri.parse('https://myzerobroker.com/api/user/profile/update/user_id=$id'),
           headers: {
             'Content-Type': 'application/json',
             'X-CSRF-TOKEN': csrfToken,

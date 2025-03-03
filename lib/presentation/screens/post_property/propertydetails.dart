@@ -25,6 +25,7 @@ class PropertyDetailsFormScreen extends StatefulWidget {
 }
 
 class _PropertyDetailsFormScreenState extends State<PropertyDetailsFormScreen> {
+  List<Map<String, dynamic>> selectedAmenities = [];
   final _formKey = GlobalKey<FormState>();
   final cityDetails = locator.get<AreaDetailsDependency>().cityDetails.map((e) {
     return {
@@ -33,6 +34,12 @@ class _PropertyDetailsFormScreenState extends State<PropertyDetailsFormScreen> {
       "id": e.id.toString()
     };
   }).toList();
+
+  void _updateAmenities(List<Map<String, dynamic>> amenities) {
+    setState(() {
+      selectedAmenities = amenities;
+    });
+  }
 
   final TextEditingController carpetAreaController = TextEditingController();
   final TextEditingController plotAreaController = TextEditingController();
@@ -109,8 +116,7 @@ class _PropertyDetailsFormScreenState extends State<PropertyDetailsFormScreen> {
       return "0";
     }
   }
-
-  _submitForm() async {
+_submitForm() async {
     if (_formKey.currentState!.validate()) {
       if (images.isNotEmpty) {
         for (File image in images) {
@@ -119,7 +125,14 @@ class _PropertyDetailsFormScreenState extends State<PropertyDetailsFormScreen> {
         }
         print(photosUrls);
       }
-      print(photosUrls);
+
+      // Map amenities to payload format (true -> 1, false -> 0)
+      final Map<String, int> amenitiesMap = {};
+      for (var amenity in selectedAmenities) {
+        String key = amenity['label'].toLowerCase().replaceAll(' ', '_');
+        amenitiesMap[key] = amenity['value'] ? 1 : 0;
+      }
+
       final Map<String, dynamic> propertyDetails = {
         "user_id": locator.get<UserDetailsDependency>().id,
         "bhk": selectedBhkType.toString(),
@@ -146,9 +159,6 @@ class _PropertyDetailsFormScreenState extends State<PropertyDetailsFormScreen> {
         "parking_type": selectedParking.toString(),
         "water_supply": selectedWaterSupply.toString(),
         "description": descriptionController.text.toString(),
-        "club_house": 1,
-        "intercom": 1,
-        "grated_security": selectedGratedSecurity.toString(),
         "area": plotAreaController.text.toString(),
         "expected_price": offerPriceController.text.toString(),
         "maintenance_cost": maintenanceCostController.text,
@@ -163,10 +173,28 @@ class _PropertyDetailsFormScreenState extends State<PropertyDetailsFormScreen> {
         "city_id": city_id.toString() ?? "0",
         "locality_id": locality_id.toString() ?? "0",
         "street": streetAreaController.text.toString(),
-        "photos": photosUrls
+        "photos": photosUrls,
+
+        // Add amenities from the payload
+        "lift": amenitiesMap['lift'] ?? 0,
+        "internet_service": amenitiesMap['internet_service'] ?? 0,
+        "air_conditioner": amenitiesMap['air_conditioner'] ?? 0,
+        "club_house": amenitiesMap['club_house'] ?? 0,
+        "intercom": amenitiesMap['intercom'] ?? 0,
+        "swimming_pool": amenitiesMap['swimming_pool'] ?? 0,
+        "childrens_play_area": amenitiesMap['childrens_play_area'] ?? 0,
+        "fire_safety": amenitiesMap['fire_safety'] ?? 0,
+        "servant_room": amenitiesMap['servant_room'] ?? 0,
+        "shopping_center": amenitiesMap['shopping_center'] ?? 0,
+        "gas_pipeline": amenitiesMap['gas_pipeline'] ?? 0,
+        "park": amenitiesMap['park'] ?? 0,
+        "rain_water_harvesting": amenitiesMap['rain_water_harvesting'] ?? 0,
+        "sewage_treatment": amenitiesMap['sewage_treatment_plant'] ?? 0,
+        "house_keeping": amenitiesMap['house_keeping'] ?? 0,
+        "power_backup": amenitiesMap['power_backup'] ?? 0,
+        "visitor_parking": amenitiesMap['visitor_parking'] ?? 0,
       };
 
-      // print(propertyDetails);
       BlocProvider.of<PostPropertyDetailsBloc>(context)
           .add(PostPropertyEventToApi(propertyDetails: propertyDetails));
     } else {
@@ -476,7 +504,7 @@ class _PropertyDetailsFormScreenState extends State<PropertyDetailsFormScreen> {
                     child: Column(
                       children: [
                         const SectionTitle(title: "Extra Amenities"),
-                        ExtraAmenitieWidget()
+                        ExtraAmenitieWidget(onAmenitiesChanged: _updateAmenities),
                       ],
                     ),
                   ),
