@@ -14,7 +14,6 @@ class SearchForm extends StatefulWidget {
 
 class _SearchFormState extends State<SearchForm> {
   // Dropdown values and selections with icons
-
   final locations = locator.get<AreaDetailsDependency>().cityDetails.map((e) {
     return {
       "label": e.cName,
@@ -55,7 +54,7 @@ class _SearchFormState extends State<SearchForm> {
   final List<Map<String, dynamic>> _movingdate = [
     {'label': 'Immediately', 'icon': Icons.date_range},
     {'label': 'Within 15 Days', 'icon': Icons.date_range},
-    {'label': 'After 15 Days', 'icon': Icons.money},
+    {'label': 'After 15 Days', 'icon': Icons.date_range}, // Fixed icon
   ];
 
   final List<Map<String, dynamic>> _priceRangesforRent = [
@@ -77,6 +76,7 @@ class _SearchFormState extends State<SearchForm> {
     {'label': 'Buy', 'icon': Icons.shopping_bag_sharp},
     {'label': 'Rent', 'icon': Icons.shop},
   ];
+
   final List<Map<String, dynamic>> _plotArea = [
     {'label': '1 Guntha to 2 Guntha', 'icon': Icons.home},
     {'label': '2 Guntha to 4 Guntha', 'icon': Icons.home},
@@ -91,223 +91,111 @@ class _SearchFormState extends State<SearchForm> {
     {'label': 'Farm Land', 'icon': Icons.landscape},
     {'label': 'Industrial Plot', 'icon': Icons.landscape},
   ];
-  // Selected values
+
+  // Selected values for each dropdown
   String? _selectedLocation = locator
       .get<AreaDetailsDependency>()
       .cityDetails
-      .map((e) {
-        return {
-          "label": e.cName,
-          "icon": Icons.location_city,
-          "id": e.id.toString()
-        };
-      })
+      .map((e) => {"label": e.cName, "icon": Icons.location_city, "id": e.id.toString()})
       .toList()
       .first["label"] as String;
   String? _selectedArea;
   String? _selectedBHK;
-  String? _selectedStatus;
+  String? _selectedStatus; // For Property Status or Moving Date
+  String? _selectedBuyOrRent; // For Buy or Rent in Commercial
   String? _selectedType;
   String? _selectedPriceRange;
-  int index = 0;
 
   final ValueNotifier<int> _indexNotifier = ValueNotifier<int>(0);
 
   @override
   void initState() {
     super.initState();
-    // _selectedStatus = _propertyBuyorRent.first['label'];
+    // Optionally initialize default values here if needed
   }
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-        child: Column(children: [
-      _buildCategoryButtons(),
-      SizedBox(height: 20),
-      ValueListenableBuilder<int>(
-        valueListenable: _indexNotifier,
-        builder: (context, index, _) {
-          switch (index) {
-            case 0:
-              return _buyfields();
-            case 1:
-              return _rentfields();
-            case 2:
-              return _commercialfields();
-            case 3:
-              return _openplotfields();
-            default:
-              return _buyfields();
-          }
-        },
+      child: Column(
+        children: [
+          _buildCategoryButtons(),
+          SizedBox(height: 20),
+          ValueListenableBuilder<int>(
+            valueListenable: _indexNotifier,
+            builder: (context, index, _) {
+              switch (index) {
+                case 0:
+                  return _buyfields();
+                case 1:
+                  return _rentfields();
+                case 2:
+                  return _commercialfields();
+                case 3:
+                  return _openplotfields();
+                default:
+                  return _buyfields();
+              }
+            },
+          ),
+        ],
       ),
-    ]));
+    );
   }
 
   Widget _buyfields() {
     return BlocListener<SearchPropertyBloc, SearchPropertyState>(
       listener: (context, state) {
         if (state is SearchPropertyError) {
+          Snack.show(state.message, context);
         } else if (state is SearchPropertyLoaded) {
-        } else {}
+          // Handle success if needed
+        }
       },
       child: Column(
         children: [
           Container(
-            decoration: BoxDecoration(),
             child: Column(
               children: [
-                _buildDropdownWithIcons(
-                    'Search Location', locations, _selectedLocation,
-                    (String? newValue) {
+                _buildDropdownWithIcons('Search Location', locations, _selectedLocation, (String? newValue) {
                   setState(() => _selectedLocation = newValue);
                 }),
                 _buildDropdownWithIcons(
-                    'Search Area',
-                    _selectedLocation == null
-                        ? []
-                        : (locator
-                                    .get<AreaDetailsDependency>()
-                                    .areas[_selectedLocation!]
-                                as List<Map<String, dynamic>>)
-                            .map((e) => {
-                                  "label": e["a_name"].toString(),
-                                  "icon": Icons.map
-                                })
-                            .toList(),
-                    _selectedArea, (String? newValue) {
-                  setState(() => _selectedArea = newValue);
-                }),
-                _buildDropdownWithIcons('BHK Type', _bhkTypes, _selectedBHK,
-                    (String? newValue) {
+                  'Search Area',
+                  _selectedLocation == null
+                      ? []
+                      : (locator.get<AreaDetailsDependency>().areas[_selectedLocation!] as List<Map<String, dynamic>>)
+                          .map((e) => {"label": e["a_name"].toString(), "icon": Icons.map})
+                          .toList(),
+                  _selectedArea,
+                  (String? newValue) {
+                    setState(() => _selectedArea = newValue);
+                  },
+                ),
+                _buildDropdownWithIcons('BHK Type', _bhkTypes, _selectedBHK, (String? newValue) {
                   setState(() => _selectedBHK = newValue);
                 }),
               ],
             ),
           ),
-          _buildDropdownWithIcons(
-              'Property Status', _propertyStatus, _selectedStatus,
-              (String? newValue) {
+          _buildDropdownWithIcons('Property Status', _propertyStatus, _selectedStatus, (String? newValue) {
             setState(() => _selectedStatus = newValue);
           }),
-          _buildDropdownWithIcons(
-              'Property Type', _propertyTypes, _selectedType,
-              (String? newValue) {
+          _buildDropdownWithIcons('Property Type', _propertyTypes, _selectedType, (String? newValue) {
             setState(() => _selectedType = newValue);
           }),
-          _buildDropdownWithIcons(
-              'Price Range', _priceRanges, _selectedPriceRange,
-              (String? newValue) {
+          _buildDropdownWithIcons('Price Range', _priceRanges, _selectedPriceRange, (String? newValue) {
             setState(() => _selectedPriceRange = newValue);
           }),
           SizedBox(height: 20),
           ElevatedButton.icon(
-            onPressed: () {
-              if (_selectedLocation == null) {
-                Snack.show("Please select a Location", context);
-              } else {
-                print("Selected Location: $_selectedLocation");
-                final id = locations.firstWhere(
-                    (element) => element["label"] == _selectedLocation)["id"];
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  final area = _selectedArea == null
-                      ? ""
-                      : (locator
-                                  .get<AreaDetailsDependency>()
-                                  .areas[_selectedLocation!]
-                              as List<Map<String, dynamic>>)
-                          .firstWhere((element) =>
-                              element["a_name"] == _selectedArea)["id"];
-                  print(area);
-                  print("assadsa" + id.toString());
-                  return ViewProperties(
-                    city_id: id.toString(),
-                    status: "",
-                    bhk: _selectedBHK == null
-                        ? ""
-                        : _selectedBHK! == "4 or more BHK"
-                            ? "4BHK"
-                            : _selectedBHK!.split(" ").join(""),
-                    area: area.toString(),
-                    propertyType: _selectedType ?? "",
-                    priceRange: _selectedPriceRange ?? "",
-                  );
-                }));
-              }
-            },
+            onPressed: () => _performSearch(context, "Buy"),
             icon: Icon(Icons.search, color: Colors.white),
-            label: Text(
-              'Search',
-              style: TextStyle(fontSize: 18, color: Colors.white),
-            ),
-            style: ElevatedButton.styleFrom(
-              fixedSize: Size(350, 60),
-              backgroundColor: Colors.red,
-              padding: EdgeInsets.symmetric(horizontal: 60, vertical: 15),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-            ),
+            label: Text('Search', style: TextStyle(fontSize: 18, color: Colors.white)),
+            style: ElevatedButton.styleFrom(fixedSize: Size(350, 60), backgroundColor: Colors.red, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
           ),
           SizedBox(height: 10),
-          ElevatedButton.icon(
-            onPressed: () {
-              Navigator.pushNamed(context, RoutesName.postbuilderform);
-            },
-            icon: Icon(Icons.money, color: Colors.white),
-            label: Text(
-              "Builder's Plan",
-              style: TextStyle(fontSize: 18, color: Colors.white),
-            ),
-            style: ElevatedButton.styleFrom(
-              fixedSize: Size(350, 60),
-              backgroundColor: Colors.blue,
-              padding: EdgeInsets.symmetric(horizontal: 60, vertical: 15),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-            ),
-          ),
-          SizedBox(height: 10),
-          ElevatedButton.icon(
-            onPressed: () {
-              Navigator.pushNamed(context, RoutesName.postpropertyScreen);
-            },
-            icon: Icon(Icons.home, color: Colors.white),
-            label: Text(
-              'Post Property for Free',
-              style: TextStyle(fontSize: 18, color: Colors.white),
-            ),
-            style: ElevatedButton.styleFrom(
-              fixedSize: Size(350, 60),
-              backgroundColor: Colors.red,
-              padding: EdgeInsets.symmetric(horizontal: 60, vertical: 15),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-            ),
-          ),
-          SizedBox(height: 10),
-          ElevatedButton.icon(
-            onPressed: () {
-              Navigator.pushNamed(context, RoutesName.postfarmland);
-            },
-            icon: Icon(Icons.add_location_alt_rounded, color: Colors.white),
-            label: Text(
-              'Post your Plot',
-              style: TextStyle(fontSize: 18, color: Colors.white),
-            ),
-            style: ElevatedButton.styleFrom(
-              fixedSize: Size(350, 60),
-              backgroundColor: Colors.blue,
-              padding: EdgeInsets.symmetric(horizontal: 60, vertical: 15),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-            ),
-          ),
-          SizedBox(height: 10),
+          _buildCustomButtons(),
         ],
       ),
     );
@@ -317,156 +205,47 @@ class _SearchFormState extends State<SearchForm> {
     return Column(
       children: [
         Container(
-          decoration: BoxDecoration(),
           child: Column(
             children: [
-              _buildDropdownWithIcons(
-                  'Search Location', locations, _selectedLocation,
-                  (String? newValue) {
+              _buildDropdownWithIcons('Search Location', locations, _selectedLocation, (String? newValue) {
                 setState(() => _selectedLocation = newValue);
               }),
               _buildDropdownWithIcons(
-                  'Search Area',
-                  _selectedLocation == null
-                      ? []
-                      : (locator
-                                  .get<AreaDetailsDependency>()
-                                  .areas[_selectedLocation!]
-                              as List<Map<String, dynamic>>)
-                          .map((e) => {
-                                "label": e["a_name"].toString(),
-                                "icon": Icons.map
-                              })
-                          .toList(),
-                  _selectedArea, (String? newValue) {
-                setState(() => _selectedArea = newValue);
-              }),
-              _buildDropdownWithIcons('BHK Type', _bhkTypes, _selectedBHK,
-                  (String? newValue) {
+                'Search Area',
+                _selectedLocation == null
+                    ? []
+                    : (locator.get<AreaDetailsDependency>().areas[_selectedLocation!] as List<Map<String, dynamic>>)
+                        .map((e) => {"label": e["a_name"].toString(), "icon": Icons.map})
+                        .toList(),
+                _selectedArea,
+                (String? newValue) {
+                  setState(() => _selectedArea = newValue);
+                },
+              ),
+              _buildDropdownWithIcons('BHK Type', _bhkTypes, _selectedBHK, (String? newValue) {
                 setState(() => _selectedBHK = newValue);
               }),
             ],
           ),
         ),
-        _buildDropdownWithIcons('Moving Date', _movingdate, _selectedStatus,
-            (String? newValue) {
+        _buildDropdownWithIcons('Moving Date', _movingdate, _selectedStatus, (String? newValue) {
           setState(() => _selectedStatus = newValue);
         }),
-        _buildDropdownWithIcons('Property Type', _propertyTypes, _selectedType,
-            (String? newValue) {
+        _buildDropdownWithIcons('Property Type', _propertyTypes, _selectedType, (String? newValue) {
           setState(() => _selectedType = newValue);
         }),
-        _buildDropdownWithIcons(
-            'Price Range', _priceRangesforRent, _selectedPriceRange,
-            (String? newValue) {
+        _buildDropdownWithIcons('Price Range', _priceRangesforRent, _selectedPriceRange, (String? newValue) {
           setState(() => _selectedPriceRange = newValue);
         }),
         SizedBox(height: 20),
         ElevatedButton.icon(
-          onPressed: () {
-            if (_selectedLocation == null) {
-              Snack.show("Please select a Location", context);
-            } else {
-              print("Selected Location: $_selectedLocation");
-              final id = locations.firstWhere(
-                  (element) => element["label"] == _selectedLocation)["id"];
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                final area = _selectedArea == null
-                    ? ""
-                    : (locator
-                                .get<AreaDetailsDependency>()
-                                .areas[_selectedLocation!]
-                            as List<Map<String, dynamic>>)
-                        .firstWhere((element) =>
-                            element["a_name"] == _selectedArea)["id"];
-                print(area);
-                return ViewProperties(
-                  city_id: id.toString(),
-                  status: "Rent",
-                  bhk: _selectedBHK == null
-                      ? ""
-                      : _selectedBHK! == "4 or more BHK"
-                          ? "4BHK"
-                          : _selectedBHK!.split(" ").join(""),
-                  area: area.toString(),
-                  propertyType: _selectedType ?? "",
-                  priceRange: _selectedPriceRange ?? "",
-                );
-              }));
-            }
-          },
+          onPressed: () => _performSearch(context, "Rent"),
           icon: Icon(Icons.search, color: Colors.white),
-          label: Text(
-            'Search',
-            style: TextStyle(fontSize: 18, color: Colors.white),
-          ),
-          style: ElevatedButton.styleFrom(
-            fixedSize: Size(350, 60),
-            backgroundColor: Colors.red,
-            padding: EdgeInsets.symmetric(horizontal: 60, vertical: 15),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-          ),
+          label: Text('Search', style: TextStyle(fontSize: 18, color: Colors.white)),
+          style: ElevatedButton.styleFrom(fixedSize: Size(350, 60), backgroundColor: Colors.red, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
         ),
         SizedBox(height: 10),
-        ElevatedButton.icon(
-          onPressed: () {
-            Navigator.pushNamed(context, RoutesName.postbuilderform);
-          },
-          icon: Icon(Icons.money, color: Colors.white),
-          label: Text(
-            "Builder's Plan",
-            style: TextStyle(fontSize: 18, color: Colors.white),
-          ),
-          style: ElevatedButton.styleFrom(
-            fixedSize: Size(350, 60),
-            backgroundColor: Colors.blue,
-            padding: EdgeInsets.symmetric(horizontal: 60, vertical: 15),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-          ),
-        ),
-        SizedBox(height: 10),
-        ElevatedButton.icon(
-          onPressed: () {
-            Navigator.pushNamed(context, RoutesName.postpropertyScreen);
-          },
-          icon: Icon(Icons.home, color: Colors.white),
-          label: Text(
-            'Post Property for Free',
-            style: TextStyle(fontSize: 18, color: Colors.white),
-          ),
-          style: ElevatedButton.styleFrom(
-            fixedSize: Size(350, 60),
-            backgroundColor: Colors.red,
-            padding: EdgeInsets.symmetric(horizontal: 60, vertical: 15),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-          ),
-        ),
-        SizedBox(height: 10),
-        ElevatedButton.icon(
-          onPressed: () {
-            Navigator.pushNamed(context, RoutesName.postfarmland);
-          },
-          icon: Icon(Icons.add_location_alt_rounded, color: Colors.white),
-          label: Text(
-            'Post your Plot',
-            style: TextStyle(fontSize: 18, color: Colors.white),
-          ),
-          style: ElevatedButton.styleFrom(
-            fixedSize: Size(350, 60),
-            backgroundColor: Colors.blue,
-            padding: EdgeInsets.symmetric(horizontal: 60, vertical: 15),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-          ),
-        ),
-        SizedBox(height: 10),
+        _buildCustomButtons(),
       ],
     );
   }
@@ -475,155 +254,47 @@ class _SearchFormState extends State<SearchForm> {
     return Column(
       children: [
         Container(
-          decoration: BoxDecoration(),
           child: Column(
             children: [
-              _buildDropdownWithIcons(
-                  'Search Location', locations, _selectedLocation,
-                  (String? newValue) {
+              _buildDropdownWithIcons('Search Location', locations, _selectedLocation, (String? newValue) {
                 setState(() => _selectedLocation = newValue);
               }),
               _buildDropdownWithIcons(
-                  'Search Area',
-                  _selectedLocation == null
-                      ? []
-                      : (locator
-                                  .get<AreaDetailsDependency>()
-                                  .areas[_selectedLocation!]
-                              as List<Map<String, dynamic>>)
-                          .map((e) => {
-                                "label": e["a_name"].toString(),
-                                "icon": Icons.map
-                              })
-                          .toList(),
-                  _selectedArea, (String? newValue) {
-                setState(() => _selectedArea = newValue);
-              }),
+                'Search Area',
+                _selectedLocation == null
+                    ? []
+                    : (locator.get<AreaDetailsDependency>().areas[_selectedLocation!] as List<Map<String, dynamic>>)
+                        .map((e) => {"label": e["a_name"].toString(), "icon": Icons.map})
+                        .toList(),
+                _selectedArea,
+                (String? newValue) {
+                  setState(() => _selectedArea = newValue);
+                },
+              ),
             ],
           ),
         ),
-        _buildDropdownWithIcons(
-            'Buy or Rent', _propertyBuyorRent, _selectedStatus,
-            (String? newValue) {
+        _buildDropdownWithIcons('Buy or Rent', _propertyBuyorRent, _selectedBuyOrRent, (String? newValue) {
+          setState(() => _selectedBuyOrRent = newValue);
+        }),
+        _buildDropdownWithIcons('Property Status', _propertyStatus, _selectedStatus, (String? newValue) {
           setState(() => _selectedStatus = newValue);
         }),
-        _buildDropdownWithIcons(
-            'Property Status', _propertyStatus, _selectedStatus,
-            (String? newValue) {
-          setState(() => _selectedStatus = newValue);
-        }),
-        _buildDropdownWithIcons(
-            'Property Type', _propertyTypesForCommercial, _selectedType,
-            (String? newValue) {
+        _buildDropdownWithIcons('Property Type', _propertyTypesForCommercial, _selectedType, (String? newValue) {
           setState(() => _selectedType = newValue);
         }),
-        _buildDropdownWithIcons(
-            'Price Range', _priceRanges, _selectedPriceRange,
-            (String? newValue) {
+        _buildDropdownWithIcons('Price Range', _priceRanges, _selectedPriceRange, (String? newValue) {
           setState(() => _selectedPriceRange = newValue);
         }),
         SizedBox(height: 20),
         ElevatedButton.icon(
-          onPressed: () {
-            if (_selectedLocation == null) {
-              Snack.show("Please select a Location", context);
-            } else {
-              print("Selected Location: $_selectedLocation");
-              final id = locations.firstWhere(
-                  (element) => element["label"] == _selectedLocation)["id"];
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                final area = _selectedArea == null
-                    ? ""
-                    : (locator
-                                .get<AreaDetailsDependency>()
-                                .areas[_selectedLocation!]
-                            as List<Map<String, dynamic>>)
-                        .firstWhere((element) =>
-                            element["a_name"] == _selectedArea)["id"];
-                print(area);
-                return ViewProperties(
-                  city_id: id.toString(),
-                  status: "Commercial",
-                  bhk: "",
-                  area: area.toString(),
-                  propertyType: _selectedType ?? "",
-                  priceRange: _selectedPriceRange ?? "",
-                );
-              }));
-            }
-          },
+          onPressed: () => _performSearch(context, "Commercial"),
           icon: Icon(Icons.search, color: Colors.white),
-          label: Text(
-            'Search',
-            style: TextStyle(fontSize: 18, color: Colors.white),
-          ),
-          style: ElevatedButton.styleFrom(
-            fixedSize: Size(350, 60),
-            backgroundColor: Colors.red,
-            padding: EdgeInsets.symmetric(horizontal: 60, vertical: 15),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-          ),
+          label: Text('Search', style: TextStyle(fontSize: 18, color: Colors.white)),
+          style: ElevatedButton.styleFrom(fixedSize: Size(350, 60), backgroundColor: Colors.red, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
         ),
         SizedBox(height: 10),
-        ElevatedButton.icon(
-          onPressed: () {
-            Navigator.pushNamed(context, RoutesName.postbuilderform);
-          },
-          icon: Icon(Icons.money, color: Colors.white),
-          label: Text(
-            "Builder's Plan",
-            style: TextStyle(fontSize: 18, color: Colors.white),
-          ),
-          style: ElevatedButton.styleFrom(
-            fixedSize: Size(350, 60),
-            backgroundColor: Colors.blue,
-            padding: EdgeInsets.symmetric(horizontal: 60, vertical: 15),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-          ),
-        ),
-        SizedBox(height: 10),
-        ElevatedButton.icon(
-          onPressed: () {
-            Navigator.pushNamed(context, RoutesName.postpropertyScreen);
-          },
-          icon: Icon(Icons.home, color: Colors.white),
-          label: Text(
-            'Post Property for Free',
-            style: TextStyle(fontSize: 18, color: Colors.white),
-          ),
-          style: ElevatedButton.styleFrom(
-            fixedSize: Size(350, 60),
-            backgroundColor: Colors.red,
-            padding: EdgeInsets.symmetric(horizontal: 60, vertical: 15),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-          ),
-        ),
-        SizedBox(height: 10),
-        ElevatedButton.icon(
-          onPressed: () {
-            Navigator.pushNamed(context, RoutesName.postfarmland);
-          },
-          icon: Icon(Icons.add_location_alt_rounded, color: Colors.white),
-          label: Text(
-            'Post your Plot',
-            style: TextStyle(fontSize: 18, color: Colors.white),
-          ),
-          style: ElevatedButton.styleFrom(
-            fixedSize: Size(350, 60),
-            backgroundColor: Colors.blue,
-            padding: EdgeInsets.symmetric(horizontal: 60, vertical: 15),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-          ),
-        ),
-        SizedBox(height: 10),
+        _buildCustomButtons(),
       ],
     );
   }
@@ -632,175 +303,45 @@ class _SearchFormState extends State<SearchForm> {
     return Column(
       children: [
         Container(
-          decoration: BoxDecoration(),
           child: Column(
             children: [
-              _buildDropdownWithIcons(
-                  'Search Location', locations, _selectedLocation,
-                  (String? newValue) {
+              _buildDropdownWithIcons('Search Location', locations, _selectedLocation, (String? newValue) {
                 setState(() => _selectedLocation = newValue);
               }),
               _buildDropdownWithIcons(
-                  'Search Area',
-                  _selectedLocation == null
-                      ? []
-                      : (locator
-                                  .get<AreaDetailsDependency>()
-                                  .areas[_selectedLocation!]
-                              as List<Map<String, dynamic>>)
-                          .map((e) => {
-                                "label": e["a_name"].toString(),
-                                "icon": Icons.map
-                              })
-                          .toList(),
-                  _selectedArea, (String? newValue) {
-                setState(() => _selectedArea = newValue);
-              }),
-              _buildDropdownWithIcons('Plot Area', _plotArea, _selectedBHK,
-                  (String? newValue) {
+                'Search Area',
+                _selectedLocation == null
+                    ? []
+                    : (locator.get<AreaDetailsDependency>().areas[_selectedLocation!] as List<Map<String, dynamic>>)
+                        .map((e) => {"label": e["a_name"].toString(), "icon": Icons.map})
+                        .toList(),
+                _selectedArea,
+                (String? newValue) {
+                  setState(() => _selectedArea = newValue);
+                },
+              ),
+              _buildDropdownWithIcons('Plot Area', _plotArea, _selectedBHK, (String? newValue) {
                 setState(() => _selectedBHK = newValue);
               }),
             ],
           ),
         ),
-        _buildDropdownWithIcons(
-            'Property Type', _propertyTypesForOpenPlot, _selectedType,
-            (String? newValue) {
+        _buildDropdownWithIcons('Property Type', _propertyTypesForOpenPlot, _selectedType, (String? newValue) {
           setState(() => _selectedType = newValue);
         }),
-        _buildDropdownWithIcons(
-            'Price Range', _priceRanges, _selectedPriceRange,
-            (String? newValue) {
+        _buildDropdownWithIcons('Price Range', _priceRanges, _selectedPriceRange, (String? newValue) {
           setState(() => _selectedPriceRange = newValue);
         }),
         SizedBox(height: 20),
         ElevatedButton.icon(
-          onPressed: () {
-            if (_selectedLocation == null) {
-              Snack.show("Please select a Location", context);
-            } else {
-              print("Selected Location: $_selectedLocation");
-              final id = locations.firstWhere(
-                  (element) => element["label"] == _selectedLocation)["id"];
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                final area = _selectedArea == null
-                    ? ""
-                    : (locator
-                                .get<AreaDetailsDependency>()
-                                .areas[_selectedLocation!]
-                            as List<Map<String, dynamic>>)
-                        .firstWhere((element) =>
-                            element["a_name"] == _selectedArea)["id"];
-                print(area);
-                return ViewProperties(
-                  city_id: id.toString(),
-                  status: "Plot_farmland",
-                  bhk: "",
-                  area: area.toString(),
-                  propertyType: _selectedType ?? "",
-                  priceRange: _selectedPriceRange ?? "",
-                );
-              }));
-            }
-          },
+          onPressed: () => _performSearch(context, "Plot_farmland"),
           icon: Icon(Icons.search, color: Colors.white),
-          label: Text(
-            'Search',
-            style: TextStyle(fontSize: 18, color: Colors.white),
-          ),
-          style: ElevatedButton.styleFrom(
-            fixedSize: Size(350, 60),
-            backgroundColor: Colors.red,
-            padding: EdgeInsets.symmetric(horizontal: 60, vertical: 15),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-          ),
+          label: Text('Search', style: TextStyle(fontSize: 18, color: Colors.white)),
+          style: ElevatedButton.styleFrom(fixedSize: Size(350, 60), backgroundColor: Colors.red, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
         ),
         SizedBox(height: 10),
-        ElevatedButton.icon(
-          onPressed: () {
-            Navigator.pushNamed(context, RoutesName.postbuilderform);
-          },
-          icon: Icon(Icons.money, color: Colors.white),
-          label: Text(
-            "Builder's Plan",
-            style: TextStyle(fontSize: 18, color: Colors.white),
-          ),
-          style: ElevatedButton.styleFrom(
-            fixedSize: Size(350, 60),
-            backgroundColor: Colors.blue,
-            padding: EdgeInsets.symmetric(horizontal: 60, vertical: 15),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-          ),
-        ),
-        SizedBox(height: 10),
-        ElevatedButton.icon(
-          onPressed: () {
-            Navigator.pushNamed(context, RoutesName.postpropertyScreen);
-          },
-          icon: Icon(Icons.home, color: Colors.white),
-          label: Text(
-            'Post Property for Free',
-            style: TextStyle(fontSize: 18, color: Colors.white),
-          ),
-          style: ElevatedButton.styleFrom(
-            fixedSize: Size(350, 60),
-            backgroundColor: Colors.red,
-            padding: EdgeInsets.symmetric(horizontal: 60, vertical: 15),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-          ),
-        ),
-        SizedBox(height: 10),
-        ElevatedButton.icon(
-          onPressed: () {
-            Navigator.pushNamed(context, RoutesName.postfarmland);
-          },
-          icon: Icon(Icons.add_location_alt_rounded, color: Colors.white),
-          label: Text(
-            'Post your Plot',
-            style: TextStyle(fontSize: 18, color: Colors.white),
-          ),
-          style: ElevatedButton.styleFrom(
-            fixedSize: Size(350, 60),
-            backgroundColor: Colors.blue,
-            padding: EdgeInsets.symmetric(horizontal: 60, vertical: 15),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-          ),
-        ),
-        SizedBox(height: 10),
+        _buildCustomButtons(),
       ],
-    );
-  }
-
-  Widget _buildTitle(String text) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 20),
-      child: Text(
-        text,
-        style: TextStyle(
-          fontSize: 24,
-          fontWeight: FontWeight.bold,
-          color: Colors.black,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSubtitle(String text) {
-    return Text(
-      text,
-      style: TextStyle(
-        fontSize: 22,
-        fontWeight: FontWeight.bold,
-        color: Colors.red,
-      ),
     );
   }
 
@@ -830,12 +371,8 @@ class _SearchFormState extends State<SearchForm> {
             style: ElevatedButton.styleFrom(
               fixedSize: Size(200, 50),
               foregroundColor: index == value ? Colors.white : Colors.black,
-              backgroundColor:
-                  index == value ? Colors.blue : Colors.grey.shade200,
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
+              backgroundColor: index == value ? Colors.blue : Colors.grey.shade200,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             ),
             child: Text(label),
           ),
@@ -844,8 +381,7 @@ class _SearchFormState extends State<SearchForm> {
     );
   }
 
-  Widget _buildDropdownWithIcons(String label, List<Map<String, dynamic>> items,
-      String? selectedItem, ValueChanged<String?> onChanged) {
+  Widget _buildDropdownWithIcons(String label, List<Map<String, dynamic>> items, String? selectedItem, ValueChanged<String?> onChanged) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
       child: Container(
@@ -863,8 +399,7 @@ class _SearchFormState extends State<SearchForm> {
           icon: Icon(Icons.arrow_drop_down_sharp, color: Colors.grey),
           hint: Text(label),
           onChanged: onChanged,
-          items:
-              items.map<DropdownMenuItem<String>>((Map<String, dynamic> item) {
+          items: items.map<DropdownMenuItem<String>>((Map<String, dynamic> item) {
             return DropdownMenuItem<String>(
               value: item['label'],
               child: Row(
@@ -881,54 +416,59 @@ class _SearchFormState extends State<SearchForm> {
     );
   }
 
-  Widget _buildSearchButton(Function fn) {
-    return ElevatedButton.icon(
-      onPressed: () => fn,
-      icon: Icon(Icons.search, color: Colors.white),
-      label: Text(
-        'Search',
-        style: TextStyle(fontSize: 18, color: Colors.white),
-      ),
-      style: ElevatedButton.styleFrom(
-        fixedSize: Size(350, 60),
-        backgroundColor: Colors.red,
-        padding: EdgeInsets.symmetric(horizontal: 60, vertical: 15),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
+  Widget _buildCustomButtons() {
+    return Column(
+      children: [
+        ElevatedButton.icon(
+          onPressed: () => Navigator.pushNamed(context, RoutesName.postbuilderform),
+          icon: Icon(Icons.money, color: Colors.white),
+          label: Text("Builder's Plan", style: TextStyle(fontSize: 18, color: Colors.white)),
+          style: ElevatedButton.styleFrom(fixedSize: Size(350, 60), backgroundColor: Colors.blue, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
         ),
-      ),
+        SizedBox(height: 10),
+        ElevatedButton.icon(
+          onPressed: () => Navigator.pushNamed(context, RoutesName.postpropertyScreen),
+          icon: Icon(Icons.home, color: Colors.white),
+          label: Text('Post Property for Free', style: TextStyle(fontSize: 18, color: Colors.white)),
+          style: ElevatedButton.styleFrom(fixedSize: Size(350, 60), backgroundColor: Colors.red, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
+        ),
+        SizedBox(height: 10),
+        ElevatedButton.icon(
+          onPressed: () => Navigator.pushNamed(context, RoutesName.postfarmland),
+          icon: Icon(Icons.add_location_alt_rounded, color: Colors.white),
+          label: Text('Post your Plot', style: TextStyle(fontSize: 18, color: Colors.white)),
+          style: ElevatedButton.styleFrom(fixedSize: Size(350, 60), backgroundColor: Colors.blue, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
+        ),
+        SizedBox(height: 10),
+      ],
     );
   }
 
-  Widget _buildCustomButton(
-      IconData icon, String text, Color color, Function f) {
-    {
-      return ElevatedButton.icon(
-        onPressed: () => f,
-        icon: Icon(icon, color: Colors.white),
-        label: Text(
-          text,
-          style: TextStyle(fontSize: 18, color: Colors.white),
-        ),
-        style: ElevatedButton.styleFrom(
-          fixedSize: Size(350, 60),
-          backgroundColor: color,
-          padding: EdgeInsets.symmetric(horizontal: 60, vertical: 15),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
-        ),
-      );
+  void _performSearch(BuildContext context, String status) {
+    if (_selectedLocation == null) {
+      Snack.show("Please select a Location", context);
+    } else {
+      print("Selected Location: $_selectedLocation");
+      final id = locations.firstWhere((element) => element["label"] == _selectedLocation)["id"];
+      Navigator.push(context, MaterialPageRoute(builder: (context) {
+        final area = _selectedArea == null
+            ? ""
+            : (locator.get<AreaDetailsDependency>().areas[_selectedLocation!] as List<Map<String, dynamic>>)
+                .firstWhere((element) => element["a_name"] == _selectedArea)["id"];
+        print("Area ID: $area");
+        return ViewProperties(
+          city_id: id.toString(),
+          status: status == "Commercial" ? _selectedBuyOrRent ?? "Buy" : status,
+          bhk: _selectedBHK == null
+              ? ""
+              : _selectedBHK! == "4 or more BHK"
+                  ? "4BHK"
+                  : _selectedBHK!.split(" ").join(""),
+          area: area.toString(),
+          propertyType: _selectedType ?? "",
+          priceRange: _selectedPriceRange ?? "",
+        );
+      }));
     }
-  }
-
-  void _performSearch() {
-    // Perform search logic
-    print('Selected Location: $_selectedLocation');
-    print('Selected Area: $_selectedArea');
-    print('Selected BHK: $_selectedBHK');
-    print('Selected Status: $_selectedStatus');
-    print('Selected Type: $_selectedType');
-    print('Selected Price Range: $_selectedPriceRange');
   }
 }
