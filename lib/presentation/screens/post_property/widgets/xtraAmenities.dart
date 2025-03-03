@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:my_zero_broker/presentation/screens/post_property/widgets/checkboxes.dart';
- // Import your CustomCheckbox file
 
 class ExtraAmenitieWidget extends StatefulWidget {
-  const ExtraAmenitieWidget({Key? key}) : super(key: key);
+  final Function(List<Map<String, dynamic>>)? onAmenitiesChanged; // Callback to send updated amenities
+
+  const ExtraAmenitieWidget({Key? key, this.onAmenitiesChanged}) : super(key: key);
 
   @override
   _ExtraAmenitieWidgetState createState() => _ExtraAmenitieWidgetState();
@@ -26,8 +27,8 @@ class _ExtraAmenitieWidgetState extends State<ExtraAmenitieWidget> {
     {'label': 'Rain Water Harvesting', 'value': false},
     {'label': 'Sewage Treatment Plant', 'value': false},
     {'label': 'House Keeping', 'value': false},
-    {'label': 'Power Backup', 'value': true},
-    {'label': 'Visitor Parking', 'value': true},
+    {'label': 'Power Backup', 'value': false},
+    {'label': 'Visitor Parking', 'value': false},
   ];
 
   @override
@@ -37,8 +38,6 @@ class _ExtraAmenitieWidgetState extends State<ExtraAmenitieWidget> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-         
-         
           Center(
             child: Text(
               'Select the amenities available',
@@ -56,6 +55,9 @@ class _ExtraAmenitieWidgetState extends State<ExtraAmenitieWidget> {
                 onChanged: (bool? value) {
                   setState(() {
                     amenity['value'] = value ?? false;
+                    if (widget.onAmenitiesChanged != null) {
+                      widget.onAmenitiesChanged!(_amenities); // Notify parent of changes
+                    }
                   });
                 },
               );
@@ -65,4 +67,7 @@ class _ExtraAmenitieWidgetState extends State<ExtraAmenitieWidget> {
       ),
     );
   }
+
+  // Method to get the current state of amenities
+  List<Map<String, dynamic>> getAmenities() => _amenities;
 }
