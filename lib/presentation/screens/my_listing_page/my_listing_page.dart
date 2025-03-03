@@ -106,6 +106,28 @@ class _MyListingPageState extends State<MyListingPage> {
                           e["id"].toString() ==
                           property.localityId.toString())["a_name"];
                       print(photos);
+                      final propertySTATUS = property.property;
+                      final purpose = property.purpose;
+                      String heading;
+                      if (propertySTATUS == "Residential" &&
+                          purpose == "Sale/Resale") {
+                        heading = "RS";
+                      } else if (propertySTATUS == "Residential" &&
+                          purpose == "Rent") {
+                        heading = "RR";
+                      } else if (propertySTATUS == "Commercial" &&
+                          purpose == "Sale/Resale") {
+                        heading = "CS";
+                      } else if (propertySTATUS == "Commercial" &&
+                          purpose == "Rent") {
+                        heading = "CR";
+                      } else if (propertySTATUS == "Residential" &&
+                          purpose == "Sell") {
+                        heading = "RS";
+                      } else {
+                        heading = "PR";
+                      }
+
                       return Center(
                         child: Container(
                           width: 500,
@@ -154,7 +176,7 @@ class _MyListingPageState extends State<MyListingPage> {
                                 children: [
                                   _detailRow(
                                     'Property No:',
-                                    "RS" + property.id.toString(),
+                                    heading + property.id.toString(),
                                     Colors.blue,
                                   ),
                                   _detailRow(

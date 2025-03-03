@@ -114,6 +114,12 @@ class _SearchFormState extends State<SearchForm> {
   final ValueNotifier<int> _indexNotifier = ValueNotifier<int>(0);
 
   @override
+  void initState() {
+    super.initState();
+    // _selectedStatus = _propertyBuyorRent.first['label'];
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
         child: Column(children: [

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_zero_broker/bloc/location/location_bloc.dart';
 import 'package:my_zero_broker/bloc/login/login_bloc.dart';
@@ -15,7 +16,9 @@ import 'package:my_zero_broker/presentation/screens/splash/bloc/splash_cubit.dar
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  setupLocator();
+  setupLocator(); 
+  // set the rotation to only portrait
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(const MyApp());
 }
 
@@ -37,7 +40,7 @@ class MyApp extends StatelessWidget {
           BlocProvider(create: (context) => PostFormladBloc()),
           BlocProvider(create: (context) => MyListingBloc()),
             BlocProvider(create: (context) => PostBuildersDetailsBloc()),
-        
+      
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
