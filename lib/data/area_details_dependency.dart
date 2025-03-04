@@ -5,7 +5,7 @@ import 'package:my_zero_broker/data/models/city_details_model.dart';
 
 class AreaDetailsDependency {
   List<CityDetails> cityDetails = [];
-  Map<String, List<Map>> areas = {};
+  Map<String, List<Map<String, dynamic>>> areas = {}; // Explicitly specify the type
 
   Future<List<CityDetails>> fetchAreas() async {
     final locationUrl = "https://myzerobroker.com/api/city-details";
@@ -24,8 +24,10 @@ class AreaDetailsDependency {
         );
         if (response.statusCode == 200) {
           final List<dynamic> data = jsonDecode(response.body);
-          areas[cityDetails[i].cName.toString()] =
-              data.map((e) => e as Map<String, dynamic>).toList();
+          areas[cityDetails[i].cName.toString()] = data.map((e) {
+            // Explicitly convert each map to Map<String, dynamic>
+            return (e as Map).map((key, value) => MapEntry(key.toString(), value));
+          }).toList();
         } else {
           throw Exception('Failed to load areas');
         }
