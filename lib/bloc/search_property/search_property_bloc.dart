@@ -16,6 +16,8 @@ class SearchPropertyBloc
       final area_id = event.area_id;
       final page = event.page;
       final property_type = event.property_type;
+      final status = event.status;
+
       String range = event.priceRange;
       final pricerange = {
         "₹10 Lakh - ₹20 Lakh": "1000000-2000000",
@@ -29,7 +31,7 @@ class SearchPropertyBloc
       emit(SearchPropertyLoading());
       try {
         final res = await http.get(Uri.parse(
-            'https://myzerobroker.com/api/search?city_id=$city_id&locality_id=$area_id&page=$page&property_status=${event.status}&bhk=${event.bhk}&price_range=${r}'));
+            'https://myzerobroker.com/api/search?city_id=$city_id&locality_id=$area_id&page=$page&property_status=${event.status}&bhk=${event.bhk}&price_range=${r}&property_select=$status'));
         if (res.statusCode == 200) {
           final property = PropertyInCityModel.fromJson(jsonDecode(res.body));
           emit(SearchPropertyLoaded(properties: property));

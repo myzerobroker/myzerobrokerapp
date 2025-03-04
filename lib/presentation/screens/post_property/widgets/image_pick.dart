@@ -13,6 +13,13 @@ class GalleryImagePicker extends StatefulWidget {
 }
 
 class _GalleryImagePickerState extends State<GalleryImagePicker> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    _images.clear();
+    super.initState();
+  }
+  
   final ImagePicker _picker = ImagePicker();
   List<File> _images = [];
 
