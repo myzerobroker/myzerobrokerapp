@@ -67,8 +67,7 @@ class Routes {
       case RoutesName.plotSellerPlanScreen:
         return _createRoute(PlotSellerPlanScreen());
 
-      case RoutesName.postfarmland:
-        return _createRoute(PostFarmland());
+     
 
        case RoutesName.postbuilderform:
         return _createRoute(PostBuilderForm()); 

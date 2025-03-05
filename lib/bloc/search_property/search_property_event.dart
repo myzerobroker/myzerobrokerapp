@@ -15,6 +15,7 @@ class SearchBuyProperty extends SearchPropertyEvent {
   final String property_type;
   final String priceRange; 
   final String bhk;
+  final String tp; 
 
   SearchBuyProperty(
       {required this.city_id,
@@ -23,5 +24,6 @@ class SearchBuyProperty extends SearchPropertyEvent {
       required this.status,
       required this.property_type,
       required this.priceRange,
+      required this.tp,
       required this.bhk});
 }

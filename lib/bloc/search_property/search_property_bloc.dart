@@ -27,16 +27,17 @@ class SearchPropertyBloc
         "Above ₹1 Cr": "10000000%2B",
       };
       print(pricerange[range]);
-      final r = range == "" ? "" : pricerange[range]; 
+      final r = range == "" ? "" : pricerange[range];
       emit(SearchPropertyLoading());
+      final url =
+          'https://myzerobroker.com/api/search?city_id=$city_id&locality_id=$area_id&page=$page&property_status=${event.tp}&bhk=${event.bhk}&price_range=${r}&property_select=$status';
+      print(url);
       try {
-        final res = await http.get(Uri.parse(
-            'https://myzerobroker.com/api/search?city_id=$city_id&locality_id=$area_id&page=$page&property_status=${event.status}&bhk=${event.bhk}&price_range=${r}&property_select=$status'));
+        final res = await http.get(Uri.parse(url));
         if (res.statusCode == 200) {
           final property = PropertyInCityModel.fromJson(jsonDecode(res.body));
           emit(SearchPropertyLoaded(properties: property));
         } else {
-          
           emit(SearchPropertyError(message: 'Failed to load property'));
         }
       } catch (err) {
