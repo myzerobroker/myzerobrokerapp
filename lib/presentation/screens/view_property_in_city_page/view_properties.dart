@@ -7,25 +7,27 @@ import 'package:my_zero_broker/data/area_details_dependency.dart';
 import 'package:my_zero_broker/data/models/property_in_cities_model.dart';
 import 'package:my_zero_broker/locator.dart';
 import 'package:my_zero_broker/presentation/widgets/image_carousel.dart';
+import 'package:my_zero_broker/utils/code_generator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ViewProperties extends StatefulWidget {
-  const ViewProperties(
-      {super.key,
-      required this.city_id,
-      required this.status,
-      required this.bhk,
-      required this.area, required this.propertyType, required this.priceRange,
-
-      
-      
-      });
+  const ViewProperties({
+    super.key,
+    required this.city_id,
+    required this.status,
+    required this.bhk,
+    required this.area,
+    required this.propertyType,
+    required this.priceRange,
+    required this.tp,
+  });
   final String city_id;
+  final String tp;
   final String status;
   final area;
   final String bhk;
   final String propertyType;
-  final String priceRange; 
+  final String priceRange;
 
   @override
   State<ViewProperties> createState() => _ViewPropertiesState();
@@ -60,8 +62,9 @@ class _ViewPropertiesState extends State<ViewProperties> {
         city_id: widget.city_id,
         area_id: widget.area ?? "0",
         page: current,
+        tp: widget.tp,
         bhk: widget.bhk,
-        priceRange: widget.priceRange ,
+        priceRange: widget.priceRange,
         property_type: widget.propertyType,
         status: widget.status));
     areas = locator
@@ -92,6 +95,9 @@ class _ViewPropertiesState extends State<ViewProperties> {
   @override
   Widget build(BuildContext context) {
     print(widget.area);
+    //print data from the widget
+    print(widget.tp);
+    print(widget.status);
     return Scaffold(
         appBar: AppBar(
           title: Text(
@@ -126,6 +132,7 @@ class _ViewPropertiesState extends State<ViewProperties> {
                                   BlocProvider.of<SearchPropertyBloc>(context)
                                       .add(SearchBuyProperty(
                                           city_id: widget.city_id,
+                                          tp: widget.tp,
                                           area_id: selectedArea == "Select Area"
                                               ? "0"
                                               : locator
@@ -141,8 +148,8 @@ class _ViewPropertiesState extends State<ViewProperties> {
                                                   .toString(),
                                           page: current,
                                           bhk: widget.bhk,
-                                          priceRange: widget.priceRange ,
-        property_type: widget.propertyType,
+                                          priceRange: widget.priceRange,
+                                          property_type: widget.propertyType,
                                           status: widget.status));
                                 },
                                 child: Container(
@@ -233,11 +240,12 @@ class _ViewPropertiesState extends State<ViewProperties> {
                                     BlocProvider.of<SearchPropertyBloc>(context)
                                         .add(SearchBuyProperty(
                                             city_id: widget.city_id,
+                                            tp: widget.tp,
                                             area_id: areaId,
                                             bhk: widget.bhk,
                                             page: current,
-                                            priceRange: widget.priceRange ,
-        property_type: widget.propertyType,
+                                            priceRange: widget.priceRange,
+                                            property_type: widget.propertyType,
                                             status: widget.status));
 
                                     print(
@@ -258,11 +266,12 @@ class _ViewPropertiesState extends State<ViewProperties> {
                                   // Reset to unfiltered properties
                                   BlocProvider.of<SearchPropertyBloc>(context)
                                       .add(SearchBuyProperty(
+                                          tp: widget.tp,
                                           city_id: widget.city_id,
                                           area_id: "0",
                                           bhk: widget.bhk,
-                                          priceRange: widget.priceRange ,
-        property_type: widget.propertyType,
+                                          priceRange: widget.priceRange,
+                                          property_type: widget.propertyType,
                                           page: current,
                                           status: widget.status));
                                   print(
@@ -427,15 +436,8 @@ class _ViewPropertiesState extends State<ViewProperties> {
                                             ),
                                             _detailRow(
                                                 'Property No:',
-                                                (widget.status == "Commercial"
-                                                        ? "CS"
-                                                        : widget.status ==
-                                                                "Rent"
-                                                            ? "RR"
-                                                            : widget.status ==
-                                                                    ""
-                                                                ? "RS"
-                                                                : "PR") +
+                                                codeGenerator(widget.status,
+                                                        widget.tp) +
                                                     property.id.toString(),
                                                 Colors.blue),
                                             _detailRow(
@@ -494,7 +496,9 @@ class _ViewPropertiesState extends State<ViewProperties> {
                                         _detailRow('Facing:',
                                             property.facing.toString()),
                                         _detailRow(
-                                            'Offer:',
+                                            widget.status == "Rent"
+                                                ? "Rent: "
+                                                : 'Offer:',
                                             "₹" +
                                                 property.expectedPrice
                                                     .toString(),
