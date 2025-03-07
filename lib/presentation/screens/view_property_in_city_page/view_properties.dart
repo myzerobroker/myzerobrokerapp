@@ -51,10 +51,32 @@ class _ViewPropertiesState extends State<ViewProperties> {
     return false;
   }
 
+  String formatPrice(String price) {
+    try {
+      double priceValue = double.parse(price);
+      String formattedPrice;
+
+      if (priceValue >= 10000000) {
+        formattedPrice = (priceValue / 10000000).toStringAsFixed(1).replaceAll('.0', '') + ' Cr';
+      } else if (priceValue >= 100000) {
+        formattedPrice = (priceValue / 100000).toStringAsFixed(1).replaceAll('.0', '') + ' Lakh';
+      } else if (priceValue >= 1000) {
+        formattedPrice = (priceValue / 1000).toStringAsFixed(1).replaceAll('.0', '') + ' K';
+      } else {
+        formattedPrice = priceValue.toStringAsFixed(0);
+      }
+
+      return '₹$formattedPrice (Negotiable)';
+    } catch (e) {
+      return '₹$price (Negotiable)';
+    }
+  }
+
   bool show = false;
   List<dynamic> areas = [];
   late String selectedArea;
   List<Property> props = [];
+
   @override
   void initState() {
     super.initState();
@@ -95,7 +117,6 @@ class _ViewPropertiesState extends State<ViewProperties> {
   @override
   Widget build(BuildContext context) {
     print(widget.area);
-    //print data from the widget
     print(widget.tp);
     print(widget.status);
     return Scaffold(
@@ -191,7 +212,6 @@ class _ViewPropertiesState extends State<ViewProperties> {
                       SizedBox(
                         height: 5,
                       ),
-                      //filter options here
                       Row(
                         children: [
                           Expanded(
@@ -226,7 +246,6 @@ class _ViewPropertiesState extends State<ViewProperties> {
                                     selectedArea = val!;
                                     show = true;
 
-                                    // Filter properties by the selected area
                                     final areaId = locator
                                         .get<AreaDetailsDependency>()
                                         .areas[cityDetails.firstWhere(
@@ -263,7 +282,6 @@ class _ViewPropertiesState extends State<ViewProperties> {
                                   selectedArea = "Select Area";
                                   show = false;
 
-                                  // Reset to unfiltered properties
                                   BlocProvider.of<SearchPropertyBloc>(context)
                                       .add(SearchBuyProperty(
                                           tp: widget.tp,
@@ -283,7 +301,6 @@ class _ViewPropertiesState extends State<ViewProperties> {
                           ),
                         ],
                       ),
-
                       state.properties.properties!.isEmpty
                           ? Center(
                               child: Text("No Results Found"),
@@ -312,7 +329,6 @@ class _ViewPropertiesState extends State<ViewProperties> {
                                     .toList()
                                     .first["a_name"];
 
-                                // print(photos);
                                 return Center(
                                   child: Container(
                                     width: double.infinity,
@@ -334,7 +350,6 @@ class _ViewPropertiesState extends State<ViewProperties> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        // Header: Logo & Title
                                         photos.isEmpty
                                             ? Image.asset(
                                                 "assets/images/my_zero_broker_logo (2).png")
@@ -363,7 +378,6 @@ class _ViewPropertiesState extends State<ViewProperties> {
                                                   ),
                                         Divider(color: Colors.black45),
                                         SizedBox(height: 6),
-                                        // Property Details
                                         Wrap(
                                           spacing: 10,
                                           runSpacing: 6,
@@ -440,92 +454,122 @@ class _ViewPropertiesState extends State<ViewProperties> {
                                                         widget.tp) +
                                                     property.id.toString(),
                                                 Colors.blue),
-                                            _detailRow(
-                                                'Posted on:',
-                                                DateTime.parse(property
-                                                            .createdAt
-                                                            .toString())
-                                                        .day
-                                                        .toString() +
-                                                    "-" +
-                                                    DateTime.parse(property
-                                                            .createdAt
-                                                            .toString())
-                                                        .month
-                                                        .toString() +
-                                                    "-" +
-                                                    DateTime.parse(property
-                                                            .createdAt
-                                                            .toString())
-                                                        .year
-                                                        .toString(),
-                                                Colors.red),
-                                            _detailRow(
-                                                'Location:',
-                                                state.properties.cityName
-                                                    .toString(),
-                                                Colors.red),
-                                            _detailRow('Area :',
-                                                area.toString(), Colors.red),
+                                            if (property.propertyType != null &&
+                                                property.propertyType.isNotEmpty)
+                                              _detailRow(
+                                                  'Property Type:',
+                                                  property.propertyType,
+                                                  Colors.blue),
+                                            if (property.createdAt != null)
+                                              _detailRow(
+                                                  'Posted on:',
+                                                  DateTime.parse(property
+                                                              .createdAt
+                                                              .toString())
+                                                          .day
+                                                          .toString() +
+                                                      "-" +
+                                                      DateTime.parse(property
+                                                              .createdAt
+                                                              .toString())
+                                                          .month
+                                                          .toString() +
+                                                      "-" +
+                                                      DateTime.parse(property
+                                                              .createdAt
+                                                              .toString())
+                                                          .year
+                                                          .toString(),
+                                                  Colors.red),
+                                            if (state.properties.cityName !=
+                                                    null &&
+                                                state.properties.cityName!
+                                                    .isNotEmpty)
+                                              _detailRow(
+                                                  'Location:',
+                                                  state.properties.cityName
+                                                      .toString(),
+                                                  Colors.red),
+                                            if (area != null && area.isNotEmpty)
+                                              _detailRow('Area :', area.toString(),
+                                                  Colors.red),
                                           ],
                                         ),
                                         SizedBox(height: 10),
-                                        _detailRow(
-                                            "BHK", property.bhk.toString()),
-                                        _detailRow(
-                                            'Plot Area:',
-                                            property.areaSqft.toString() ==
-                                                    "null"
-                                                ? "Not Defined"
-                                                : (property.areaSqft
-                                                        .toString() +
-                                                    ' sqFT')),
-                                        _detailRow(
-                                            'Built-Up Area:',
-                                            property.carpetAreaSqft
-                                                        .toString() ==
-                                                    "null"
-                                                ? "Not Defined"
-                                                : (property.carpetAreaSqft
-                                                        .toString() +
-                                                    ' sqFT')),
-                                        _detailRow('Property Age:',
-                                            property.propertyAge.toString()),
-                                        _detailRow('Floors:',
-                                            property.totalFloor.toString()),
-                                        _detailRow('Facing:',
-                                            property.facing.toString()),
-                                        _detailRow(
-                                            widget.status == "Rent"
-                                                ? "Rent: "
-                                                : 'Offer:',
-                                            "₹" +
-                                                property.expectedPrice
-                                                    .toString(),
-                                            Colors.green),
-                                        _detailRow(
-                                            'Maintainance:',
-                                            '₹' +
-                                                property.maintenanceCost
-                                                    .toString()),
-                                        _detailRow('Furnishing:',
-                                            property.furnishing.toString()),
-                                        _detailRow('Parking:',
-                                            property.parkingType.toString()),
-                                        _detailRow('Kitchen Type:',
-                                            property.kitchenType.toString()),
-                                        _detailRow('Bathrooms:',
-                                            property.bathroom.toString()),
-                                        _detailRow('Balcony:',
-                                            property.balcony.toString()),
+                                        if (property.bhk != null &&
+                                            property.bhk!.isNotEmpty)
+                                          _detailRow("BHK", property.bhk.toString()),
+                                        if (property.areaSqft != null &&
+                                            property.areaSqft.toString() != "null")
+                                          _detailRow(
+                                              'Plot Area:',
+                                              property.areaSqft.toString() ==
+                                                      "null"
+                                                  ? "Not Defined"
+                                                  : (property.areaSqft.toString() +
+                                                      ' sqFT')),
+                                        if (property.carpetAreaSqft != null &&
+                                            property.carpetAreaSqft.toString() !=
+                                                "null")
+                                          _detailRow(
+                                              'Built-Up Area:',
+                                              property.carpetAreaSqft.toString() ==
+                                                      "null"
+                                                  ? "Not Defined"
+                                                  : (property.carpetAreaSqft
+                                                          .toString() +
+                                                      ' sqFT')),
+                                        if (property.propertyAge != null &&
+                                            property.propertyAge!.isNotEmpty)
+                                          _detailRow('Property Age:',
+                                              property.propertyAge.toString()),
+                                        if (property.totalFloor != null &&
+                                            property.totalFloor!.isNotEmpty)
+                                          _detailRow('Floors:',
+                                              property.totalFloor.toString()),
+                                        if (property.facing != null &&
+                                            property.facing!.isNotEmpty)
+                                          _detailRow(
+                                              'Facing:', property.facing.toString()),
+                                     if (property.expectedPrice != null)
+  _detailRow(
+      widget.status == "Rent" ? "Rent: " : 'Offer:',
+      formatPrice(property.expectedPrice.toString()),
+      Colors.green),
+                                      if (property.maintenanceCost != null)
+  _detailRow(
+      'Maintainance:',
+      '₹' + property.maintenanceCost.toString()),
+                                        if (property.furnishing != null &&
+                                            property.furnishing!.isNotEmpty)
+                                          _detailRow('Furnishing:',
+                                              property.furnishing.toString()),
+                                        if (property.parkingType != null &&
+                                            property.parkingType!.isNotEmpty)
+                                          _detailRow('Parking:',
+                                              property.parkingType.toString()),
+                                        if (property.kitchenType != null &&
+                                            property.kitchenType!.isNotEmpty)
+                                          _detailRow('Kitchen Type:',
+                                              property.kitchenType.toString()),
+                                        if (property.bathroom != null &&
+                                            property.bathroom!.isNotEmpty)
+                                          _detailRow('Bathrooms:',
+                                              property.bathroom.toString()),
+                                        if (property.balcony != null &&
+                                            property.balcony!.isNotEmpty)
+                                          _detailRow(
+                                              'Balcony:', property.balcony.toString()),
                                         SizedBox(height: 6),
-                                        Text(
-                                          property.description ?? "",
-                                          style: TextStyle(
-                                            fontStyle: FontStyle.italic,
-                                            color: Colors.grey,
+                                        if (property.description != null &&
+                                            property.description!.isNotEmpty)
+                                          Text(
+                                            property.description ?? "",
+                                            style: TextStyle(
+                                              fontStyle: FontStyle.italic,
+                                              color: Colors.grey,
+                                            ),
                                           ),
-                                        ),
                                         SizedBox(height: 12),
                                         ElevatedButton(
                                           onPressed: () {
