@@ -44,6 +44,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     };
 
     try {
+      print(data);
       final response = await http.post(
         Uri.parse('https://myzerobroker.com/api/login'),
         body: data,
