@@ -9,7 +9,6 @@ import 'package:my_zero_broker/data/area_details_dependency.dart';
 import 'package:my_zero_broker/data/upload_image.dart';
 import 'package:my_zero_broker/data/user_details_dependency.dart';
 import 'package:my_zero_broker/locator.dart';
-import 'package:my_zero_broker/presentation/screens/post_property/post_property_depenency.dart/dependency_class.dart';
 import 'package:my_zero_broker/presentation/screens/post_property/widgets/buildcard.dart';
 import 'package:my_zero_broker/presentation/screens/post_property/widgets/image_pick.dart';
 import 'package:my_zero_broker/presentation/screens/post_property/widgets/section_title.dart';
@@ -197,11 +196,8 @@ class _PostFarmlandState extends State<PostFarmland> {
         "total_floor": "0", // Not applicable for farmland
         "ownership": "null", // Could be updated if you add ownership selection
         "facing": selectedFacing?.toString() ?? "null", // Ensure null safety
-        "property": locator.get<PostPropertyDependency>().isResidential
-            ? "Residential"
-            : "Commercial",
-        "purpose": locator.get<PostPropertyDependency>().adType ??
-            "null", // Ensure null safety
+        "property": "Plot",
+        "purpose": "Sale", // Ensure null safety
         "area_sqft":
             plotAreaController.text.isNotEmpty ? plotAreaController.text : "0",
         "carpet_area_sqft": "0", // Not applicable for farmland
