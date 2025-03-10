@@ -138,72 +138,121 @@ class _ViewPropertiesState extends State<ViewProperties> {
                           Text("Total Pages"),
                         ],
                       ),
-                      SizedBox(
-                        height: 70,
-                        child: Center(
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: state.properties.pagination!.lastPage,
-                            itemBuilder: (BuildContext context, int index) {
-                              return GestureDetector(
-                                onTap: () async {
-                                  setState(() {
-                                    current = index + 1;
-                                  });
-                                  BlocProvider.of<SearchPropertyBloc>(context)
-                                      .add(SearchBuyProperty(
-                                          city_id: widget.city_id,
-                                          tp: widget.tp,
-                                          area_id: selectedArea == "Select Area"
-                                              ? "0"
-                                              : locator
-                                                  .get<AreaDetailsDependency>()
-                                                  .areas[cityDetails.firstWhere(
-                                                          (element) =>
-                                                              element["id"] ==
-                                                              widget.city_id)[
-                                                      "label"]]!
-                                                  .firstWhere((e) =>
-                                                      e["a_name"] ==
-                                                      selectedArea)["id"]
-                                                  .toString(),
-                                          page: current,
-                                          bhk: widget.bhk,
-                                          priceRange: widget.priceRange,
-                                          property_type: widget.propertyType,
-                                          status: widget.status));
-                                },
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  height: 50,
-                                  width: 50,
-                                  margin: EdgeInsets.only(
-                                      right: 10, top: 10, bottom: 10),
-                                  child: Text(
-                                    (index + 1).toString(),
-                                    style: TextStyle(
-                                        color: current == index + 1
-                                            ? Colors.white
-                                            : Colors.black),
-                                  ),
-                                  decoration: BoxDecoration(
-                                      color: current == index + 1
-                                          ? Colors.red
-                                          : Colors.white,
-                                      borderRadius: BorderRadius.circular(10),
-                                      border: Border.all(
-                                          color: current == index + 1
-                                              ? Colors.red
-                                              : Colors.grey.shade200)),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                      ),
+                     SizedBox(
+  height: 70,
+  child: Center(
+    child: ListView.builder(
+      scrollDirection: Axis.horizontal,
+      itemCount: state.properties.pagination!.lastPage,
+      itemBuilder: (BuildContext context, int index) {
+        return GestureDetector(
+          onTap: () async {
+            setState(() {
+              current = index + 1;
+            });
+
+            BlocProvider.of<SearchPropertyBloc>(context).add(SearchBuyProperty(
+                city_id: widget.city_id,
+                tp: widget.tp,
+                area_id: selectedArea == "Select Area"
+                    ? "0"
+                    : locator
+                        .get<AreaDetailsDependency>()
+                        .areas[cityDetails.firstWhere(
+                                (element) =>
+                                    element["id"] == widget.city_id)["label"]]!
+                        .firstWhere((e) => e["a_name"] == selectedArea)["id"]
+                        .toString(),
+                page: current,
+                bhk: widget.bhk,
+                priceRange: widget.priceRange,
+                property_type: widget.propertyType,
+                status: widget.status));
+          },
+          child: Container(
+            alignment: Alignment.center,
+            height: 50,
+            width: 50,
+            margin: EdgeInsets.only(right: 10, top: 10, bottom: 10),
+            child: Text(
+              (index + 1).toString(),
+              style: TextStyle(
+                  color: current == index + 1 ? Colors.white : Colors.black),
+            ),
+            decoration: BoxDecoration(
+                color: current == index + 1 ? Colors.red : Colors.white,
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(
+                    color: current == index + 1 ? Colors.red : Colors.grey.shade200)),
+          ),
+        );
+      },
+    ),
+  ),
+),
+
+
+SizedBox(height: 10), 
+
+Row(
+  mainAxisAlignment: MainAxisAlignment.end,
+  children: [
+    GestureDetector(
+      onTap: current < state.properties.pagination!.lastPage
+          ? () {
+              setState(() {
+                current += 1;
+              });
+
+              BlocProvider.of<SearchPropertyBloc>(context).add(SearchBuyProperty(
+                  city_id: widget.city_id,
+                  tp: widget.tp,
+                  area_id: selectedArea == "Select Area"
+                      ? "0"
+                      : locator
+                          .get<AreaDetailsDependency>()
+                          .areas[cityDetails.firstWhere(
+                                  (element) =>
+                                      element["id"] == widget.city_id)["label"]]!
+                          .firstWhere((e) => e["a_name"] == selectedArea)["id"]
+                          .toString(),
+                  page: current,
+                  bhk: widget.bhk,
+                  priceRange: widget.priceRange,
+                  property_type: widget.propertyType,
+                  status: widget.status));
+            }
+          : null, 
+      child: Container(
+        alignment: Alignment.center,
+        height: 40,
+        width: 80,
+        margin: EdgeInsets.only(right: 10, top: 10, bottom: 10),
+        decoration: BoxDecoration(
+          color: current < state.properties.pagination!.lastPage ? Colors.red : Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(
+            color: current < state.properties.pagination!.lastPage ? Colors.red : Colors.grey.shade200,
+          ),
+        ),
+        child: Text(
+          "Next",  
+          style: TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.bold,
+            color: current < state.properties.pagination!.lastPage ? Colors.white : Colors.black,
+          ),
+        ),
+      ),
+    ),
+  ],
+),
+
+
                       SizedBox(
                         height: 10,
                       ),
+                     
                       Row(
                         children: [
                           Text("Filter Options"),

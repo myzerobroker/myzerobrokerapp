@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:my_zero_broker/config/routes/routes_name.dart';
 import 'package:my_zero_broker/data/user_details_dependency.dart';
 import 'package:my_zero_broker/locator.dart';
+import 'package:my_zero_broker/presentation/widgets/custom_snack_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DrawerContent extends StatefulWidget {
@@ -91,8 +92,16 @@ class _DrawerContentState extends State<DrawerContent> {
                 _drawerItem(context, 'My Listings', RoutesName.myListing,
                     Icon(Icons.book)),
                 Divider(color: Colors.grey.shade100),
-                _drawerItem(context, 'Post Property For Free',
-                    RoutesName.postpropertyScreen, Icon(Icons.add)),
+               _drawerItem(
+  context,
+  'Post Property For Free',
+  locator.get<UserDetailsDependency>().id != -1
+      ? RoutesName.postpropertyScreen
+      : null, // Set route to null if user is not logged in
+  Icon(Icons.add),
+  isLoginRequired: true, // Add this flag
+),
+
                 Divider(color: Colors.grey.shade100),
                 ExpansionTile(
                   leading: Icon(Icons.payment),
@@ -169,25 +178,32 @@ class _DrawerContentState extends State<DrawerContent> {
   }
 
   Widget _drawerItem(
-      BuildContext context, String title, String routeName, Icon icon) {
-    return ListTile(
-      leading: icon,
-      title: Text(title),
-      onTap: () async {
-        if (title == "Log Out") {
-          locator.get<UserDetailsDependency>().id = -1;
-          locator.get<UserDetailsDependency>().userModel == null;
-          SharedPreferences sp = await SharedPreferences.getInstance();
-          sp.remove("userId");
-          Navigator.pushNamed(context, RoutesName.homeScreen);
-          return;
-        }
+    BuildContext context, String title, String? routeName, Icon icon,
+    {bool isLoginRequired = false}) {
+  return ListTile(
+    leading: icon,
+    title: Text(title),
+    onTap: () async {
+      if (isLoginRequired && locator.get<UserDetailsDependency>().id == -1) {
+        Future.delayed(Duration.zero, () {
+          Snack.show("Please Login", context);
+        });
+        return;
+      }
 
-        if (routeName == RoutesName.homeScreen) {
-          return;
-        }
+      if (title == "Log Out") {
+        locator.get<UserDetailsDependency>().id = -1;
+        locator.get<UserDetailsDependency>().userModel = null;
+        SharedPreferences sp = await SharedPreferences.getInstance();
+        sp.remove("userId");
+        Navigator.pushNamed(context, RoutesName.homeScreen);
+        return;
+      }
+
+      if (routeName != null) {
         Navigator.pushNamed(context, routeName);
-      },
-    );
-  }
+      }
+    },
+  );
+}
 }

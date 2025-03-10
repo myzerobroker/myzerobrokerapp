@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_zero_broker/bloc/search_property/search_property_bloc.dart';
 import 'package:my_zero_broker/config/routes/routes_name.dart';
 import 'package:my_zero_broker/data/area_details_dependency.dart';
+import 'package:my_zero_broker/data/user_details_dependency.dart';
 import 'package:my_zero_broker/locator.dart';
 import 'package:my_zero_broker/presentation/screens/post_farmland/post_farmland.dart';
 import 'package:my_zero_broker/presentation/screens/view_property_in_city_page/view_properties.dart';
@@ -523,7 +524,10 @@ class _SearchFormState extends State<SearchForm> {
         SizedBox(height: 10),
         ElevatedButton.icon(
           onPressed: () =>
-              Navigator.pushNamed(context, RoutesName.postpropertyScreen),
+              locator.get<UserDetailsDependency>().id != -1 ?
+              Navigator.pushNamed(context, RoutesName.postpropertyScreen) : 
+              Snack.show("Please Login", context) 
+              ,
           icon: Icon(Icons.home, color: Colors.white),
           label: Text('Post Property for Free',
               style: TextStyle(fontSize: 18, color: Colors.white)),
@@ -540,10 +544,12 @@ class _SearchFormState extends State<SearchForm> {
                 .get<AreaDetailsDependency>()
                 .areas[_selectedLocation!] as List<Map<String, dynamic>>;
             print(areas);
+
+              locator.get<UserDetailsDependency>().id != -1 ?
             Navigator.push(context,
                 MaterialPageRoute(builder: (context) => PostFarmland(
                   areas: areas,
-                )));
+                ))) : Snack.show("Please Login", context) ;
           },
           icon: Icon(Icons.add_location_alt_rounded, color: Colors.white),
           label: Text('Post your Plot',
