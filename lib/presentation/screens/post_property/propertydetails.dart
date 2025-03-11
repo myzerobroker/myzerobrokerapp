@@ -246,12 +246,19 @@ _submitForm() async {
                       children: [
                         const SectionTitle(title: "Property Details"),
                         _buildDropdownField(
-                            "Property Type", selectedPropertyType, [
+                            "Property Type", selectedPropertyType,locator.get<PostPropertyDependency>().isResidential? [
                           "Row House",
                           "Individual Villa/Bunglow",
                           "Farm House",
                           "Flat",
                           "Twin Bunglow"
+                        ] : [
+                          "Office",
+                          "Store Room",
+                          "Shop",
+                          "Show Room",
+                          "Industrial Building",
+                          "Gowdown Warehouse"
                         ], (val) {
                           setState(() {
                             selectedPropertyType = val;
