@@ -523,11 +523,9 @@ class _SearchFormState extends State<SearchForm> {
         ),
         SizedBox(height: 10),
         ElevatedButton.icon(
-          onPressed: () =>
-              locator.get<UserDetailsDependency>().id != -1 ?
-              Navigator.pushNamed(context, RoutesName.postpropertyScreen) : 
-              Snack.show("Please Login", context) 
-              ,
+          onPressed: () => locator.get<UserDetailsDependency>().id != -1
+              ? Navigator.pushNamed(context, RoutesName.postpropertyScreen)
+              : Navigator.pushNamed(context, RoutesName.loginScreen),
           icon: Icon(Icons.home, color: Colors.white),
           label: Text('Post Property for Free',
               style: TextStyle(fontSize: 18, color: Colors.white)),
@@ -545,11 +543,14 @@ class _SearchFormState extends State<SearchForm> {
                 .areas[_selectedLocation!] as List<Map<String, dynamic>>;
             print(areas);
 
-              locator.get<UserDetailsDependency>().id != -1 ?
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => PostFarmland(
-                  areas: areas,
-                ))) : Snack.show("Please Login", context) ;
+            locator.get<UserDetailsDependency>().id != -1
+                ? Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => PostFarmland(
+                              areas: areas,
+                            )))
+                : Navigator.pushNamed(context, RoutesName.loginScreen);
           },
           icon: Icon(Icons.add_location_alt_rounded, color: Colors.white),
           label: Text('Post your Plot',

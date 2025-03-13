@@ -57,11 +57,16 @@ class _ViewPropertiesState extends State<ViewProperties> {
       String formattedPrice;
 
       if (priceValue >= 10000000) {
-        formattedPrice = (priceValue / 10000000).toStringAsFixed(1).replaceAll('.0', '') + ' Cr';
+        formattedPrice =
+            (priceValue / 10000000).toStringAsFixed(1).replaceAll('.0', '') +
+                ' Cr';
       } else if (priceValue >= 100000) {
-        formattedPrice = (priceValue / 100000).toStringAsFixed(1).replaceAll('.0', '') + ' Lakh';
+        formattedPrice =
+            (priceValue / 100000).toStringAsFixed(1).replaceAll('.0', '') +
+                ' Lakh';
       } else if (priceValue >= 1000) {
-        formattedPrice = (priceValue / 1000).toStringAsFixed(1).replaceAll('.0', '') + ' K';
+        formattedPrice =
+            (priceValue / 1000).toStringAsFixed(1).replaceAll('.0', '') + ' K';
       } else {
         formattedPrice = priceValue.toStringAsFixed(0);
       }
@@ -138,121 +143,74 @@ class _ViewPropertiesState extends State<ViewProperties> {
                           Text("Total Pages"),
                         ],
                       ),
-                     SizedBox(
-  height: 70,
-  child: Center(
-    child: ListView.builder(
-      scrollDirection: Axis.horizontal,
-      itemCount: state.properties.pagination!.lastPage,
-      itemBuilder: (BuildContext context, int index) {
-        return GestureDetector(
-          onTap: () async {
-            setState(() {
-              current = index + 1;
-            });
+                      SizedBox(
+                        height: 70,
+                        child: Center(
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: state.properties.pagination!.lastPage,
+                            itemBuilder: (BuildContext context, int index) {
+                              return GestureDetector(
+                                onTap: () async {
+                                  setState(() {
+                                    current = index + 1;
+                                  });
 
-            BlocProvider.of<SearchPropertyBloc>(context).add(SearchBuyProperty(
-                city_id: widget.city_id,
-                tp: widget.tp,
-                area_id: selectedArea == "Select Area"
-                    ? "0"
-                    : locator
-                        .get<AreaDetailsDependency>()
-                        .areas[cityDetails.firstWhere(
-                                (element) =>
-                                    element["id"] == widget.city_id)["label"]]!
-                        .firstWhere((e) => e["a_name"] == selectedArea)["id"]
-                        .toString(),
-                page: current,
-                bhk: widget.bhk,
-                priceRange: widget.priceRange,
-                property_type: widget.propertyType,
-                status: widget.status));
-          },
-          child: Container(
-            alignment: Alignment.center,
-            height: 50,
-            width: 50,
-            margin: EdgeInsets.only(right: 10, top: 10, bottom: 10),
-            child: Text(
-              (index + 1).toString(),
-              style: TextStyle(
-                  color: current == index + 1 ? Colors.white : Colors.black),
-            ),
-            decoration: BoxDecoration(
-                color: current == index + 1 ? Colors.red : Colors.white,
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(
-                    color: current == index + 1 ? Colors.red : Colors.grey.shade200)),
-          ),
-        );
-      },
-    ),
-  ),
-),
-
-
-SizedBox(height: 10), 
-
-Row(
-  mainAxisAlignment: MainAxisAlignment.end,
-  children: [
-    GestureDetector(
-      onTap: current < state.properties.pagination!.lastPage
-          ? () {
-              setState(() {
-                current += 1;
-              });
-
-              BlocProvider.of<SearchPropertyBloc>(context).add(SearchBuyProperty(
-                  city_id: widget.city_id,
-                  tp: widget.tp,
-                  area_id: selectedArea == "Select Area"
-                      ? "0"
-                      : locator
-                          .get<AreaDetailsDependency>()
-                          .areas[cityDetails.firstWhere(
-                                  (element) =>
-                                      element["id"] == widget.city_id)["label"]]!
-                          .firstWhere((e) => e["a_name"] == selectedArea)["id"]
-                          .toString(),
-                  page: current,
-                  bhk: widget.bhk,
-                  priceRange: widget.priceRange,
-                  property_type: widget.propertyType,
-                  status: widget.status));
-            }
-          : null, 
-      child: Container(
-        alignment: Alignment.center,
-        height: 40,
-        width: 80,
-        margin: EdgeInsets.only(right: 10, top: 10, bottom: 10),
-        decoration: BoxDecoration(
-          color: current < state.properties.pagination!.lastPage ? Colors.red : Colors.white,
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(
-            color: current < state.properties.pagination!.lastPage ? Colors.red : Colors.grey.shade200,
-          ),
-        ),
-        child: Text(
-          "Next",  
-          style: TextStyle(
-            fontSize: 15,
-            fontWeight: FontWeight.bold,
-            color: current < state.properties.pagination!.lastPage ? Colors.white : Colors.black,
-          ),
-        ),
-      ),
-    ),
-  ],
-),
-
-
+                                  BlocProvider.of<SearchPropertyBloc>(context)
+                                      .add(SearchBuyProperty(
+                                          city_id: widget.city_id,
+                                          tp: widget.tp,
+                                          area_id: selectedArea == "Select Area"
+                                              ? "0"
+                                              : locator
+                                                  .get<AreaDetailsDependency>()
+                                                  .areas[cityDetails.firstWhere(
+                                                          (element) =>
+                                                              element["id"] ==
+                                                              widget.city_id)[
+                                                      "label"]]!
+                                                  .firstWhere((e) =>
+                                                      e["a_name"] ==
+                                                      selectedArea)["id"]
+                                                  .toString(),
+                                          page: current,
+                                          bhk: widget.bhk,
+                                          priceRange: widget.priceRange,
+                                          property_type: widget.propertyType,
+                                          status: widget.status));
+                                },
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  height: 50,
+                                  width: 50,
+                                  margin: EdgeInsets.only(
+                                      right: 10, top: 10, bottom: 10),
+                                  child: Text(
+                                    (index + 1).toString(),
+                                    style: TextStyle(
+                                        color: current == index + 1
+                                            ? Colors.white
+                                            : Colors.black),
+                                  ),
+                                  decoration: BoxDecoration(
+                                      color: current == index + 1
+                                          ? Colors.red
+                                          : Colors.white,
+                                      borderRadius: BorderRadius.circular(10),
+                                      border: Border.all(
+                                          color: current == index + 1
+                                              ? Colors.red
+                                              : Colors.grey.shade200)),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 10),
                       SizedBox(
                         height: 10,
                       ),
-                     
                       Row(
                         children: [
                           Text("Filter Options"),
@@ -377,7 +335,7 @@ Row(
                                         property.localityId.toString())
                                     .toList()
                                     .first["a_name"];
-
+                                print(property.toJson());
                                 return Center(
                                   child: Container(
                                     width: double.infinity,
@@ -504,7 +462,8 @@ Row(
                                                     property.id.toString(),
                                                 Colors.blue),
                                             if (property.propertyType != null &&
-                                                property.propertyType.isNotEmpty)
+                                                property
+                                                    .propertyType.isNotEmpty)
                                               _detailRow(
                                                   'Property Type:',
                                                   property.propertyType,
@@ -540,29 +499,34 @@ Row(
                                                       .toString(),
                                                   Colors.red),
                                             if (area != null && area.isNotEmpty)
-                                              _detailRow('Area :', area.toString(),
-                                                  Colors.red),
+                                              _detailRow('Area :',
+                                                  area.toString(), Colors.red),
                                           ],
                                         ),
                                         SizedBox(height: 10),
                                         if (property.bhk != null &&
                                             property.bhk!.isNotEmpty)
-                                          _detailRow("BHK", property.bhk.toString()),
+                                          _detailRow(
+                                              "BHK", property.bhk.toString()),
                                         if (property.areaSqft != null &&
-                                            property.areaSqft.toString() != "null")
+                                            property.areaSqft.toString() !=
+                                                "null")
                                           _detailRow(
                                               'Plot Area:',
                                               property.areaSqft.toString() ==
                                                       "null"
                                                   ? "Not Defined"
-                                                  : (property.areaSqft.toString() +
+                                                  : (property.areaSqft
+                                                          .toString() +
                                                       ' sqFT')),
                                         if (property.carpetAreaSqft != null &&
-                                            property.carpetAreaSqft.toString() !=
+                                            property.carpetAreaSqft
+                                                    .toString() !=
                                                 "null")
                                           _detailRow(
                                               'Built-Up Area:',
-                                              property.carpetAreaSqft.toString() ==
+                                              property.carpetAreaSqft
+                                                          .toString() ==
                                                       "null"
                                                   ? "Not Defined"
                                                   : (property.carpetAreaSqft
@@ -578,17 +542,22 @@ Row(
                                               property.totalFloor.toString()),
                                         if (property.facing != null &&
                                             property.facing!.isNotEmpty)
+                                          _detailRow('Facing:',
+                                              property.facing.toString()),
+                                        if (property.expectedPrice != null)
                                           _detailRow(
-                                              'Facing:', property.facing.toString()),
-                                     if (property.expectedPrice != null)
-  _detailRow(
-      widget.status == "Rent" ? "Rent: " : 'Offer:',
-      formatPrice(property.expectedPrice.toString()),
-      Colors.green),
-                                      if (property.maintenanceCost != null)
-  _detailRow(
-      'Maintainance:',
-      '₹' + property.maintenanceCost.toString()),
+                                              widget.status == "Rent"
+                                                  ? "Rent: "
+                                                  : 'Offer:',
+                                              formatPrice(property.expectedPrice
+                                                  .toString()),
+                                              Colors.green),
+                                        if (property.maintenanceCost != null)
+                                          _detailRow(
+                                              'Maintainance:',
+                                              '₹' +
+                                                  property.maintenanceCost
+                                                      .toString()),
                                         if (property.furnishing != null &&
                                             property.furnishing!.isNotEmpty)
                                           _detailRow('Furnishing:',
@@ -607,8 +576,26 @@ Row(
                                               property.bathroom.toString()),
                                         if (property.balcony != null &&
                                             property.balcony!.isNotEmpty)
+                                          _detailRow('Balcony:',
+                                              property.balcony.toString()),
+                                        if (property.property == "Plot")
                                           _detailRow(
-                                              'Balcony:', property.balcony.toString()),
+                                              "Plot Depth: ",
+                                              property.plotDepth.toString() +
+                                                  "m"),
+                                        if (property.property == "Plot")
+                                          _detailRow(
+                                              "Plot Front:",
+                                              property.plotFront.toString() +
+                                                  "m"),
+                                        if (property.property == "Plot")
+                                          _detailRow("Main Road:",
+                                              property.mainRoad.toString()),
+                                        if (property.property == "Plot")
+                                          _detailRow("Front Road: ",
+                                              property.frontRoad.toString()),
+                                        if (property.property != "Plot")
+                                          _buildAmenitiesSection(property),
                                         SizedBox(height: 6),
                                         if (property.description != null &&
                                             property.description!.isNotEmpty)
@@ -642,6 +629,69 @@ Row(
                                 );
                               },
                             ),
+                      GestureDetector(
+                        onTap: current < state.properties.pagination!.lastPage
+                            ? () {
+                                setState(() {
+                                  current += 1;
+                                });
+
+                                BlocProvider.of<SearchPropertyBloc>(context)
+                                    .add(SearchBuyProperty(
+                                        city_id: widget.city_id,
+                                        tp: widget.tp,
+                                        area_id: selectedArea == "Select Area"
+                                            ? "0"
+                                            : locator
+                                                .get<AreaDetailsDependency>()
+                                                .areas[cityDetails.firstWhere(
+                                                    (element) =>
+                                                        element["id"] ==
+                                                        widget
+                                                            .city_id)["label"]]!
+                                                .firstWhere((e) =>
+                                                    e["a_name"] ==
+                                                    selectedArea)["id"]
+                                                .toString(),
+                                        page: current,
+                                        bhk: widget.bhk,
+                                        priceRange: widget.priceRange,
+                                        property_type: widget.propertyType,
+                                        status: widget.status));
+                              }
+                            : null,
+                        child: Container(
+                          alignment: Alignment.center,
+                          height: 40,
+                          width: double.infinity,
+                          margin:
+                              EdgeInsets.only(right: 10, top: 10, bottom: 10),
+                          decoration: BoxDecoration(
+                            color:
+                                current < state.properties.pagination!.lastPage
+                                    ? Colors.red
+                                    : Colors.white,
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(
+                              color: current <
+                                      state.properties.pagination!.lastPage
+                                  ? Colors.red
+                                  : Colors.grey.shade200,
+                            ),
+                          ),
+                          child: Text(
+                            "Next Page",
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                              color: current <
+                                      state.properties.pagination!.lastPage
+                                  ? Colors.white
+                                  : Colors.black,
+                            ),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -682,6 +732,67 @@ Widget _detailRow(String label, String value, [Color? color]) {
             color: color ?? Colors.black54,
           ),
         ),
+      ),
+    ],
+  );
+}
+
+Widget _buildAmenitiesSection(Property property) {
+  // Map of amenity keys to display names
+  final Map<String, String> amenitiesLabels = {
+    "lift": "Lift",
+    "internet_service": "Internet Service",
+    "air_conditioner": "Air Conditioner",
+    "club_house": "Club House",
+    "intercom": "Intercom",
+    "swimming_pool": "Swimming Pool",
+    "childrens_play_area": "Children's Play Area",
+    "fire_safety": "Fire Safety",
+    "servant_room": "Servant Room",
+    "shopping_center": "Shopping Center",
+    "gas_pipeline": "Gas Pipeline",
+    "park": "Park",
+    "rain_water_harvesting": "Rain Water Harvesting",
+    "sewage_treatment": "Sewage Treatment",
+    "house_keeping": "House Keeping",
+    "power_backup": "Power Backup",
+    "visitor_parking": "Visitor Parking",
+  };
+
+  // Extracting available amenities
+  final availableAmenities = amenitiesLabels.entries
+      .where((entry) => property.toJson()[entry.key] == 1)
+      .map((entry) => entry.value)
+      .toList();
+
+  print(availableAmenities);
+  if (availableAmenities.isEmpty) {
+    return SizedBox(); // Return an empty widget if no amenities are available
+  }
+
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(
+        'Amenities:',
+        style: TextStyle(
+          fontSize: 15,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      const SizedBox(height: 6),
+      Wrap(
+        spacing: 10,
+        runSpacing: 10,
+        children: availableAmenities.map((amenity) {
+          return Chip(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            label: Text(amenity),
+            backgroundColor: Colors.grey.shade200,
+          );
+        }).toList(),
       ),
     ],
   );
