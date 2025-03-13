@@ -118,7 +118,8 @@ class _PropertyDetailsFormScreenState extends State<PropertyDetailsFormScreen> {
       return "0";
     }
   }
-_submitForm() async {
+
+  _submitForm() async {
     if (_formKey.currentState!.validate()) {
       if (images.isNotEmpty) {
         for (File image in images) {
@@ -199,12 +200,9 @@ _submitForm() async {
 
       BlocProvider.of<PostPropertyDetailsBloc>(context)
           .add(PostPropertyEventToApi(propertyDetails: propertyDetails));
-         
     } else {
       Snack.show("All Fields are Required!!", context);
-      
     }
-    
   }
 
   @override
@@ -246,35 +244,45 @@ _submitForm() async {
                       children: [
                         const SectionTitle(title: "Property Details"),
                         _buildDropdownField(
-                            "Property Type", selectedPropertyType,locator.get<PostPropertyDependency>().isResidential? [
-                          "Row House",
-                          "Individual Villa/Bunglow",
-                          "Farm House",
-                          "Flat",
-                          "Twin Bunglow"
-                        ] : [
-                          "Office",
-                          "Store Room",
-                          "Shop",
-                          "Show Room",
-                          "Industrial Building",
-                          "Gowdown Warehouse"
-                        ], (val) {
+                            "Property Type",
+                            selectedPropertyType,
+                            locator.get<PostPropertyDependency>().isResidential
+                                ? [
+                                    "Row House",
+                                    "Individual Villa/Bunglow",
+                                    "Farm House",
+                                    "Flat",
+                                    "Twin Bunglow"
+                                  ]
+                                : [
+                                    "Office",
+                                    "Store Room",
+                                    "Shop",
+                                    "Show Room",
+                                    "Industrial Building",
+                                    "Gowdown Warehouse"
+                                  ], (val) {
                           setState(() {
                             selectedPropertyType = val;
                           });
                         }),
-                        _buildDropdownField("BHK Type", selectedBhkType, [
-                          "1 RK",
-                          "1 BHK",
-                          "2 BHK",
-                          "3 BHK",
-                          "4 or more BHK"
-                        ], (val) {
-                          setState(() {
-                            selectedBhkType = val;
-                          });
-                        }),
+                        Visibility(
+                          visible: locator
+                              .get<PostPropertyDependency>()
+                              .isResidential,
+                          child: _buildDropdownField(
+                              "BHK Type", selectedBhkType, [
+                            "1 RK",
+                            "1 BHK",
+                            "2 BHK",
+                            "3 BHK",
+                            "4 or more BHK"
+                          ], (val) {
+                            setState(() {
+                              selectedBhkType = val;
+                            });
+                          }),
+                        ),
                         _buildDropdownField(
                             "Property Age", selectedPropertyAge, [
                           "Under Construction/ New Construction",
@@ -412,13 +420,13 @@ _submitForm() async {
                             selectedParking = val;
                           });
                         }),
-                        _buildDropdownField("Kitchen Type", selectedKitchenType,
+                       Visibility(visible: locator.get<PostPropertyDependency>().isResidential,child:  _buildDropdownField("Kitchen Type", selectedKitchenType,
                             ["Modular", "Covered Shelves", "Open Shelves"],
                             (val) {
                           setState(() {
                             selectedKitchenType = val;
                           });
-                        }),
+                        }),), 
                         _buildTextField("Description", descriptionController),
                       ],
                     ),
@@ -517,7 +525,8 @@ _submitForm() async {
                     child: Column(
                       children: [
                         const SectionTitle(title: "Extra Amenities"),
-                        ExtraAmenitieWidget(onAmenitiesChanged: _updateAmenities),
+                        ExtraAmenitieWidget(
+                            onAmenitiesChanged: _updateAmenities),
                       ],
                     ),
                   ),
