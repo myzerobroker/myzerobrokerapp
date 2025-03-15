@@ -85,6 +85,7 @@ class _ViewPropertiesState extends State<ViewProperties> {
   @override
   void initState() {
     super.initState();
+    print(widget.status);
     BlocProvider.of<SearchPropertyBloc>(context).add(SearchBuyProperty(
         city_id: widget.city_id,
         area_id: widget.area ?? "0",
@@ -504,6 +505,7 @@ class _ViewPropertiesState extends State<ViewProperties> {
                                           ],
                                         ),
                                         SizedBox(height: 10),
+                                          
                                         if (property.bhk != null &&
                                             property.bhk!.isNotEmpty)
                                           _detailRow(
@@ -544,13 +546,14 @@ class _ViewPropertiesState extends State<ViewProperties> {
                                             property.facing!.isNotEmpty)
                                           _detailRow('Facing:',
                                               property.facing.toString()),
-                                        if (property.expectedPrice != null)
+                                        if (property.expectedPrice != 0)
                                           _detailRow(
-                                              widget.status == "Rent"
+                                              widget.status == 'Rent'
                                                   ? "Rent: "
                                                   : 'Offer:',
-                                              formatPrice(property.expectedPrice
-                                                  .toString()),
+                                              widget.status == 'Rent'? formatPrice(property.expectedRent
+                                                  .toString()) : formatPrice(property.expectedPrice
+                                                  .toString()) ,
                                               Colors.green),
                                         if (property.maintenanceCost != null)
                                           _detailRow(
@@ -582,18 +585,23 @@ class _ViewPropertiesState extends State<ViewProperties> {
                                           _detailRow(
                                               "Plot Depth: ",
                                               property.plotDepth.toString() +
-                                                  "m"),
+                                                  " m"),
                                         if (property.property == "Plot")
                                           _detailRow(
                                               "Plot Front:",
                                               property.plotFront.toString() +
-                                                  "m"),
+                                                  " m"),
                                         if (property.property == "Plot")
-                                          _detailRow("Main Road:",
-                                              property.mainRoad.toString()),
+                                          _detailRow("Main Road:" ,
+                                              property.mainRoad.toString()
+                                              + " m"
+                                              ),
                                         if (property.property == "Plot")
                                           _detailRow("Front Road: ",
-                                              property.frontRoad.toString()),
+                                              property.frontRoad.toString() + " m"),
+                                                  if (property.property == "Plot")
+                                          _detailRow("Side Road: ",
+                                              property.sideRoad.toString() + " m"),
                                         if (property.property != "Plot")
                                           _buildAmenitiesSection(property),
                                         SizedBox(height: 6),
