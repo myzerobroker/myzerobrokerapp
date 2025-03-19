@@ -328,7 +328,7 @@ class _PostFarmlandState extends State<PostFarmland> {
                               "Front Road (M)", frontRoadController, true),
                           _buildTextField(
                               "Side Road (M)", sideRoadController, false),
-                          _buildTextField("Offer Price (in Lakhs Per Guntha)",
+                          _buildTextField("Offer (in Lakhs Per Guntha)",
                               offerPriceController, true),
                           _buildDropdownField("Facing", selectedFacing, [
                             "East",
