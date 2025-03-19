@@ -588,12 +588,12 @@ class _ViewPropertiesState extends State<ViewProperties> {
                                               "Plot Front:",
                                               property.plotFront.toString() +
                                                   "m"),
-                                        if (property.property == "Plot")
-                                          _detailRow("Main Road:",
-                                              property.mainRoad.toString()),
+                                        // if (property.property == "Plot")
+                                        //   _detailRow("Main Road:",
+                                        //       property.mainRoad.toString()),
                                         if (property.property == "Plot")
                                           _detailRow("Front Road: ",
-                                              property.frontRoad.toString()),
+                                              property.frontRoad.toString( ) + "m"),
                                         if (property.property != "Plot")
                                           _buildAmenitiesSection(property),
                                         SizedBox(height: 6),
