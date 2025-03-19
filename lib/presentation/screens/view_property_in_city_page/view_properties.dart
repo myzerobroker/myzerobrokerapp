@@ -71,7 +71,7 @@ class _ViewPropertiesState extends State<ViewProperties> {
         formattedPrice = priceValue.toStringAsFixed(0);
       }
 
-      return '₹$formattedPrice (Negotiable)';
+      return '₹$formattedPrice ';
     } catch (e) {
       return '₹$price (Negotiable)';
     }
@@ -505,7 +505,6 @@ class _ViewPropertiesState extends State<ViewProperties> {
                                           ],
                                         ),
                                         SizedBox(height: 10),
-                                          
                                         if (property.bhk != null &&
                                             property.bhk!.isNotEmpty)
                                           _detailRow(
@@ -551,9 +550,18 @@ class _ViewPropertiesState extends State<ViewProperties> {
                                               widget.status == 'Rent'
                                                   ? "Rent: "
                                                   : 'Offer:',
-                                              widget.status == 'Rent'? formatPrice(property.expectedRent
-                                                  .toString()) : formatPrice(property.expectedPrice
-                                                  .toString()) ,
+                                              widget.status == 'Rent'
+                                                  ? formatPrice(property
+                                                      .expectedRent
+                                                      .toString())
+                                                  : formatPrice(property
+                                                          .expectedPrice
+                                                          .toString()) +
+                                                      " " +
+                                                      (property.property ==
+                                                              "Plot"
+                                                          ? "per guntha"
+                                                          : "(Negotiable)"),
                                               Colors.green),
                                         if (property.maintenanceCost != null)
                                           _detailRow(
@@ -592,16 +600,15 @@ class _ViewPropertiesState extends State<ViewProperties> {
                                               property.plotFront.toString() +
                                                   " m"),
                                         if (property.property == "Plot")
-                                          _detailRow("Main Road:" ,
-                                              property.mainRoad.toString()
-                                              + " m"
-                                              ),
+                                          _detailRow(
+                                              "Front Road: ",
+                                              property.frontRoad.toString() +
+                                                  " m"),
                                         if (property.property == "Plot")
-                                          _detailRow("Front Road: ",
-                                              property.frontRoad.toString() + " m"),
-                                                  if (property.property == "Plot")
-                                          _detailRow("Side Road: ",
-                                              property.sideRoad.toString() + " m"),
+                                          _detailRow(
+                                              "Side Road: ",
+                                              property.sideRoad.toString() +
+                                                  " m"),
                                         if (property.property != "Plot")
                                           _buildAmenitiesSection(property),
                                         SizedBox(height: 6),
