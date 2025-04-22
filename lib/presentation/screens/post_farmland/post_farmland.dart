@@ -12,6 +12,7 @@ import 'package:my_zero_broker/locator.dart';
 import 'package:my_zero_broker/presentation/screens/post_property/widgets/buildcard.dart';
 import 'package:my_zero_broker/presentation/screens/post_property/widgets/image_pick.dart';
 import 'package:my_zero_broker/presentation/screens/post_property/widgets/section_title.dart';
+import 'package:my_zero_broker/utils/constant/colors.dart';
 
 class PostFarmland extends StatefulWidget {
   @override
@@ -67,7 +68,7 @@ class _PostFarmlandState extends State<PostFarmland> {
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: ColorsPalette.secondaryColor,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(color: Colors.grey, width: 1),
         ),
@@ -78,7 +79,11 @@ class _PostFarmlandState extends State<PostFarmland> {
             contentPadding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
           ),
           icon: Icon(Icons.arrow_drop_down_sharp, color: Colors.grey),
-          hint: Text(label),
+          hint: Text(label,
+              style: TextStyle(
+                color: ColorsPalette.primaryColor,
+                fontSize: 16,
+              )),
           onChanged: onChanged,
           items:
               items.map<DropdownMenuItem<String>>((Map<String, dynamic> item) {
@@ -86,9 +91,14 @@ class _PostFarmlandState extends State<PostFarmland> {
               value: item['label'],
               child: Row(
                 children: [
-                  Icon(item['icon'], color: Colors.red, size: 20),
+                  Icon(item['icon'],
+                      color: ColorsPalette.primaryColor, size: 20),
                   SizedBox(width: 10),
-                  Text(item['label']),
+                  Text(item['label'],
+                      style: TextStyle(
+                        color: ColorsPalette.primaryColor,
+                        fontSize: 16,
+                      )),
                 ],
               ),
             );
@@ -112,6 +122,10 @@ class _PostFarmlandState extends State<PostFarmland> {
         value: value,
         decoration: InputDecoration(
           labelText: label,
+          labelStyle: TextStyle(
+            color: ColorsPalette.primaryColor,
+            fontSize: 16,
+          ),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12.0),
           ),
@@ -119,7 +133,13 @@ class _PostFarmlandState extends State<PostFarmland> {
         items: items
             .map((item) => DropdownMenuItem(
                   value: item,
-                  child: Text(item),
+                  child: Text(
+                    item,
+                    style: TextStyle(
+                      color: ColorsPalette.primaryColor,
+                      fontSize: 16,
+                    ),
+                  ),
                 ))
             .toList(),
         onChanged: (newValue) {
@@ -144,6 +164,10 @@ class _PostFarmlandState extends State<PostFarmland> {
         keyboardType: TextInputType.text,
         decoration: InputDecoration(
           hintText: hintText,
+          hintStyle: TextStyle(
+            color: ColorsPalette.primaryColor.withOpacity(0.9),
+            fontSize: 16,
+          ),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12.0),
           ),
@@ -287,11 +311,12 @@ class _PostFarmlandState extends State<PostFarmland> {
     final width = MediaQuery.of(context).size.width;
 
     return Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: ColorsPalette.bgColor,
         appBar: AppBar(
           title: const Text("Post your Plot/Farmland"),
           centerTitle: true,
-          backgroundColor: Colors.red,
+          backgroundColor: ColorsPalette.primaryColor,
+          foregroundColor: ColorsPalette.secondaryColor,
         ),
         body: BlocListener<PostFormladBloc, PostFormladState>(
           listener: (context, state) {

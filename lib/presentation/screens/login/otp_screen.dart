@@ -60,7 +60,7 @@ class _OtpScreenState extends State<OtpScreen> {
           ),
         ),
         elevation: 0,
-        backgroundColor: ColorsPalette.appBarColor,
+        backgroundColor: ColorsPalette.primaryColor,
       ),
       body: BlocProvider(
         create: (context) => _loginBloc,
@@ -77,7 +77,7 @@ class _OtpScreenState extends State<OtpScreen> {
                 ),
                 SizedBox(height: height * 0.02),
                 Card(
-                  color: ColorsPalette.cardColor,
+                  color: ColorsPalette.bgColor,
                   elevation: 10,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(19),

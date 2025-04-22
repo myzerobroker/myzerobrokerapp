@@ -4,6 +4,7 @@ import 'package:my_zero_broker/bloc/property_form/property_form_bloc.dart';
 import 'package:my_zero_broker/bloc/property_form/property_form_event.dart';
 import 'package:my_zero_broker/bloc/property_form/property_form_state.dart';
 import 'package:my_zero_broker/config/routes/routes_name.dart';
+import 'package:my_zero_broker/data/area_details_dependency.dart';
 import 'package:my_zero_broker/data/user_details_dependency.dart';
 import 'package:my_zero_broker/locator.dart';
 import 'package:my_zero_broker/presentation/widgets/ElevatedButton.dart';
@@ -13,15 +14,40 @@ import 'package:my_zero_broker/utils/constant/colors.dart';
 
 import 'post_property_depenency.dart/dependency_class.dart';
 
-class PropertyFormScreen extends StatelessWidget {
+class PropertyFormScreen extends StatefulWidget {
+  @override
+  State<PropertyFormScreen> createState() => _PropertyFormScreenState();
+}
+
+class _PropertyFormScreenState extends State<PropertyFormScreen> {
   final user = locator.get<UserDetailsDependency>().userModel;
 
   TextEditingController fullNamecontroller = TextEditingController();
+
   TextEditingController emailcontroller = TextEditingController();
+
   TextEditingController phonenocontroller = TextEditingController();
-  String city = "Ahmednagar";
+
+  String city = "";
+
   String adType = "Sale/Resale";
+
   bool isResidential = true;
+
+  final locations = locator.get<AreaDetailsDependency>().cityDetails.map((e) {
+    return {
+      "label": e.cName,
+      "icon": Icons.location_city,
+      "id": e.id.toString()
+    };
+  }).toList();
+
+  @override
+  void initState() {
+    super.initState();
+    print(locations);
+    city = locations[0]["label"] as String;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +60,8 @@ class PropertyFormScreen extends StatelessWidget {
       create: (_) => PropertyFormBloc(),
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: ColorsPalette.appBarColor,
+          backgroundColor: ColorsPalette.primaryColor,
+          foregroundColor: Colors.white,
           centerTitle: true,
           title: Text.rich(
             TextSpan(
@@ -42,7 +69,7 @@ class PropertyFormScreen extends StatelessWidget {
                 TextSpan(
                   text: "Post Your Property",
                   style: TextStyle(
-                    color: Colors.black,
+                    // color: Colors.black,
                     fontWeight: FontWeight.bold,
                     fontSize: MediaQuery.of(context).size.width * 0.059,
                   ),
@@ -65,7 +92,7 @@ class PropertyFormScreen extends StatelessWidget {
                   children: [
                     SizedBox(height: height * 0.02),
                     Card(
-                      color: const Color.fromARGB(255, 252, 231, 249),
+                      color: ColorsPalette.secondaryColor,
                       elevation: 10,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(19),
@@ -80,6 +107,7 @@ class PropertyFormScreen extends StatelessWidget {
                               style: TextStyle(
                                 fontSize: width * 0.06,
                                 fontWeight: FontWeight.bold,
+                                color: ColorsPalette.primaryColor,
                               ),
                             ),
                             SizedBox(height: height * 0.02),
@@ -105,7 +133,6 @@ class PropertyFormScreen extends StatelessWidget {
                               controller: phonenocontroller,
                               textInputType: TextInputType.name,
                               hintText: 'Phone No.',
-                            
                             ),
                             SizedBox(height: 16),
 
@@ -118,17 +145,16 @@ class PropertyFormScreen extends StatelessWidget {
                                     Border.all(color: Colors.grey, width: 1),
                               ),
                               child: DropdownButton<String>(
-                                value: state.form.city,
+                                value: city,
                                 onChanged: (value) {
                                   bloc.add(UpdateCity(value!));
                                   city = value;
                                 },
                                 isExpanded: true,
                                 underline: Container(),
-                                items: [
-                                  'Ahmednagar',
-                                  'Pune',
-                                ]
+                                items: locations
+                                    .map((e) => e["label"] as String)
+                                    .toList()
                                     .map((city) => DropdownMenuItem(
                                           value: city,
                                           child: Text(city),
@@ -162,7 +188,7 @@ class PropertyFormScreen extends StatelessWidget {
                               ],
                               borderColor: Colors.grey,
                               selectedColor: Colors.white,
-                              fillColor: Colors.blueAccent,
+                              fillColor: ColorsPalette.primaryColor,
                               borderRadius: BorderRadius.circular(8),
                             ),
                             SizedBox(height: 16),
@@ -192,7 +218,7 @@ class PropertyFormScreen extends StatelessWidget {
                               ],
                               borderColor: Colors.grey,
                               selectedColor: Colors.white,
-                              fillColor: Colors.greenAccent,
+                              fillColor: ColorsPalette.primaryColor,
                               borderRadius: BorderRadius.circular(8),
                             ),
 

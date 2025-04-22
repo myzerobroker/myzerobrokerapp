@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:my_zero_broker/utils/constant/colors.dart';
+
 class EnquiryGrids extends StatefulWidget {
-  final Function(String, String) onSubjectSelected; // Update the callback to take both subject and image
+  final Function(String, String)
+      onSubjectSelected; // Update the callback to take both subject and image
 
   EnquiryGrids({required this.onSubjectSelected});
 
@@ -13,12 +16,24 @@ class _EnquiryGridsState extends State<EnquiryGrids> {
   final List<Map<String, dynamic>> services = [
     {'name': 'ZERO BROKERAGE', 'image': 'assets/images/zero brokerage.png'},
     {'name': 'FREE LISTING', 'image': 'assets/images/free listing.png'},
-    {'name': 'VASTU CONSULTANT', 'image': 'assets/images/Swastik-updated (1).png'},
+    {
+      'name': 'VASTU CONSULTANT',
+      'image': 'assets/images/Swastik-updated (1).png'
+    },
     {'name': 'MAXIMUM EXPOSURE', 'image': 'assets/images/maximum exposure.png'},
     {'name': 'SITE VISITS', 'image': 'assets/images/site visits.png'},
-    {'name': 'DIGITAL MARKETING', 'image': 'assets/images/digital marketing.png'},
-    {'name': 'AVOID UNNECESSARY CALLS', 'image': 'assets/images/unnecessary calls.png'},
-    {'name': 'EASY BUILDER PLAN', 'image': 'assets/images/easy builder plan.png'},
+    {
+      'name': 'DIGITAL MARKETING',
+      'image': 'assets/images/digital marketing.png'
+    },
+    {
+      'name': 'AVOID UNNECESSARY CALLS',
+      'image': 'assets/images/unnecessary calls.png'
+    },
+    {
+      'name': 'EASY BUILDER PLAN',
+      'image': 'assets/images/easy builder plan.png'
+    },
     {'name': 'EASE OF USE', 'image': 'assets/images/ease of use.png'},
   ];
 
@@ -34,15 +49,16 @@ class _EnquiryGridsState extends State<EnquiryGrids> {
         shrinkWrap: true,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 3, // Set 3 items per row
-          crossAxisSpacing: width * 0.08, // Dynamic cross spacing
+          crossAxisSpacing: width * 0.03, // Dynamic cross spacing
           mainAxisSpacing: height * 0.003, // Dynamic main spacing
-          childAspectRatio: width / (height * 0.5), //* Adjust aspect ratio for 3 items
+          childAspectRatio:
+              width / (height * 0.5), //* Adjust aspect ratio for 3 items
         ),
         itemCount: services.length,
         itemBuilder: (context, index) {
           return GestureDetector(
-            onTap: () => widget.onSubjectSelected(
-                services[index]['name'], services[index]['image']), // Pass both subject and image
+            onTap: () => widget.onSubjectSelected(services[index]['name'],
+                services[index]['image']), // Pass both subject and image
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -59,7 +75,7 @@ class _EnquiryGridsState extends State<EnquiryGrids> {
                   height: height * 0.049, // Adjust button height dynamically
                   width: width * 0.4, // Adjust button width for consistency
                   decoration: BoxDecoration(
-                    color: Colors.blue, // Blue button background
+                    color: ColorsPalette.primaryColor,
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Center(
