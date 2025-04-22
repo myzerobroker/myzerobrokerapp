@@ -41,8 +41,7 @@ class TextStyles {
   static const TextStyle buttonStyle = TextStyle(
     fontSize: 16,
     fontWeight: FontWeight.w500,
-    color: Color.fromARGB(255, 80, 14, 14),
-   
+    color: ColorsPalette.cardBgColor,
   );
 }
 
