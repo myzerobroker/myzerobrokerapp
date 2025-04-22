@@ -18,6 +18,7 @@ import 'package:my_zero_broker/presentation/screens/post_property/widgets/xtraAm
 // import 'package:my_zero_broker/presentation/widgets/ElevatedButton.dart';
 import 'package:my_zero_broker/presentation/widgets/TextField.dart';
 import 'package:my_zero_broker/presentation/widgets/custom_snack_bar.dart';
+import 'package:my_zero_broker/utils/constant/colors.dart';
 
 class PropertyDetailsFormScreen extends StatefulWidget {
   @override
@@ -220,7 +221,8 @@ class _PropertyDetailsFormScreenState extends State<PropertyDetailsFormScreen> {
           height: height * 0.08,
           width: width * 0.5,
         ),
-        backgroundColor: Colors.red,
+        backgroundColor: ColorsPalette.primaryColor,
+        foregroundColor: Colors.white,
       ),
       body: BlocListener<PostPropertyDetailsBloc, PostPropertyDetailsState>(
         listener: (context, state) {
@@ -420,13 +422,20 @@ class _PropertyDetailsFormScreenState extends State<PropertyDetailsFormScreen> {
                             selectedParking = val;
                           });
                         }),
-                       Visibility(visible: locator.get<PostPropertyDependency>().isResidential,child:  _buildDropdownField("Kitchen Type", selectedKitchenType,
-                            ["Modular", "Covered Shelves", "Open Shelves"],
-                            (val) {
-                          setState(() {
-                            selectedKitchenType = val;
-                          });
-                        }),), 
+                        Visibility(
+                          visible: locator
+                              .get<PostPropertyDependency>()
+                              .isResidential,
+                          child: _buildDropdownField(
+                              "Kitchen Type",
+                              selectedKitchenType,
+                              ["Modular", "Covered Shelves", "Open Shelves"],
+                              (val) {
+                            setState(() {
+                              selectedKitchenType = val;
+                            });
+                          }),
+                        ),
                         _buildTextField("Description", descriptionController),
                       ],
                     ),
@@ -592,6 +601,7 @@ class _PropertyDetailsFormScreenState extends State<PropertyDetailsFormScreen> {
         value: value,
         decoration: InputDecoration(
           labelText: label,
+          labelStyle: TextStyle(color: ColorsPalette.primaryColor),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12.0),
           ),
@@ -599,7 +609,8 @@ class _PropertyDetailsFormScreenState extends State<PropertyDetailsFormScreen> {
         items: items
             .map((item) => DropdownMenuItem(
                   value: item,
-                  child: Text(item),
+                  child: Text(item,
+                      style: TextStyle(color: ColorsPalette.primaryColor)),
                 ))
             .toList(),
         onChanged: (newValue) {
@@ -623,6 +634,7 @@ class _PropertyDetailsFormScreenState extends State<PropertyDetailsFormScreen> {
         controller: controller,
         textInputType: TextInputType.text,
         hintText: hintText,
+       
         validator: (value) {
           if (isRequired && (value == null || value.isEmpty)) {
             return 'Please enter $hintText';

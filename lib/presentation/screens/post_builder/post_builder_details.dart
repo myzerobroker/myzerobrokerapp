@@ -10,6 +10,7 @@ import 'package:my_zero_broker/presentation/screens/post_property/post_property_
 import 'package:my_zero_broker/presentation/screens/post_property/widgets/buildcard.dart';
 import 'package:my_zero_broker/presentation/screens/post_property/widgets/section_title.dart';
 import 'package:my_zero_broker/presentation/widgets/custom_snack_bar.dart';
+import 'package:my_zero_broker/utils/constant/colors.dart';
 
 class PostBuilderDetails extends StatefulWidget {
   @override
@@ -34,6 +35,7 @@ class _PostBuilderDetailsState extends State<PostBuilderDetails> {
   @override
   void initState() {
     super.initState();
+    print(locations);
     areas = locator
         .get<AreaDetailsDependency>()
         .areas[locator.get<PostPropertyDependency>().city.toUpperCase()]!
@@ -61,9 +63,9 @@ class _PostBuilderDetailsState extends State<PostBuilderDetails> {
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: ColorsPalette.secondaryColor,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.grey, width: 1),
+          border: Border.all(color: ColorsPalette.primaryColor, width: 1),
         ),
         child: DropdownButtonFormField<String>(
           value: value,
@@ -80,9 +82,14 @@ class _PostBuilderDetailsState extends State<PostBuilderDetails> {
               value: item['label'],
               child: Row(
                 children: [
-                  Icon(item['icon'], color: Colors.red, size: 20),
+                  Icon(item['icon'],
+                      color: ColorsPalette.primaryColor, size: 20),
                   SizedBox(width: 10),
-                  Text(item['label']),
+                  Text(item['label'],
+                      style: TextStyle(
+                        color: ColorsPalette.primaryColor,
+                        fontWeight: FontWeight.bold,
+                      )),
                 ],
               ),
             );
@@ -113,7 +120,11 @@ class _PostBuilderDetailsState extends State<PostBuilderDetails> {
         items: items
             .map((item) => DropdownMenuItem(
                   value: item,
-                  child: Text(item),
+                  child: Text(item,
+                      style: TextStyle(
+                        color: ColorsPalette.primaryColor,
+                        fontWeight: FontWeight.bold,
+                      )),
                 ))
             .toList(),
         onChanged: (newValue) {
@@ -135,9 +146,16 @@ class _PostBuilderDetailsState extends State<PostBuilderDetails> {
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: TextFormField(
         controller: controller,
+        style: TextStyle(
+          color: ColorsPalette.primaryColor,
+          fontWeight: FontWeight.bold,
+        ),
         keyboardType: TextInputType.text,
         decoration: InputDecoration(
           hintText: hintText,
+          hintStyle: TextStyle(
+            color: ColorsPalette.primaryColor.withOpacity(0.9),
+          ),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12.0),
           ),
@@ -191,7 +209,8 @@ class _PostBuilderDetailsState extends State<PostBuilderDetails> {
         appBar: AppBar(
           title: const Text("Builder's Plan"),
           centerTitle: true,
-          backgroundColor: const Color.fromARGB(255, 238, 123, 152),
+          backgroundColor: ColorsPalette.primaryColor,
+          foregroundColor: ColorsPalette.secondaryColor,
         ),
         body: BlocListener<PostBuildersDetailsBloc, PostBuildersDetailsState>(
           listener: (context, state) {

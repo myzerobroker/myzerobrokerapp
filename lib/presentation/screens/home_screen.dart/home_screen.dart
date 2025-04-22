@@ -9,6 +9,7 @@ import 'package:my_zero_broker/presentation/screens/home_screen.dart/header_widg
 import 'package:my_zero_broker/presentation/screens/home_screen.dart/responsive_layout.dart';
 import 'package:my_zero_broker/presentation/screens/home_screen.dart/search_form.dart';
 import 'package:my_zero_broker/presentation/widgets/drawer_content.dart';
+import 'package:my_zero_broker/utils/constant/colors.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -23,7 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return BlocProvider(
       create: (_) => DrawerCubit(),
       child: Scaffold(
-        backgroundColor: const Color.fromARGB(255, 255, 254, 254),
+        backgroundColor: ColorsPalette.bgColor,
         body: BlocBuilder<DrawerCubit, DrawerEvent>(
           builder: (context, state) {
             return ResponsiveLayout(
@@ -63,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
           pinned: true,
           elevation: 10,
           floating: true,
-          backgroundColor: Colors.white,
+          backgroundColor: ColorsPalette.bgColor,
           flexibleSpace: FlexibleSpaceBar(
             title: Text.rich(
               TextSpan(
@@ -71,7 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   TextSpan(
                     text: "REAL ESTATE, ",
                     style: TextStyle(
-                      color: Colors.black,
+                      color: ColorsPalette.primaryColor,
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
                     ),
@@ -79,7 +80,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   TextSpan(
                     text: "SIMPLIFIED",
                     style: TextStyle(
-                      color: const Color.fromARGB(255, 116, 0, 0),
+                      color: ColorsPalette.primaryColor.withOpacity(0.5),
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
                     ),

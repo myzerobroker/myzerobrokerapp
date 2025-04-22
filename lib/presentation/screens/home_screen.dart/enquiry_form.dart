@@ -4,9 +4,11 @@ import 'package:my_zero_broker/bloc/Enquiry/enquiry_bloc.dart';
 import 'package:my_zero_broker/bloc/Enquiry/enquiry_event.dart';
 import 'package:my_zero_broker/bloc/Enquiry/enquiry_state.dart';
 import 'package:my_zero_broker/presentation/widgets/ElevatedButton.dart';
+import 'package:my_zero_broker/utils/constant/colors.dart';
 
 class EnquiryFormDialog {
-  static void showEnquiryForm(BuildContext context, String subject, String img) {
+  static void showEnquiryForm(
+      BuildContext context, String subject, String img) {
     showDialog(
       context: context,
       barrierDismissible: true, // Allow dismiss by tapping outside the dialog
@@ -38,7 +40,8 @@ class _EnquiryFormState extends State<_EnquiryForm> {
     super.initState();
     _bloc = context.read<EnquiryBloc>();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _bloc.add(SubjectChanged(widget.subject)); // Moved bloc.add here to avoid calling it during build
+      _bloc.add(SubjectChanged(widget
+          .subject)); // Moved bloc.add here to avoid calling it during build
     });
   }
 
@@ -48,18 +51,21 @@ class _EnquiryFormState extends State<_EnquiryForm> {
     final width = MediaQuery.of(context).size.width;
     return Dialog(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20), // Custom border radius for dialog
+        borderRadius:
+            BorderRadius.circular(20), // Custom border radius for dialog
       ),
       elevation: 0,
-      backgroundColor: Colors.transparent, // Transparent background for the dialog
-      child: SingleChildScrollView( // Make the content scrollable
+      backgroundColor:
+          Colors.transparent, // Transparent background for the dialog
+      child: SingleChildScrollView(
+        // Make the content scrollable
         child: Stack(
           clipBehavior: Clip.none,
           children: [
             Container(
               padding: const EdgeInsets.all(16.0),
               decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 82, 94, 116),
+                color: ColorsPalette.secondaryColor,
                 borderRadius: BorderRadius.circular(30),
                 border: const Border(
                   top: BorderSide(
@@ -91,7 +97,7 @@ class _EnquiryFormState extends State<_EnquiryForm> {
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                      color: ColorsPalette.primaryColor,
                     ),
                   ),
                   SizedBox(height: 10),
@@ -100,7 +106,7 @@ class _EnquiryFormState extends State<_EnquiryForm> {
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white70,
+                      color: ColorsPalette.primaryColor,
                     ),
                   ),
                   SizedBox(height: 20),
@@ -167,22 +173,23 @@ class _EnquiryFormState extends State<_EnquiryForm> {
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: TextField(
         style: TextStyle(
-          color: Colors.white,
+          color: ColorsPalette.primaryColor,
           fontWeight: FontWeight.bold,
         ),
         onChanged: onChanged,
         decoration: InputDecoration(
           labelText: label,
-          labelStyle: TextStyle(color: Colors.white),
+          labelStyle: TextStyle(color: ColorsPalette.primaryColor),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide(color: Colors.white),
+            borderSide: BorderSide(color: ColorsPalette.primaryColor),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide(color: Colors.blue),
+            borderSide: BorderSide(color: ColorsPalette.primaryColor),
           ),
-          prefixIcon: Icon(Icons.text_fields, color: Colors.white),
+          prefixIcon:
+              Icon(Icons.text_fields, color: ColorsPalette.primaryColor),
         ),
         cursorColor: Colors.red,
       ),
@@ -209,8 +216,8 @@ class _EnquiryFormState extends State<_EnquiryForm> {
       padding: const EdgeInsets.symmetric(vertical: 16),
       child: Text(
         message,
-        style: TextStyle(fontSize: 16, color: color,
-        fontWeight: FontWeight.bold),
+        style:
+            TextStyle(fontSize: 16, color: color, fontWeight: FontWeight.bold),
       ),
     );
   }
