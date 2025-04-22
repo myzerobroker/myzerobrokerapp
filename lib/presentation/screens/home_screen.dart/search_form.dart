@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:my_zero_broker/bloc/search_property/search_property_bloc.dart';
 import 'package:my_zero_broker/config/routes/routes_name.dart';
 import 'package:my_zero_broker/data/area_details_dependency.dart';
@@ -8,6 +9,7 @@ import 'package:my_zero_broker/locator.dart';
 import 'package:my_zero_broker/presentation/screens/post_farmland/post_farmland.dart';
 import 'package:my_zero_broker/presentation/screens/view_property_in_city_page/all_properties_screen.dart';
 import 'package:my_zero_broker/presentation/widgets/custom_snack_bar.dart';
+import 'package:my_zero_broker/utils/constant/colors.dart';
 
 class SearchForm extends StatefulWidget {
   @override
@@ -219,7 +221,7 @@ class _SearchFormState extends State<SearchForm> {
                 fixedSize: Size(350, 60),
                 backgroundColor: Colors.red,
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8))),
+                    borderRadius: BorderRadius.circular(15))),
           ),
           SizedBox(height: 10),
           _buildCustomButtons(),
@@ -287,7 +289,7 @@ class _SearchFormState extends State<SearchForm> {
               fixedSize: Size(350, 60),
               backgroundColor: Colors.red,
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8))),
+                  borderRadius: BorderRadius.circular(15))),
         ),
         SizedBox(height: 10),
         _buildCustomButtons(),
@@ -357,7 +359,7 @@ class _SearchFormState extends State<SearchForm> {
               fixedSize: Size(350, 60),
               backgroundColor: Colors.red,
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8))),
+                  borderRadius: BorderRadius.circular(15))),
         ),
         SizedBox(height: 10),
         _buildCustomButtons(),
@@ -421,7 +423,7 @@ class _SearchFormState extends State<SearchForm> {
               fixedSize: Size(350, 60),
               backgroundColor: Colors.red,
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8))),
+                  borderRadius: BorderRadius.circular(15))),
         ),
         SizedBox(height: 10),
         _buildCustomButtons(),
@@ -431,38 +433,60 @@ class _SearchFormState extends State<SearchForm> {
 
   Widget _buildCategoryButtons() {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 20),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: GridView.count(
+        crossAxisCount: 4, // 4 elements per row
+        shrinkWrap: true, // Prevents GridView from taking infinite height
+        physics: NeverScrollableScrollPhysics(), // Disables scrolling
+        // mainAxisSpacing: 10, // Space between rows
+        crossAxisSpacing: 10, // Space between columns
         children: [
-          _buildCategoryButton('Buy', 0),
-          _buildCategoryButton('Rent', 1),
-          _buildCategoryButton('Commercial', 2),
-          _buildCategoryButton('Open Plot / Farmland', 3),
+          _buildCategoryButton('Buy', 0, Iconsax.safe_home4),
+          _buildCategoryButton('Rent', 1, Iconsax.house4),
+          _buildCategoryButton('Commercial', 2, Iconsax.building4),
+          _buildCategoryButton('Open Plot / Farmland', 3, Iconsax.tree4),
         ],
       ),
     );
   }
 
-  Widget _buildCategoryButton(String label, int value) {
+  Widget _buildCategoryButton(String label, int value, IconData icon) {
     return ValueListenableBuilder<int>(
       valueListenable: _indexNotifier,
       builder: (context, index, _) {
-        return Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: ElevatedButton(
-            onPressed: () {
-              _indexNotifier.value = value;
-            },
-            style: ElevatedButton.styleFrom(
-              fixedSize: Size(200, 50),
-              foregroundColor: index == value ? Colors.white : Colors.black,
-              backgroundColor:
-                  index == value ? Colors.blue : Colors.grey.shade200,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8)),
-            ),
-            child: Text(label),
+        return GestureDetector(
+          onTap: () {
+            _indexNotifier.value = value;
+          },
+          child: Column(
+            children: [
+              Container(
+                width: double.infinity,
+                height: 60,
+                decoration: BoxDecoration(
+                  color: index == value
+                      ? ColorsPalette.primaryColor
+                      : ColorsPalette.secondaryColor,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: Colors.grey, width: 1),
+                ),
+                child: Icon(
+                  icon,
+                  size: 30,
+                  color: index == value ? Colors.white : Colors.black,
+                ),
+              ),
+              SizedBox(height: 5),
+              Text(
+                label,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: ColorsPalette.primaryColor,
+                  fontSize: 10,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
           ),
         );
       },
@@ -475,9 +499,9 @@ class _SearchFormState extends State<SearchForm> {
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: ColorsPalette.secondaryColor.withOpacity(0.5),
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.grey, width: 1),
+          border: Border.all(color: ColorsPalette.primaryColor, width: 1),
         ),
         child: DropdownButtonFormField<String>(
           decoration: InputDecoration(
@@ -494,7 +518,8 @@ class _SearchFormState extends State<SearchForm> {
               value: item['label'],
               child: Row(
                 children: [
-                  Icon(item['icon'], color: Colors.red, size: 20),
+                  Icon(item['icon'],
+                      color: ColorsPalette.primaryColor, size: 20),
                   SizedBox(width: 10),
                   Text(item['label']),
                 ],
@@ -517,9 +542,9 @@ class _SearchFormState extends State<SearchForm> {
               style: TextStyle(fontSize: 18, color: Colors.white)),
           style: ElevatedButton.styleFrom(
               fixedSize: Size(350, 60),
-              backgroundColor: Colors.blue,
+              backgroundColor: ColorsPalette.primaryColor,
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8))),
+                  borderRadius: BorderRadius.circular(15))),
         ),
         SizedBox(height: 10),
         ElevatedButton.icon(
@@ -531,9 +556,9 @@ class _SearchFormState extends State<SearchForm> {
               style: TextStyle(fontSize: 18, color: Colors.white)),
           style: ElevatedButton.styleFrom(
               fixedSize: Size(350, 60),
-              backgroundColor: Colors.red,
+              backgroundColor: ColorsPalette.primaryColor.withOpacity(1),
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8))),
+                  borderRadius: BorderRadius.circular(15))),
         ),
         SizedBox(height: 10),
         ElevatedButton.icon(
@@ -557,9 +582,9 @@ class _SearchFormState extends State<SearchForm> {
               style: TextStyle(fontSize: 18, color: Colors.white)),
           style: ElevatedButton.styleFrom(
               fixedSize: Size(350, 60),
-              backgroundColor: Colors.blue,
+              backgroundColor: ColorsPalette.primaryColor,
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8))),
+                  borderRadius: BorderRadius.circular(15))),
         ),
         SizedBox(height: 10),
       ],

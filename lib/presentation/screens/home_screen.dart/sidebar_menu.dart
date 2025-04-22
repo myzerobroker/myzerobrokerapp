@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:my_zero_broker/bloc/drawer/drawer_cubit.dart';
 import 'package:my_zero_broker/config/routes/routes_name.dart';
 
@@ -19,7 +20,7 @@ class DrawerContent extends StatelessWidget {
             ),
           ),
           ListTile(
-            leading: Icon(Icons.home, color: Colors.white),
+            leading: Icon(Iconsax.home4, color: Colors.white),
             title: Text('Home', style: TextStyle(color: Colors.white)),
             onTap: () {
               context.read<DrawerCubit>().showHome();

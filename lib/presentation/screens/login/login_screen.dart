@@ -63,6 +63,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     Image.asset(
                       'assets/images/my_zero_broker_logo (2).png',
                       height: height * 0.1,
+,
+                          color: ColorsPalette.primaryColor
                     ),
                     SizedBox(height: height * 0.09),
                     Card(
@@ -82,6 +84,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 fontSize: width * 0.05,
                               ),
                             ),
+
                             SizedBox(height: height * 0.015),
                             Text(
                               "Welcome back! Log in to continue.",
@@ -234,6 +237,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             SizedBox(height: height * 0.02),
                           ],
                         ),
+
                       ),
                     ),
                     SizedBox(height: height * 0.03),

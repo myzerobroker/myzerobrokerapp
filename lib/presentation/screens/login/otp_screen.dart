@@ -51,6 +51,7 @@ class _OtpScreenState extends State<OtpScreen> {
               stops: const [0.0, 0.4, 1.0],
             ),
           ),
+
           child: BlocProvider(
             create: (context) => _loginBloc,
             child: Center(
@@ -72,6 +73,7 @@ class _OtpScreenState extends State<OtpScreen> {
                         elevation: 8,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15),
+
                         ),
                         child: Padding(
                           padding: EdgeInsets.all(width * 0.03),

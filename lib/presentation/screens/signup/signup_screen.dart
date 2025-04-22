@@ -49,6 +49,8 @@ class _SignupScreenState extends State<SignupScreen> {
             ],
             stops: const [0.0, 0.4, 1.0],
           ),
+
+
         ),
         child: BlocProvider(
           create: (context) => _signupBloc,
@@ -76,8 +78,10 @@ class _SignupScreenState extends State<SignupScreen> {
                     ),
                     SizedBox(height: height * 0.03),
                     Card(
+
                       elevation: 8,
                       color: ColorsPalette.cardBgColor.withOpacity(0.95),
+
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15),
                       ),
