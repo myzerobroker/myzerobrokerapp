@@ -63,7 +63,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     Image.asset(
                       'assets/images/my_zero_broker_logo (2).png',
                       height: height * 0.1,
-,
+
                           color: ColorsPalette.primaryColor
                     ),
                     SizedBox(height: height * 0.09),

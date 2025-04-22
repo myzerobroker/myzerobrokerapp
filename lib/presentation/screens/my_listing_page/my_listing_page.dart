@@ -5,7 +5,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_zero_broker/bloc/my_listing/my_listing_bloc.dart';
 import 'package:my_zero_broker/data/area_details_dependency.dart';
 import 'package:my_zero_broker/locator.dart';
+import 'package:my_zero_broker/presentation/widgets/image_carousel.dart';
+// import 'package:my_zero_broker/utils/constant/colors.dart';
+import 'package:my_zero_broker/utils/constant/theme.dart';
 import 'package:shimmer/shimmer.dart';
+
+import '../view_property_in_city_page/property_detail_screen.dart';
 
 class MyListingPage extends StatefulWidget {
   const MyListingPage({super.key});
@@ -128,132 +133,97 @@ class _MyListingPageState extends State<MyListingPage> {
                         heading = "PR";
                       }
 
-                      return Center(
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  PropertyDetailScreen(property: property),
+                            ),
+                          );
+                        },
                         child: Container(
-                          width: 500,
-                          margin: const EdgeInsets.all(12),
-                          padding: const EdgeInsets.all(12),
+                          margin: EdgeInsets.all(10),
                           decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(8),
-                            boxShadow: const [
-                              BoxShadow(
-                                color: Colors.black12,
-                                blurRadius: 4,
-                                spreadRadius: 1,
-                                offset: Offset(0, 4),
-                              ),
-                            ],
+                            color: ColorsPalette.cardBgColor,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                              color:
+                                  ColorsPalette.primaryColor.withOpacity(0.3),
+                              width: 1,
+                            ),
                           ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              photos.isEmpty
-                                  ? Image.asset(
-                                      "assets/images/my_zero_broker_logo (2).png",
-                                    )
-                                  : Image.network(
-                                      "https://myzerobroker.com/public/storage/" +
-                                          photos[0].toString(),
-                                      height: 200,
-                                      width: double.infinity,
-                                      fit: BoxFit.cover,
-                                      loadingBuilder:
-                                          (context, child, loadingProgress) {
-                                        if (loadingProgress == null) {
-                                          return child;
-                                        }
-                                        return const Center(
-                                          child: CircularProgressIndicator(),
-                                        );
-                                      },
-                                    ),
-                              const Divider(color: Colors.black45),
-                              const SizedBox(height: 6),
-                              Wrap(
-                                spacing: 10,
-                                runSpacing: 6,
+                          child: Padding(
+                            padding: const EdgeInsets.all(14.0),
+                            child: Card(
+                              color: ColorsPalette.cardBgColor,
+                              margin: EdgeInsets.symmetric(vertical: 8.0),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12)),
+                              elevation: 0,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  _detailRow(
-                                    'Property No:',
-                                    heading + property.id.toString(),
-                                    Colors.blue,
+                                  photos.isEmpty
+                                      ? Image.asset(
+                                          "assets/images/my_zero_broker_logo (2).png",
+                                          height: 200,
+                                          fit: BoxFit.cover)
+                                      : photos.length > 1
+                                          ? ImageCarousel(
+                                              images: photos,
+                                            )
+                                          : Image.network(
+                                              "https://myzerobroker.com/public/storage/" +
+                                                  photos[0].toString(),
+                                              height: 200,
+                                              width: double.infinity,
+                                              fit: BoxFit.cover,
+                                              loadingBuilder: (context, child,
+                                                  loadingProgress) {
+                                                if (loadingProgress == null)
+                                                  return child;
+                                                return Center(
+                                                    child:
+                                                        CircularProgressIndicator());
+                                              },
+                                            ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          loc + ", " + area,
+                                          style: TextStyles.bodyStyle.copyWith(
+                                              color: ColorsPalette
+                                                  .textSecondaryColor),
+                                        ),
+                                        Text(
+                                          property.status == 'Rent'
+                                              ? 'Rent: ${formatPrice(property.expectedRent.toString())}'
+                                              : 'Price: ${formatPrice(property.expectedPrice.toString())}',
+                                          style: TextStyles.priceStyle,
+                                        ),
+                                        Row(
+                                          children: [
+                                            Icon(Icons.star,
+                                                color: ColorsPalette.starColor,
+                                                size: 16),
+                                            Text("4.5",
+                                                style: TextStyles.bodyStyle),
+                                            Text(" For ${property.status}",
+                                                style: TextStyles.bodyStyle),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                  _detailRow(
-                                    'Posted on:',
-                                    "${DateTime.parse(property.createdAt.toString()).day}-"
-                                        "${DateTime.parse(property.createdAt.toString()).month}-"
-                                        "${DateTime.parse(property.createdAt.toString()).year}",
-                                    Colors.red,
-                                  ),
-                                  _detailRow('Location:', loc, Colors.red),
-                                  _detailRow(
-                                      'Area:', area.toString(), Colors.red),
                                 ],
                               ),
-                              const SizedBox(height: 10),
-                              _detailRow(
-                                'Plot Area:',
-                                property.areaSqft?.toString() ?? "Not Defined",
-                              ),
-                              _detailRow(
-                                'Built-Up Area:',
-                                property.carpetAreaSqft?.toString() ??
-                                    "Not Defined",
-                              ),
-                              _detailRow(
-                                'Property Age:',
-                                property.propertyAge?.toString() ?? "N/A",
-                              ),
-                              _detailRow(
-                                'Floors:',
-                                property.totalFloor?.toString() ?? "N/A",
-                              ),
-                              _detailRow(
-                                'Facing:',
-                                property.facing?.toString() ?? "N/A",
-                              ),
-                              _detailRow(
-                                'Offer:',
-                                "₹" + property.expectedPrice.toString(),
-                                Colors.green,
-                              ),
-                              _detailRow(
-                                'Maintenance:',
-                                "₹" +
-                                    (property.maintenanceCost?.toString() ??
-                                        "N/A"),
-                              ),
-                              _detailRow(
-                                'Furnishing:',
-                                property.furnishing?.toString() ?? "N/A",
-                              ),
-                              _detailRow(
-                                'Parking:',
-                                property.parkingType?.toString() ?? "N/A",
-                              ),
-                              _detailRow(
-                                'Kitchen Type:',
-                                property.kitchenType?.toString() ?? "N/A",
-                              ),
-                              _detailRow(
-                                'Bathrooms:',
-                                property.bathroom?.toString() ?? "N/A",
-                              ),
-                              _detailRow(
-                                'Balcony:',
-                                property.balcony?.toString() ?? "N/A",
-                              ),
-                              const SizedBox(height: 6),
-                              const Text(
-                                'No extra amenities',
-                                style: TextStyle(
-                                  fontStyle: FontStyle.italic,
-                                  color: Colors.grey,
-                                ),
-                              ),
-                              const SizedBox(height: 12),
-                            ],
+                            ),
                           ),
                         ),
                       );
@@ -297,4 +267,30 @@ Widget _detailRow(String label, String value, [Color? color]) {
       ),
     ],
   );
+}
+
+String formatPrice(String price) {
+  try {
+    double priceValue = double.parse(price);
+    String formattedPrice;
+
+    if (priceValue >= 10000000) {
+      formattedPrice =
+          (priceValue / 10000000).toStringAsFixed(1).replaceAll('.0', '') +
+              ' Cr';
+    } else if (priceValue >= 100000) {
+      formattedPrice =
+          (priceValue / 100000).toStringAsFixed(1).replaceAll('.0', '') +
+              ' Lakh';
+    } else if (priceValue >= 1000) {
+      formattedPrice =
+          (priceValue / 1000).toStringAsFixed(1).replaceAll('.0', '') + ' K';
+    } else {
+      formattedPrice = priceValue.toStringAsFixed(0);
+    }
+
+    return '₹$formattedPrice (Negotiable)';
+  } catch (e) {
+    return '₹$price (Negotiable)';
+  }
 }
