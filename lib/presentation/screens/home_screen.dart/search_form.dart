@@ -6,7 +6,7 @@ import 'package:my_zero_broker/data/area_details_dependency.dart';
 import 'package:my_zero_broker/data/user_details_dependency.dart';
 import 'package:my_zero_broker/locator.dart';
 import 'package:my_zero_broker/presentation/screens/post_farmland/post_farmland.dart';
-import 'package:my_zero_broker/presentation/screens/view_property_in_city_page/view_properties.dart';
+import 'package:my_zero_broker/presentation/screens/view_property_in_city_page/all_properties_screen.dart';
 import 'package:my_zero_broker/presentation/widgets/custom_snack_bar.dart';
 
 class SearchForm extends StatefulWidget {
@@ -582,7 +582,7 @@ class _SearchFormState extends State<SearchForm> {
                     (element) => element["a_name"] == _selectedArea)["id"];
         print("Area ID: $area");
 
-        return ViewProperties(
+        return AllPropertiesScreen(
           tp: status,
           city_id: id.toString(),
           status: status == "Commercial" ? _selectedBuyOrRent ?? "Buy" : status,

@@ -1,9 +1,10 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class ImageCarousel extends StatefulWidget {
-  const ImageCarousel({super.key, required this.images});
+  const ImageCarousel({super.key, required this.images, });
   final List<dynamic> images;
 
   @override

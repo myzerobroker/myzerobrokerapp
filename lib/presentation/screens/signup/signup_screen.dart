@@ -8,7 +8,7 @@ import 'package:my_zero_broker/config/routes/routes_name.dart';
 import 'package:my_zero_broker/presentation/widgets/ElevatedButton.dart';
 import 'package:my_zero_broker/presentation/widgets/TextField.dart';
 import 'package:my_zero_broker/presentation/widgets/custom_snack_bar.dart';
-import 'package:my_zero_broker/utils/utils.dart';
+import 'package:my_zero_broker/utils/constant/theme.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -36,34 +36,21 @@ class _SignupScreenState extends State<SignupScreen> {
     final width = MediaQuery.of(context).size.width;
 
     return Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: Text.rich(
-            TextSpan(
-              children: [
-                TextSpan(
-                  text: "REAL ESTATE, ",
-                  style: TextStyle(
-                    color: const Color.fromARGB(255, 0, 0, 0),
-                    fontWeight: FontWeight.bold,
-                    fontSize: width * 0.059,
-                  ),
-                ),
-                TextSpan(
-                  text: "SIMPLIFIED",
-                  style: TextStyle(
-                    color: const Color.fromARGB(255, 116, 0, 0),
-                    fontWeight: FontWeight.bold,
-                    fontSize: width * 0.059,
-                  ),
-                ),
-              ],
-            ),
+      backgroundColor:  ColorsPalette.bgColor, 
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              ColorsPalette.primaryColor.withOpacity(0.7),
+              ColorsPalette.bgColor.withOpacity(0.8),
+              Colors.white,
+            ],
+            stops: const [0.0, 0.4, 1.0],
           ),
-          elevation: 0,
-          backgroundColor: ColorsPalette.appBarColor,
         ),
-        body: BlocProvider(
+        child: BlocProvider(
           create: (context) => _signupBloc,
           child: BlocListener<SignupBloc, SignUpState>(
             listener: (context, state) {
@@ -71,7 +58,6 @@ class _SignupScreenState extends State<SignupScreen> {
                 Snack.show('Loading...', context);
               } else if (state.signupStatus == SignUpStatus.success) {
                 Snack.show(state.message, context);
-
                 Navigator.pushNamed(context, RoutesName.homeScreen);
               } else if (state.signupStatus == SignUpStatus.error) {
                 Snack.show(state.message, context);
@@ -79,40 +65,51 @@ class _SignupScreenState extends State<SignupScreen> {
             },
             child: SingleChildScrollView(
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: width * 0.04),
+                padding: EdgeInsets.symmetric(horizontal: width * 0.03),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    SizedBox(height: height * 0.02),
+                    SizedBox(height: height * 0.05),
                     Image.asset(
                       'assets/images/my_zero_broker_logo (2).png',
-                      height: height * 0.06,
+                      height: height * 0.1,
                     ),
-                    SizedBox(height: height * 0.02),
+                    SizedBox(height: height * 0.03),
                     Card(
-                      color: ColorsPalette.cardColor,
-                      elevation: 10,
+                      elevation: 8,
+                      color: ColorsPalette.cardBgColor.withOpacity(0.95),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(19),
+                        borderRadius: BorderRadius.circular(15),
                       ),
                       child: Padding(
                         padding: EdgeInsets.all(width * 0.04),
                         child: Column(
                           children: [
+                            SizedBox(height: height * 0.02),
                             Text(
                               "Register",
-                              style: TextStyle(
-                                fontSize: width * 0.06,
-                                fontWeight: FontWeight.bold,
+                              style: TextStyles.headingStyle.copyWith(
+                                fontSize: width * 0.05,
+                                shadows: [
+                                  Shadow(
+                                    color: Colors.black26,
+                                    offset: const Offset(0.5, 0.5),
+                                    blurRadius: 1,
+                                  ),
+                                ],
                               ),
                             ),
-                            const Text(
+                            SizedBox(height: height * 0.015),
+                            Text(
                               "Register here and then Log in to continue.",
                               textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  color: Color.fromARGB(255, 90, 42, 42)),
+                              style: TextStyles.bodyStyle.copyWith(
+                                color: ColorsPalette.textSecondaryColor,
+                                fontStyle: FontStyle.italic,
+                                fontSize: width * 0.035,
+                              ),
                             ),
-                            SizedBox(height: height * 0.02),
+                            SizedBox(height: height * 0.03),
                             BlocBuilder<SignupBloc, SignUpState>(
                               builder: (context, state) {
                                 return Column(
@@ -148,11 +145,10 @@ class _SignupScreenState extends State<SignupScreen> {
                                             phoneNoChanged(phoneNo: value));
                                       },
                                     ),
-                                    SizedBox(height: height * 0.02),
+                                    SizedBox(height: height * 0.03),
                                     Elevatedbutton(
-                                      bgcolor: const Color.fromARGB(
-                                          255, 209, 20, 20),
-                                      foregroundColor: Colors.white,
+                                      bgcolor: ColorsPalette.primaryColor,
+                                      foregroundColor: ColorsPalette.cardBgColor,
                                       onPressed: (state.phoneNo.isNotEmpty &&
                                               state.email.isNotEmpty &&
                                               state.fullName.isNotEmpty)
@@ -163,8 +159,8 @@ class _SignupScreenState extends State<SignupScreen> {
                                             }
                                           : null,
                                       text: 'REGISTER',
-                                      height: height * 0.8,
-                                      width: width,
+                                      height: height * 0.78,
+                                      width: width * 1,
                                     ),
                                   ],
                                 );
@@ -173,21 +169,17 @@ class _SignupScreenState extends State<SignupScreen> {
                             SizedBox(height: height * 0.02),
                             RichText(
                               text: TextSpan(
-                                style: TextStyle(
-                                  fontSize: width *
-                                      0.035, 
-                                  color: Colors.black, 
+                                style: TextStyles.bodyStyle.copyWith(
+                                  fontSize: width * 0.032,
                                 ),
                                 children: [
-                                  const TextSpan(
-                                      text: "Already have an account? "),
+                                  const TextSpan(text: "Already have an account? "),
                                   TextSpan(
                                     text: "Login",
-                                    style: TextStyle(
-                                      color: Colors.blue,
+                                    style: TextStyles.bodyStyle.copyWith(
+                                      color: ColorsPalette.primaryColor,
                                       decoration: TextDecoration.underline,
-                                      fontSize: width *
-                                          0.035, // Match font size for alignment
+                                      fontSize: width * 0.032,
                                     ),
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = () {
@@ -202,31 +194,31 @@ class _SignupScreenState extends State<SignupScreen> {
                         ),
                       ),
                     ),
-                    SizedBox(height: height * 0.02),
+                    SizedBox(height: height * 0.03),
                     Column(
                       children: [
                         Text(
                           "Welcome to My Zero Broker, a groundbreaking firm that redefines property consultancy. We pride ourselves on operating as mediators rather than traditional property agents or brokers.",
                           textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Colors.grey,
-                            fontSize: width * 0.04,
+                          style: TextStyles.bodyStyle.copyWith(
+                            color: ColorsPalette.textSecondaryColor,
+                            fontSize: width * 0.035,
                           ),
                         ),
-                        SizedBox(height: height * 0.02),
+                        SizedBox(height: height * 0.04),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Image.asset(
                               'assets/images/my_zero_broker_logo (2).png',
-                              height: height * 0.03,
+                              height: height * 0.025,
                             ),
+                            SizedBox(width: width * 0.015),
                             Text(
                               "MYZERO BROKER",
-                              style: TextStyle(
-                                fontSize: width * 0.05,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.blueAccent,
+                              style: TextStyles.subHeadingStyle.copyWith(
+                                color: ColorsPalette.primaryColor,
+                                fontSize: width * 0.045,
                               ),
                             ),
                           ],
@@ -238,6 +230,8 @@ class _SignupScreenState extends State<SignupScreen> {
               ),
             ),
           ),
-        ));
+        ),
+      ),
+    );
   }
 }
