@@ -8,6 +8,7 @@ import 'package:my_zero_broker/presentation/screens/home_screen.dart/enquiry_gri
 import 'package:my_zero_broker/presentation/screens/home_screen.dart/header_widget.dart';
 import 'package:my_zero_broker/presentation/screens/home_screen.dart/responsive_layout.dart';
 import 'package:my_zero_broker/presentation/screens/home_screen.dart/search_form.dart';
+import 'package:my_zero_broker/presentation/screens/home_screen.dart/video_player_widget.dart';
 import 'package:my_zero_broker/presentation/widgets/drawer_content.dart';
 import 'package:my_zero_broker/utils/constant/colors.dart';
 
@@ -121,6 +122,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 HeaderWidget(),
                 SearchForm(),
                 AdvertisementsCarousel(),
+                VideoPlayerScreen(),
                 EnquiryGrids(
                   onSubjectSelected: (String subject, String img) {
                     EnquiryFormDialog.showEnquiryForm(

@@ -9,6 +9,7 @@ import 'package:my_zero_broker/bloc/post_farmland/post_farmland_bloc.dart';
 import 'package:my_zero_broker/bloc/post_property_details/post_property_details_bloc.dart';
 import 'package:my_zero_broker/bloc/search_property/search_property_bloc.dart';
 import 'package:my_zero_broker/bloc/user_details/fetch_user_details_bloc.dart';
+import 'package:my_zero_broker/bloc/video/video_bloc.dart';
 import 'package:my_zero_broker/config/routes/routes.dart';
 import 'package:my_zero_broker/config/routes/routes_name.dart';
 import 'package:my_zero_broker/locator.dart';
@@ -40,6 +41,7 @@ class MyApp extends StatelessWidget {
           BlocProvider(create: (context) => PostFormladBloc()),
           BlocProvider(create: (context) => MyListingBloc()),
             BlocProvider(create: (context) => PostBuildersDetailsBloc()),
+            BlocProvider(create: (context) => VideoBloc()),
       
       ],
       child: MaterialApp(
