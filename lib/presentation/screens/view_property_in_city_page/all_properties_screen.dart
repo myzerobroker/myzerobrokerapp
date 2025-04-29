@@ -314,7 +314,7 @@ class _AllPropertiesState extends State<AllPropertiesScreen> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => PropertyDetailScreen(property: property),
+                                        builder: (context) => PropertyDetailScreen(property: property,peropertyStatus: widget.status,),
                                       ),
                                     );
                                   },
