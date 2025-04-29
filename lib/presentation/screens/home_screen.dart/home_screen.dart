@@ -10,6 +10,7 @@ import 'package:my_zero_broker/presentation/screens/home_screen.dart/responsive_
 import 'package:my_zero_broker/presentation/screens/home_screen.dart/search_form.dart';
 import 'package:my_zero_broker/presentation/screens/home_screen.dart/video_player_widget.dart';
 import 'package:my_zero_broker/presentation/widgets/drawer_content.dart';
+import 'package:my_zero_broker/presentation/widgets/footer.dart';
 import 'package:my_zero_broker/utils/constant/colors.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -129,6 +130,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         context, subject, img); // Use correct class name here
                   },
                 ),
+                FooterWidget(),
               ],
             ),
           ],
