@@ -11,7 +11,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class PropertyDetailScreen extends StatefulWidget {
   final Property property;
-  const PropertyDetailScreen({super.key, required this.property});
+  final String? peropertyStatus;
+  const PropertyDetailScreen({super.key, required this.property, this.peropertyStatus});
 
   @override
   State<PropertyDetailScreen> createState() => _PropertyDetailScreenState();
@@ -133,7 +134,7 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
                       ],
                     ),
                     Text(
-                      widget.property.status == 'Rent'
+                       widget.peropertyStatus== 'Rent'
                           ? 'Rent: ${formatPrice(widget.property.expectedRent.toString())}'
                           : 'Price: ${formatPrice(widget.property.expectedPrice.toString())}',
                       style: TextStyles.priceStyle,
@@ -188,16 +189,22 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
                     if (widget.property.facing != null &&
                         widget.property.facing!.isNotEmpty)
                       _detailRow('Facing:', widget.property.facing!),
-                    if (widget.property.expectedPrice != 0)
+                    if (widget.property.expectedPrice != 0 || widget.property.expectedRent != 0 || widget.property.expectedPrice != null || widget.property.expectedRent != null)
                       _detailRow(
-                        widget.property.status == 'Rent' ? "Rent:" : 'Offer:',
-                        widget.property.status == 'Rent'
+                       widget.peropertyStatus== 'Rent'? "Rent:" : "Offer:",
+                        widget.peropertyStatus == 'Rent'
                             ? formatPrice(
                                 widget.property.expectedRent.toString())
-                            : formatPrice(
-                                widget.property.expectedPrice.toString()),
+                            : widget.property.property == "Plot"
+                                ? formatPrice(widget.property.expectedPrice
+                                            .toString())
+                                        .replaceAll(' (Negotiable)', '') +
+                                    ' per guntha (Negotiable)'
+                                : formatPrice(
+                                    widget.property.expectedPrice.toString()),
                         ColorsPalette.primaryColor,
                       ),
+
                     if (widget.property.maintenanceCost != null)
                       _detailRow('Maintenance:',
                           '₹' + widget.property.maintenanceCost.toString()),
@@ -222,9 +229,9 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
                     if (widget.property.property == "Plot")
                       _detailRow('Plot Front:',
                           widget.property.plotFront.toString() + " m"),
-                    if (widget.property.property == "Plot")
-                      _detailRow('Main Road:',
-                          widget.property.mainRoad.toString() + " m"),
+                    // if (widget.property.property == "Plot")
+                    //   _detailRow('Main Road:',
+                    //       widget.property.mainRoad.toString() + " m"),
                     if (widget.property.property == "Plot")
                       _detailRow('Front Road:',
                           widget.property.frontRoad.toString() + " m"),
