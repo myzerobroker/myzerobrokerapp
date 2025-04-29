@@ -65,6 +65,7 @@ class _SearchFormState extends State<SearchForm> {
     {'label': '₹1000 - ₹5000', 'icon': Icons.money},
     {'label': '₹5000 - ₹10000', 'icon': Icons.money},
     {'label': '₹10000 - ₹25000', 'icon': Icons.money},
+    {'label': '₹25000 - ₹50000', 'icon': Icons.money},
     {'label': '₹50000 - ₹1 Lakh', 'icon': Icons.money},
   ];
 
@@ -345,7 +346,7 @@ class _SearchFormState extends State<SearchForm> {
           setState(() => _selectedType = newValue);
         }),
         _buildDropdownWithIcons(
-            'Price Range', _priceRanges, _selectedPriceRange,
+            'Price Range', _priceRangesforRent, _selectedPriceRange,
             (String? newValue) {
           setState(() => _selectedPriceRange = newValue);
         }),
@@ -578,7 +579,7 @@ class _SearchFormState extends State<SearchForm> {
                 : Navigator.pushNamed(context, RoutesName.loginScreen);
           },
           icon: Icon(Icons.add_location_alt_rounded, color: Colors.white),
-          label: Text('Post your Plot',
+          label: Text('Post your Plot/Farmland',
               style: TextStyle(fontSize: 18, color: Colors.white)),
           style: ElevatedButton.styleFrom(
               fixedSize: Size(350, 60),
