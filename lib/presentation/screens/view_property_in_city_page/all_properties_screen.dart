@@ -103,14 +103,16 @@ class _AllPropertiesState extends State<AllPropertiesScreen> {
         ? "Select Area"
         : locator
             .get<AreaDetailsDependency>()
-            .areas[cityDetails
-                .firstWhere((element) => element["id"] == widget.city_id)["label"]]!
+            .areas[cityDetails.firstWhere(
+                (element) => element["id"] == widget.city_id)["label"]]!
             .firstWhere((element) =>
                 element["id"].toString() == widget.area.toString())["a_name"];
   }
 
   @override
   Widget build(BuildContext context) {
+    // print(widget.priceRange);
+    print(widget.propertyType);
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -162,8 +164,8 @@ class _AllPropertiesState extends State<AllPropertiesScreen> {
                                               ? "0"
                                               : locator
                                                   .get<AreaDetailsDependency>()
-                                                  .areas[cityDetails
-                                                          .firstWhere((element) =>
+                                                  .areas[cityDetails.firstWhere(
+                                                          (element) =>
                                                               element["id"] ==
                                                               widget.city_id)[
                                                       "label"]]!
@@ -218,15 +220,18 @@ class _AllPropertiesState extends State<AllPropertiesScreen> {
                         children: [
                           Expanded(
                             child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 8),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 8),
                               child: DropdownButton<String>(
                                 isExpanded: true,
                                 value: selectedArea,
                                 hint: Row(
                                   children: [
-                                    Icon(Icons.map, color: ColorsPalette.iconColor),
+                                    Icon(Icons.map,
+                                        color: ColorsPalette.iconColor),
                                     const SizedBox(width: 10),
-                                    Text("Filter Area", style: TextStyles.bodyStyle),
+                                    Text("Filter Area",
+                                        style: TextStyles.bodyStyle),
                                   ],
                                 ),
                                 items: areas.map((e) {
@@ -234,7 +239,8 @@ class _AllPropertiesState extends State<AllPropertiesScreen> {
                                     value: e,
                                     child: Row(
                                       children: [
-                                        Icon(Icons.map, color: ColorsPalette.primaryColor),
+                                        Icon(Icons.map,
+                                            color: ColorsPalette.primaryColor),
                                         const SizedBox(width: 8),
                                         Text(e, style: TextStyles.bodyStyle),
                                       ],
@@ -247,10 +253,12 @@ class _AllPropertiesState extends State<AllPropertiesScreen> {
                                     show = true;
                                     final areaId = locator
                                         .get<AreaDetailsDependency>()
-                                        .areas[cityDetails
-                                            .firstWhere((element) =>
-                                                element["id"] == widget.city_id)["label"]]!
-                                        .firstWhere((e) => e["a_name"] == val)["id"]
+                                        .areas[cityDetails.firstWhere(
+                                            (element) =>
+                                                element["id"] ==
+                                                widget.city_id)["label"]]!
+                                        .firstWhere(
+                                            (e) => e["a_name"] == val)["id"]
                                         .toString();
                                     BlocProvider.of<SearchPropertyBloc>(context)
                                         .add(SearchBuyProperty(
@@ -286,27 +294,36 @@ class _AllPropertiesState extends State<AllPropertiesScreen> {
                                           status: widget.status));
                                 });
                               },
-                              child: Text("Remove Filter", style: TextStyles.buttonStyle),
+                              child: Text("Remove Filter",
+                                  style: TextStyles.buttonStyle),
                             ),
                           ),
                         ],
                       ),
                       state.properties.properties!.isEmpty
-                          ? Center(child: Text("No Results Found", style: TextStyles.bodyStyle))
+                          ? Center(
+                              child: Text("No Results Found",
+                                  style: TextStyles.bodyStyle))
                           : ListView.builder(
-                          
                               shrinkWrap: true,
                               physics: NeverScrollableScrollPhysics(),
                               itemCount: props.length,
                               itemBuilder: (context, index) {
                                 final property = props[index];
-                                final List photos = jsonDecode(property.photos!);
+                                final List photos =
+                                    jsonDecode(property.photos!);
                                 final loc = cityDetails
-                                    .firstWhere((element) => element["id"] == property.cityId.toString())["label"]
+                                    .firstWhere((element) =>
+                                        element["id"] ==
+                                        property.cityId.toString())["label"]
                                     .toString();
-                                final areas = locator.get<AreaDetailsDependency>().areas[loc];
+                                final areas = locator
+                                    .get<AreaDetailsDependency>()
+                                    .areas[loc];
                                 final area = areas!
-                                    .where((e) => e["id"].toString() == property.localityId.toString())
+                                    .where((e) =>
+                                        e["id"].toString() ==
+                                        property.localityId.toString())
                                     .toList()
                                     .first["a_name"];
                                 return GestureDetector(
@@ -314,7 +331,11 @@ class _AllPropertiesState extends State<AllPropertiesScreen> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => PropertyDetailScreen(property: property,peropertyStatus: widget.status,),
+                                        builder: (context) =>
+                                            PropertyDetailScreen(
+                                          property: property,
+                                          peropertyStatus: widget.status,
+                                        ),
                                       ),
                                     );
                                   },
@@ -322,45 +343,73 @@ class _AllPropertiesState extends State<AllPropertiesScreen> {
                                     padding: const EdgeInsets.all(14.0),
                                     child: Card(
                                       color: ColorsPalette.cardBgColor,
-                                      margin: EdgeInsets.symmetric(vertical: 8.0),
-                                      
-                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                      margin:
+                                          EdgeInsets.symmetric(vertical: 8.0),
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(12)),
                                       elevation: 0,
                                       child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           photos.isEmpty
-                                              ? Image.asset("assets/images/my_zero_broker_logo (2).png", height: 200, fit: BoxFit.cover)
+                                              ? Image.asset(
+                                                  "assets/images/my_zero_broker_logo (2).png",
+                                                  height: 200,
+                                                  fit: BoxFit.cover)
                                               : photos.length > 1
-                                                  ? ImageCarousel(images: photos,)
+                                                  ? ImageCarousel(
+                                                      images: photos,
+                                                    )
                                                   : Image.network(
-                                                      "https://myzerobroker.com/public/storage/" + photos[0].toString(),
+                                                      "https://myzerobroker.com/public/storage/" +
+                                                          photos[0].toString(),
                                                       height: 200,
                                                       width: double.infinity,
                                                       fit: BoxFit.cover,
-                                                      loadingBuilder: (context, child, loadingProgress) {
-                                                        if (loadingProgress == null) return child;
-                                                        return Center(child: CircularProgressIndicator());
+                                                      loadingBuilder: (context,
+                                                          child,
+                                                          loadingProgress) {
+                                                        if (loadingProgress ==
+                                                            null) return child;
+                                                        return Center(
+                                                            child:
+                                                                CircularProgressIndicator());
                                                       },
                                                     ),
                                           Padding(
                                             padding: const EdgeInsets.all(8.0),
                                             child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
                                               children: [
                                                 Text(
                                                   loc + ", " + area,
-                                                  style: TextStyles.bodyStyle.copyWith(color: ColorsPalette.textSecondaryColor),
+                                                  style: TextStyles.bodyStyle
+                                                      .copyWith(
+                                                          color: ColorsPalette
+                                                              .textSecondaryColor),
                                                 ),
                                                 Text(
-                                                  widget.status == 'Rent' ? 'Rent: ${formatPrice(property.expectedRent.toString())}' : 'Price: ${formatPrice(property.expectedPrice.toString())}',
+                                                  widget.status == 'Rent'
+                                                      ? 'Rent: ${formatPrice(property.expectedRent.toString())}'
+                                                      : 'Price: ${formatPrice(property.expectedPrice.toString())}',
                                                   style: TextStyles.priceStyle,
                                                 ),
                                                 Row(
                                                   children: [
-                                                    Icon(Icons.star, color: ColorsPalette.starColor, size: 16),
-                                                    Text("4.5", style: TextStyles.bodyStyle),
-                                                    Text(" For ${widget.status}", style: TextStyles.bodyStyle),
+                                                    Icon(Icons.star,
+                                                        color: ColorsPalette
+                                                            .starColor,
+                                                        size: 16),
+                                                    Text("4.5",
+                                                        style: TextStyles
+                                                            .bodyStyle),
+                                                    Text(
+                                                        " For ${widget.status}",
+                                                        style: TextStyles
+                                                            .bodyStyle),
                                                   ],
                                                 ),
                                               ],
@@ -387,8 +436,14 @@ class _AllPropertiesState extends State<AllPropertiesScreen> {
                                             ? "0"
                                             : locator
                                                 .get<AreaDetailsDependency>()
-                                                .areas[cityDetails.firstWhere((element) => element["id"] == widget.city_id)["label"]]!
-                                                .firstWhere((e) => e["a_name"] == selectedArea)["id"]
+                                                .areas[cityDetails.firstWhere(
+                                                    (element) =>
+                                                        element["id"] ==
+                                                        widget
+                                                            .city_id)["label"]]!
+                                                .firstWhere((e) =>
+                                                    e["a_name"] ==
+                                                    selectedArea)["id"]
                                                 .toString(),
                                         page: current,
                                         bhk: widget.bhk,
@@ -402,12 +457,14 @@ class _AllPropertiesState extends State<AllPropertiesScreen> {
                           width: double.infinity,
                           margin: EdgeInsets.all(10),
                           decoration: BoxDecoration(
-                            color: current < state.properties.pagination!.lastPage
-                                ? ColorsPalette.primaryColor
-                                : ColorsPalette.cardBgColor,
+                            color:
+                                current < state.properties.pagination!.lastPage
+                                    ? ColorsPalette.primaryColor
+                                    : ColorsPalette.cardBgColor,
                             borderRadius: BorderRadius.circular(10),
                             border: Border.all(
-                              color: current < state.properties.pagination!.lastPage
+                              color: current <
+                                      state.properties.pagination!.lastPage
                                   ? ColorsPalette.primaryColor
                                   : Colors.grey.shade200,
                             ),
@@ -418,7 +475,8 @@ class _AllPropertiesState extends State<AllPropertiesScreen> {
                               style: TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.bold,
-                                color: current < state.properties.pagination!.lastPage
+                                color: current <
+                                        state.properties.pagination!.lastPage
                                     ? ColorsPalette.cardBgColor
                                     : ColorsPalette.textPrimaryColor,
                               ),
@@ -431,7 +489,8 @@ class _AllPropertiesState extends State<AllPropertiesScreen> {
                 ),
               );
             } else if (state is SearchPropertyError) {
-              return Center(child: Text(state.message, style: TextStyles.bodyStyle));
+              return Center(
+                  child: Text(state.message, style: TextStyles.bodyStyle));
             } else {
               return Center(child: CircularProgressIndicator());
             }

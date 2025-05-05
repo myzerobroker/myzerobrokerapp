@@ -68,6 +68,13 @@ class _SearchFormState extends State<SearchForm> {
     {'label': '₹25000 - ₹50000', 'icon': Icons.money},
     {'label': '₹50000 - ₹1 Lakh', 'icon': Icons.money},
   ];
+  final List<Map<String, dynamic>> _priceRangesforBuy = [
+    {'label': '₹₹10 Lakh - ₹20 Lakh', 'icon': Icons.money},
+    {'label': '₹20 Lakh - ₹30 Lakh', 'icon': Icons.money},
+    {'label': '₹30 Lakh - ₹50 Lakh', 'icon': Icons.money},
+    {'label': '₹50 Lakh - ₹1 Cr', 'icon': Icons.money},
+    {'label': 'Above ₹1 Cr', 'icon': Icons.money},
+  ];
 
   final List<Map<String, dynamic>> _propertyTypesForCommercial = [
     {'label': 'Office', 'icon': Icons.local_post_office},
@@ -343,11 +350,17 @@ class _SearchFormState extends State<SearchForm> {
         _buildDropdownWithIcons(
             'Property Type', _propertyTypesForCommercial, _selectedType,
             (String? newValue) {
-          setState(() => _selectedType = newValue);
+          setState(() {
+            _selectedType = newValue;
+            print("Selected Type: $_selectedType");
+          });
         }),
         _buildDropdownWithIcons(
-            'Price Range', _priceRangesforRent, _selectedPriceRange,
-            (String? newValue) {
+            'Price Range',
+            _selectedBuyOrRent == "Rent"
+                ? _priceRangesforRent
+                : _priceRangesforBuy,
+            _selectedPriceRange, (String? newValue) {
           setState(() => _selectedPriceRange = newValue);
         }),
         SizedBox(height: 20),

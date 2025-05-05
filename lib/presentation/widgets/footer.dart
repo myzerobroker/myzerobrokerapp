@@ -141,6 +141,7 @@ class _FooterWidgetState extends State<FooterWidget> {
                   ),
                 ],
               ),
+              // main
             ],
           ),
         ],
