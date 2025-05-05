@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:awesome_drawer_bar/awesome_drawer_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,6 +14,7 @@ import 'package:my_zero_broker/presentation/screens/home_screen.dart/video_playe
 import 'package:my_zero_broker/presentation/widgets/drawer_content.dart';
 import 'package:my_zero_broker/presentation/widgets/footer.dart';
 import 'package:my_zero_broker/utils/constant/colors.dart';
+import 'package:http/http.dart' as http;
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -112,6 +115,23 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  Future<int> _getEnquiryStatus() async {
+    try {
+      final response = await http
+          .get(Uri.parse('https://myzerobroker.com/api/enquiry-status'));
+      if (response.statusCode == 200) {
+        final json = response.body;
+        final enquiryStatus = jsonDecode(json);
+        return enquiryStatus['status'] ?? 0; // Default to 0 if
+      } else {
+        return 0; // Enquiry status not available
+      }
+    } catch (e) {
+      print('Error fetching enquiry status: $e');
+      return 0; // Error occurred
+    }
+  }
+
   /// Builds the main content based on the drawer state
   Widget _buildMainContent(DrawerEvent state) {
     switch (state) {
@@ -124,10 +144,28 @@ class _HomeScreenState extends State<HomeScreen> {
                 SearchForm(),
                 AdvertisementsCarousel(),
                 VideoPlayerScreen(),
-                EnquiryGrids(
-                  onSubjectSelected: (String subject, String img) {
-                    EnquiryFormDialog.showEnquiryForm(
-                        context, subject, img); // Use correct class name here
+                FutureBuilder(
+                  future: _getEnquiryStatus(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      return Center(child: Text('Error: ${snapshot.error}'));
+                    } else if (snapshot.hasData) {
+                      final enquiryStatus = snapshot.data as int;
+                      if (enquiryStatus == 1) {
+                        return EnquiryGrids(
+                          onSubjectSelected: (String subject, String img) {
+                            EnquiryFormDialog.showEnquiryForm(context, subject,
+                                img); // Use correct class name here
+                          },
+                        );
+                      } else {
+                        return SizedBox.shrink();
+                      }
+                    } else {
+                      return Center(child: Text('No data available'));
+                    }
                   },
                 ),
                 FooterWidget(),

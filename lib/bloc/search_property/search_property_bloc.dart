@@ -19,6 +19,7 @@ class SearchPropertyBloc
       final status = event.status;
 
       String range = event.priceRange;
+      print(range);
       final pricerange = {
         "₹10 Lakh - ₹20 Lakh": "1000000-2000000",
         "₹20 Lakh - ₹30 Lakh": "2000000-3000000",
@@ -26,11 +27,22 @@ class SearchPropertyBloc
         "₹50 Lakh - ₹1 Cr": "5000000-10000000",
         "Above ₹1 Cr": "10000000%2B",
       };
+
+      final homeTypes = {
+        "Row House": "Row+House",
+        "Individual Villa/Bunglow": "Villa",
+        "Farm House": "Farm+House",
+        "Flat": "Flat",
+        "Twin Bunglow": "Twin+Bunglow",
+      }; 
+      print (homeTypes[property_type]);
+      final propertyType = homeTypes[property_type] ?? property_type;
+
       print(pricerange[range]);
       final r = range == "" ? "" : pricerange[range];
       emit(SearchPropertyLoading());
       final url =
-          'https://myzerobroker.com/api/search?city_id=$city_id&locality_id=$area_id&page=$page&property_status=${event.tp}&bhk=${event.bhk}&price_range=${r}&property_select=$status';
+          'https://myzerobroker.com/api/search?city_id=$city_id&locality_id=$area_id&page=$page&property_status=${event.tp}&bhk=${event.bhk}&price_range=${r}&property_select=$status&property_type=$propertyType';
       print(url);
       try {
         final res = await http.get(Uri.parse(url));
