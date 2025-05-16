@@ -76,6 +76,11 @@ class _PropertyDetailsFormScreenState extends State<PropertyDetailsFormScreen> {
   String? selectedOccupancyCertificate;
   List<String> photosUrls = [];
   List<File> images = [];
+  String? selectedAvailableForLease;
+  String? selectedPreferredTenants;
+  var expectedRentController = TextEditingController();
+  var expectedDepositController = TextEditingController();
+  bool _isRentNegotiableSelected = false;
 
   bool _isPriceNegotiableSelected = false;
   bool _isCurrentlyUnderLoanSelected = false;
@@ -95,6 +100,8 @@ class _PropertyDetailsFormScreenState extends State<PropertyDetailsFormScreen> {
       });
     }
   }
+
+  bool isRental = locator.get<PostPropertyDependency>().adType == "Rent";
 
   @override
   void initState() {
@@ -120,6 +127,9 @@ class _PropertyDetailsFormScreenState extends State<PropertyDetailsFormScreen> {
     }
   }
 
+  bool isCommRent =
+      locator.get<PostPropertyDependency>().isResidential == false &&
+          locator.get<PostPropertyDependency>().adType == "Rent";
   _submitForm() async {
     if (_formKey.currentState!.validate()) {
       if (images.isNotEmpty) {
@@ -149,17 +159,18 @@ class _PropertyDetailsFormScreenState extends State<PropertyDetailsFormScreen> {
         "carpet_area_sqft": carpetAreaController.text.toString(),
         "floor": _setFloor(selectedTotalFloor!),
         "balcony": selectedBalcony.toString(),
-        "available_for_lease": "1",
-        "expected_rent": "1",
+        "available_for_lease":
+            selectedAvailableForLease.toString() == "Yes" ? 1 : 0,
+        "expected_rent": expectedRentController.text.toString() ?? "0",
         "total_floor": selectedTotalFloor.toString(),
-        "deposit": "0",
-        "negotiable": "0",
+        "deposit": expectedDepositController.text.toString() ?? "0",
+        "negotiable": _isRentNegotiableSelected ? 1 : 0,
         "ownership": selectedOwnershipType.toString(),
         "facing": selectedFacing.toString(),
         "area_sqft": plotAreaController.text.toString(),
         "maintenance": maintenanceCostController.text.toString(),
         "furnishing": selectedFurnishing.toString(),
-        "preferred_tenants": "1",
+        "preferred_tenants": selectedPreferredTenants.toString(),
         "parking_type": selectedParking.toString(),
         "water_supply": selectedWaterSupply.toString(),
         "description": descriptionController.text.toString(),
@@ -168,7 +179,8 @@ class _PropertyDetailsFormScreenState extends State<PropertyDetailsFormScreen> {
         "maintenance_cost": maintenanceCostController.text,
         "price_negotiable": _isPriceNegotiableSelected ? 1 : 0,
         "underloan": _isCurrentlyUnderLoanSelected ? "1" : "0",
-        "lease_years": "2",
+        "lease_years": selectedAvailableForLease == "Yes" ? "1" : "0",
+
         "available_from": DateTime.now().toString(),
         "khata_cert": selectedKhataCert.toString(),
         "deed_cert": selectedSaleDeedCertificate.toString(),
@@ -286,10 +298,14 @@ class _PropertyDetailsFormScreenState extends State<PropertyDetailsFormScreen> {
                           }),
                         ),
                         _buildDropdownField(
-                            "Property Age", selectedPropertyAge, [
-                          "Under Construction/ New Construction",
-                          "Ready Possession"
-                        ], (val) {
+                            "Property Age",
+                            selectedPropertyAge,
+                            isCommRent
+                                ? ["Ready Possession"]
+                                : [
+                                    "Under Construction/ New Construction",
+                                    "Ready Possession"
+                                  ], (val) {
                           setState(() {
                             selectedPropertyAge = val;
                           });
@@ -328,8 +344,11 @@ class _PropertyDetailsFormScreenState extends State<PropertyDetailsFormScreen> {
                             selectedFacing = val;
                           });
                         }),
-                        _buildTextField(
-                            "Plot Area (Sq. Ft.)", plotAreaController),
+                        Visibility(
+                          visible: !isCommRent,
+                          child: _buildTextField(
+                              "Plot Area (Sq. Ft.)", plotAreaController),
+                        ),
                       ],
                     ),
                   ),
@@ -386,58 +405,138 @@ class _PropertyDetailsFormScreenState extends State<PropertyDetailsFormScreen> {
                     ),
                   ),
                   SizedBox(height: height * 0.06),
-                  buildCard(
-                    child: Column(
-                      children: [
-                        const SectionTitle(title: "Sale/Resale Details"),
-                        _buildTextField("Expected Price", offerPriceController),
-                        _buildTextField("Maintenance Cost (/month)",
-                            maintenanceCostController),
-                        _buildCheckbox(
-                            "Price Negotiable", _isPriceNegotiableSelected,
-                            (value) {
-                          setState(() {
-                            _isPriceNegotiableSelected = value ?? false;
-                          });
-                        }),
-                        _buildCheckbox("Currently Under Loan",
-                            _isCurrentlyUnderLoanSelected, (value) {
-                          setState(() {
-                            _isCurrentlyUnderLoanSelected = value ?? false;
-                          });
-                        }),
-                        // _buildDateField(),
-                        _buildDropdownField("Furnishing", selectedFurnishing, [
-                          "Fully-Furnished",
-                          "Semi-Furnished",
-                          "Unfurnished"
-                        ], (value) {
-                          setState(() {
-                            selectedFurnishing = value;
-                          });
-                        }),
-                        _buildDropdownField("Parking", selectedParking,
-                            ["Bike", "Car", "Bike & Car", "None"], (val) {
-                          setState(() {
-                            selectedParking = val;
-                          });
-                        }),
-                        Visibility(
-                          visible: locator
-                              .get<PostPropertyDependency>()
-                              .isResidential,
-                          child: _buildDropdownField(
-                              "Kitchen Type",
-                              selectedKitchenType,
-                              ["Modular", "Covered Shelves", "Open Shelves"],
-                              (val) {
+                  Visibility(
+                    visible: isRental,
+                    child: buildCard(
+                      child: Column(
+                        children: [
+                          const SectionTitle(title: "Rental Details"),
+                          _buildRadioButtonField(
+                            "Available for Lease",
+                            selectedAvailableForLease,
+                            ["Yes", "No"],
+                            (val) {
+                              setState(() {
+                                selectedAvailableForLease = val;
+                              });
+                            },
+                          ),
+                          _buildTextField("Expected Rent (in Thousands)",
+                              expectedRentController, true),
+                          _buildCheckbox(
+                              "Rent Negotiable", _isRentNegotiableSelected,
+                              (value) {
                             setState(() {
-                              selectedKitchenType = val;
+                              _isRentNegotiableSelected = value ?? false;
                             });
                           }),
-                        ),
-                        _buildTextField("Description", descriptionController),
-                      ],
+                          _buildTextField("Expected Deposit (in Thousands)",
+                              expectedDepositController, true),
+                          _buildTextField("Maintenance Cost (/month)",
+                              maintenanceCostController),
+                          _buildDropdownField(
+                            "Preferred Tenants",
+                            selectedPreferredTenants,
+                            [
+                              "Doesn't Matter",
+                              "Bachelors",
+                              "Company",
+                              "Family",
+                            ], // Example options
+                            (val) {
+                              setState(() {
+                                selectedPreferredTenants = val;
+                              });
+                            },
+                          ),
+                          _buildDropdownField(
+                            "Parking",
+                            selectedParking,
+                            ["Bike", "Car", "Bike & Car", "None"],
+                            (val) {
+                              setState(() {
+                                selectedParking = val;
+                              });
+                            },
+                          ),
+                          _buildDateField(),
+                          _buildDropdownField(
+                            "Furnishing",
+                            selectedFurnishing,
+                            [
+                              "Fully-Furnished",
+                              "Semi-Furnished",
+                              "Unfurnished"
+                            ],
+                            (val) {
+                              setState(() {
+                                selectedFurnishing = val;
+                              });
+                            },
+                          ),
+                          _buildTextField("Description", descriptionController),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: height * 0.06),
+                  Visibility(
+                    visible: !isRental,
+                    child: buildCard(
+                      child: Column(
+                        children: [
+                          const SectionTitle(title: "Sale/Resale Details"),
+                          _buildTextField(
+                              "Expected Price", offerPriceController),
+                          _buildTextField("Maintenance Cost (/month)",
+                              maintenanceCostController),
+                          _buildCheckbox(
+                              "Price Negotiable", _isPriceNegotiableSelected,
+                              (value) {
+                            setState(() {
+                              _isPriceNegotiableSelected = value ?? false;
+                            });
+                          }),
+                          _buildCheckbox("Currently Under Loan",
+                              _isCurrentlyUnderLoanSelected, (value) {
+                            setState(() {
+                              _isCurrentlyUnderLoanSelected = value ?? false;
+                            });
+                          }),
+                          // _buildDateField(),
+                          _buildDropdownField(
+                              "Furnishing", selectedFurnishing, [
+                            "Fully-Furnished",
+                            "Semi-Furnished",
+                            "Unfurnished"
+                          ], (value) {
+                            setState(() {
+                              selectedFurnishing = value;
+                            });
+                          }),
+                          _buildDropdownField("Parking", selectedParking,
+                              ["Bike", "Car", "Bike & Car", "None"], (val) {
+                            setState(() {
+                              selectedParking = val;
+                            });
+                          }),
+                          Visibility(
+                            visible: locator
+                                .get<PostPropertyDependency>()
+                                .isResidential,
+                            child: _buildDropdownField(
+                                "Kitchen Type",
+                                selectedKitchenType,
+                                ["Modular", "Covered Shelves", "Open Shelves"],
+                                (val) {
+                              setState(() {
+                                selectedKitchenType = val;
+                              });
+                            }),
+                          ),
+                          _buildTextField("Description", descriptionController),
+                        ],
+                      ),
                     ),
                   ),
                   SizedBox(height: height * 0.06),
@@ -593,6 +692,67 @@ class _PropertyDetailsFormScreenState extends State<PropertyDetailsFormScreen> {
     );
   }
 
+  Widget _buildDateField() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: TextFormField(
+        controller: _dateController,
+        decoration: InputDecoration(
+          labelText: "Available From",
+          labelStyle: TextStyle(color: ColorsPalette.primaryColor),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12.0),
+          ),
+          suffixIcon: Icon(Icons.calendar_today),
+        ),
+        readOnly: true,
+        onTap: () => _pickDate(context),
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Please select a date';
+          }
+          return null;
+        },
+      ),
+    );
+  }
+
+  Widget _buildRadioButtonField(String label, String? value,
+      List<String> options, Function(String?) onChanged) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            style: TextStyle(
+              color: ColorsPalette.primaryColor,
+              fontSize: 16,
+            ),
+          ),
+          Row(
+            children: options.map((option) {
+              return Row(
+                children: [
+                  Radio<String>(
+                    value: option,
+                    groupValue: value,
+                    onChanged: (newValue) {
+                      onChanged(newValue);
+                    },
+                  ),
+                  Text(option),
+                  SizedBox(width: 16),
+                ],
+              );
+            }).toList(),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildDropdownField(String label, String? value, List<String> items,
       Function(String?) onChanged) {
     return Padding(
@@ -634,7 +794,6 @@ class _PropertyDetailsFormScreenState extends State<PropertyDetailsFormScreen> {
         controller: controller,
         textInputType: TextInputType.text,
         hintText: hintText,
-       
         validator: (value) {
           if (isRequired && (value == null || value.isEmpty)) {
             return 'Please enter $hintText';
