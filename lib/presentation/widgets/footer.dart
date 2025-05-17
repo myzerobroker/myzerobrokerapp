@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:my_zero_broker/config/routes/routes_name.dart';
 import 'package:my_zero_broker/utils/constant/theme.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class FooterWidget extends StatefulWidget {
   const FooterWidget({super.key});
@@ -11,6 +13,48 @@ class FooterWidget extends StatefulWidget {
 
 class _FooterWidgetState extends State<FooterWidget> {
   bool _isExpanded = false;
+
+  // Function to show SnackBar
+  void _showSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
+    );
+  }
+
+  // Generalized function to launch URLs with detailed error handling
+  Future<void> _launchUri(Uri uri, String action) async {
+    try {
+      final canLaunch = await canLaunchUrl(uri);
+      if (!canLaunch) {
+        _showSnackBar('Cannot launch $action: No app available');
+        debugPrint('Cannot launch $uri: No app available');
+        return;
+      }
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+      debugPrint('Successfully launched $uri');
+    } catch (e, stackTrace) {
+      _showSnackBar('Error launching $action: $e');
+      debugPrint('Error launching $uri: $e\n$stackTrace');
+    }
+  }
+
+  // Function to launch URL (for social media)
+  Future<void> _launchURL(String url) async {
+    final uri = Uri.parse(url);
+    await _launchUri(uri, 'URL');
+  }
+
+  // Function to launch phone dialer
+  Future<void> _launchPhone(String phoneNumber) async {
+    final uri = Uri(scheme: 'tel', path: phoneNumber);
+    await _launchUri(uri, 'phone dialer');
+  }
+
+  // Function to launch email
+  Future<void> _launchEmail(String email) async {
+    final uri = Uri(scheme: 'mailto', path: email);
+    await _launchUri(uri, 'email client');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,9 +110,54 @@ class _FooterWidgetState extends State<FooterWidget> {
             ),
           ),
           const SizedBox(height: 8),
-          const Text(
-            'Login\nNew User\nAdd Property\nPlans',
-            style: TextStyle(fontSize: 14, color: Colors.black, height: 1.5),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              GestureDetector(
+                onTap: () => Navigator.pushNamed(context, RoutesName.loginScreen),
+                child: const Text(
+                  'Login',
+                  style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.black,
+                      height: 1.5,
+                      decoration: TextDecoration.underline),
+                ),
+              ),
+              GestureDetector(
+                onTap: () => Navigator.pushNamed(context, RoutesName.signUpScreen),
+                child: const Text(
+                  'New User',
+                  style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.black,
+                      height: 1.5,
+                      decoration: TextDecoration.underline),
+                ),
+              ),
+              GestureDetector(
+                onTap: () => Navigator.pushNamed(context, RoutesName.postfarmland),
+                child: const Text(
+                  'Add Property',
+                  style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.black,
+                      height: 1.5,
+                      decoration: TextDecoration.underline),
+                ),
+              ),
+              GestureDetector(
+                onTap: () => Navigator.pushNamed(context, '/plans'),
+                child: const Text(
+                  'Plans',
+                  style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.black,
+                      height: 1.5,
+                      decoration: TextDecoration.underline),
+                ),
+              ),
+            ],
           ),
           const SizedBox(height: 20),
           // Get Help Section
@@ -81,26 +170,38 @@ class _FooterWidgetState extends State<FooterWidget> {
             ),
           ),
           const SizedBox(height: 8),
-          Row(
-            children: [
-              const Icon(Icons.phone, color: Colors.red, size: 20),
-              const SizedBox(width: 8),
-              const Text(
-                '+91-7031005005',
-                style: TextStyle(fontSize: 14, color: Colors.black),
-              ),
-            ],
+          GestureDetector(
+            onTap: () => _launchPhone('+917031005005'),
+            child: Row(
+              children: [
+                const Icon(Icons.phone, color: Colors.red, size: 20),
+                const SizedBox(width: 8),
+                const Text(
+                  '+91-7031005005',
+                  style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.black,
+                      decoration: TextDecoration.underline),
+                ),
+              ],
+            ),
           ),
           const SizedBox(height: 4),
-          Row(
-            children: [
-              const Icon(Icons.email, color: Colors.red, size: 20),
-              const SizedBox(width: 8),
-              const Text(
-                'hi@myzerobroker.com',
-                style: TextStyle(fontSize: 14, color: Colors.black),
-              ),
-            ],
+          GestureDetector(
+            onTap: () => _launchEmail('hi@myzerobroker.com'),
+            child: Row(
+              children: [
+                const Icon(Icons.email, color: Colors.red, size: 20),
+                const SizedBox(width: 8),
+                const Text(
+                  'hi@myzerobroker.com',
+                  style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.black,
+                      decoration: TextDecoration.underline),
+                ),
+              ],
+            ),
           ),
           const SizedBox(height: 20),
           // Legal Section
@@ -113,9 +214,32 @@ class _FooterWidgetState extends State<FooterWidget> {
             ),
           ),
           const SizedBox(height: 8),
-          const Text(
-            'Privacy Policy\nTerms & Conditions',
-            style: TextStyle(fontSize: 14, color: Colors.black, height: 1.5),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              GestureDetector(
+                onTap: () => Navigator.pushNamed(context, RoutesName.privacyPolicy),
+                child: const Text(
+                  'Privacy Policy',
+                  style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.black,
+                      height: 1.5,
+                      decoration: TextDecoration.underline),
+                ),
+              ),
+              GestureDetector(
+                onTap: () => Navigator.pushNamed(context, RoutesName.termsAndCondition),
+                child: const Text(
+                  'Terms & Conditions',
+                  style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.black,
+                      height: 1.5,
+                      decoration: TextDecoration.underline),
+                ),
+              ),
+            ],
           ),
           const SizedBox(height: 20),
           // Divider
@@ -133,11 +257,13 @@ class _FooterWidgetState extends State<FooterWidget> {
                 children: [
                   IconButton(
                     icon: const Icon(Icons.facebook, color: Colors.grey),
-                    onPressed: () {},
+                    onPressed: () => _launchURL(
+                        'https://www.facebook.com/myzerobroker.7031005005?mibextid=ZbWKwL'),
                   ),
                   IconButton(
                     icon: const Icon(Iconsax.instagram4, color: Colors.grey),
-                    onPressed: () {},
+                    onPressed: () => _launchURL(
+                        'https://www.instagram.com/my_zerobroker?igsh=eWJjZ2IwN2YxNHFu'),
                   ),
                 ],
               ),

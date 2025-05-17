@@ -28,4 +28,6 @@ class RoutesName {
 
         static const String updateProfilePage = "profile_update"; 
         static const String myListing = "my_listing";
+
+           static const String privacyPolicy = "privacy_policy";
 }
