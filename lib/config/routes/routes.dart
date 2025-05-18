@@ -13,9 +13,9 @@ import 'package:my_zero_broker/presentation/screens/payments/sellers_Plan.dart';
 import 'package:my_zero_broker/presentation/screens/payments/tenant_plan.dart';
 import 'package:my_zero_broker/presentation/screens/post_builder/post_builder_details.dart';
 import 'package:my_zero_broker/presentation/screens/post_builder/post_builder_form.dart';
-import 'package:my_zero_broker/presentation/screens/post_farmland/post_farmland.dart';
 import 'package:my_zero_broker/presentation/screens/post_property/post_property.dart';
 import 'package:my_zero_broker/presentation/screens/post_property/propertydetails.dart';
+import 'package:my_zero_broker/presentation/screens/privacy_policy/privacy_policy_screen.dart';
 import 'package:my_zero_broker/presentation/screens/profile/profile_update.dart';
 import 'package:my_zero_broker/presentation/screens/terms&Condition/termsAndCondition.dart';
 import 'package:my_zero_broker/presentation/screens/view_shortlisted_property.dart';
@@ -66,6 +66,9 @@ class Routes {
 
       case RoutesName.plotSellerPlanScreen:
         return _createRoute(PlotSellerPlanScreen());
+        
+      case RoutesName.privacyPolicy:
+        return _createRoute(PrivacyPolicyScreen());
 
      
 
