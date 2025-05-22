@@ -589,43 +589,46 @@ class _PropertyDetailsFormScreenState extends State<PropertyDetailsFormScreen> {
                     ),
                   ),
                   SizedBox(height: height * 0.06),
-                  buildCard(
-                    child: Column(
-                      children: [
-                        const SectionTitle(title: "Additional Information"),
-                        _buildDropdownField(
-                            "Khata Certificate (7/12)",
-                            selectedKhataCert,
-                            ["Yes", "No", "Don't Know"], (val) {
-                          setState(() {
-                            selectedKhataCert = val;
-                          });
-                        }),
-                        _buildDropdownField(
-                            "Sale Deed Certificate",
-                            selectedSaleDeedCertificate,
-                            ["Yes", "No", "Don't Know"], (val) {
-                          setState(() {
-                            selectedSaleDeedCertificate = val;
-                          });
-                        }),
-                        _buildDropdownField(
-                            "Property Tax Paid",
-                            selectedPropertyTax,
-                            ["Yes", "No", "Don't Know"], (val) {
-                          setState(() {
-                            selectedPropertyTax = val;
-                          });
-                        }),
-                        _buildDropdownField(
-                            "Occupancy Certificate",
-                            selectedOccupancyCertificate,
-                            ["Yes", "No", "Don't Know"], (val) {
-                          setState(() {
-                            selectedOccupancyCertificate = val;
-                          });
-                        }),
-                      ],
+                  Visibility(
+                    visible: !isRental,
+                    child: buildCard(
+                      child: Column(
+                        children: [
+                          const SectionTitle(title: "Additional Information"),
+                          _buildDropdownField(
+                              "Khata Certificate (7/12)",
+                              selectedKhataCert,
+                              ["Yes", "No", "Don't Know"], (val) {
+                            setState(() {
+                              selectedKhataCert = val;
+                            });
+                          }),
+                          _buildDropdownField(
+                              "Sale Deed Certificate",
+                              selectedSaleDeedCertificate,
+                              ["Yes", "No", "Don't Know"], (val) {
+                            setState(() {
+                              selectedSaleDeedCertificate = val;
+                            });
+                          }),
+                          _buildDropdownField(
+                              "Property Tax Paid",
+                              selectedPropertyTax,
+                              ["Yes", "No", "Don't Know"], (val) {
+                            setState(() {
+                              selectedPropertyTax = val;
+                            });
+                          }),
+                          _buildDropdownField(
+                              "Occupancy Certificate",
+                              selectedOccupancyCertificate,
+                              ["Yes", "No", "Don't Know"], (val) {
+                            setState(() {
+                              selectedOccupancyCertificate = val;
+                            });
+                          }),
+                        ],
+                      ),
                     ),
                   ),
                   SizedBox(height: height * 0.06),
