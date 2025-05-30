@@ -7,21 +7,24 @@ import 'package:my_zero_broker/data/user_id.dart';
 import 'package:my_zero_broker/locator.dart';
 import 'package:my_zero_broker/presentation/widgets/ElevatedButton.dart';
 import 'package:my_zero_broker/presentation/widgets/TextField.dart';
+// import 'package:my_zero_broker/presentation/widgets/TextField.dart';
 import 'package:my_zero_broker/presentation/widgets/custom_snack_bar.dart';
 import 'package:my_zero_broker/utils/constant/theme.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class EmailLoginScreen extends StatefulWidget {
+  const EmailLoginScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<EmailLoginScreen> createState() => _EmailLoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _EmailLoginScreenState extends State<EmailLoginScreen> {
   late LoginBloc _loginBloc;
-  final TextEditingController phoneNoController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _terms = false;
+  bool _obscurePassword = true;
 
   @override
   void initState() {
@@ -94,26 +97,65 @@ class _LoginScreenState extends State<LoginScreen> {
                             SizedBox(height: height * 0.03),
                             BlocBuilder<LoginBloc, LoginState>(
                               buildWhen: (previous, current) =>
-                                  current.phoneNo != previous.phoneNo,
+                                  current.email != previous.email ||
+                                  current.password != previous.password,
                               builder: (context, state) {
                                 return Form(
                                   key: _formKey,
-                                  child: Textfield(
-                                    text: '+91',
-                                    controller: phoneNoController,
-                                    hintText: "Enter Mobile Number",
-                                    textInputType: TextInputType.phone,
-                                    onChanged: (value) {},
-                                    validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return "Please enter a phone number";
-                                      }
-                                      if (!RegExp(r"^[0-9]{10}$")
-                                          .hasMatch(value)) {
-                                        return "Enter a valid phone number";
-                                      }
-                                      return null;
-                                    },
+                                  child: Column(
+                                    children: [
+                                      Textfield(
+                                        controller: emailController,
+                                        hintText: "Enter Email",
+                                        textInputType:
+                                            TextInputType.emailAddress,
+                                        onChanged: (value) {},
+                                        validator: (value) {
+                                          if (value == null || value.isEmpty) {
+                                            return "Please enter an email";
+                                          }
+                                          if (!RegExp(
+                                                  r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+                                              .hasMatch(value)) {
+                                            return "Enter a valid email address";
+                                          }
+                                          return null;
+                                        },
+                                      ),
+                                      SizedBox(height: height * 0.02),
+                                      Textfield(
+                                        controller: passwordController,
+                                        hintText: "Enter Password",
+                                        obscureText: _obscurePassword,
+                                        textInputType:
+                                            TextInputType.visiblePassword,
+                                        onChanged: (value) {},
+                                        suffixIcon: IconButton(
+                                          icon: Icon(
+                                            _obscurePassword
+                                                ? Icons.visibility_off
+                                                : Icons.visibility,
+                                            color: ColorsPalette
+                                                .textSecondaryColor,
+                                          ),
+                                          onPressed: () {
+                                            setState(() {
+                                              _obscurePassword =
+                                                  !_obscurePassword;
+                                            });
+                                          },
+                                        ),
+                                        validator: (value) {
+                                          if (value == null || value.isEmpty) {
+                                            return "Please enter a password";
+                                          }
+                                          if (value.length < 6) {
+                                            return "Password must be at least 6 characters";
+                                          }
+                                          return null;
+                                        },
+                                      ),
+                                    ],
                                   ),
                                 );
                               },
@@ -163,15 +205,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                   Snack.show("Authenticating", context);
                                 }
                                 if (state.loginStatus == LoginStatus.success) {
-                                  Snack.show("OTP sent successfully", context);
-                                  print(state.loginStatus);
+                                  Snack.show("Login successful", context);
                                   locator.get<UserId>().id = state.userId;
-                                  print(locator.get<UserId>().id);
-                                  if (state.loginStatus ==
-                                      LoginStatus.success) {
-                                    Navigator.pushReplacementNamed(
-                                        context, RoutesName.otpScreen);
-                                  }
+                                  Navigator.pushReplacementNamed(
+                                      context, RoutesName.homeScreen);
                                 }
                               },
                               child: BlocBuilder<LoginBloc, LoginState>(
@@ -179,29 +216,34 @@ class _LoginScreenState extends State<LoginScreen> {
                                   return Elevatedbutton(
                                     bgcolor: ColorsPalette.primaryColor,
                                     foregroundColor: ColorsPalette.cardBgColor,
-                                    text: 'SEND OTP',
+                                    text: 'LOGIN',
                                     height: height * 0.78,
                                     width: width * 1,
                                     onPressed: () {
                                       if (_formKey.currentState?.validate() ??
                                           false) {
-                                        final phoneNo = phoneNoController.text;
+                                        final email = emailController.text;
+                                        final password =
+                                            passwordController.text;
                                         if (_terms == false) {
                                           Snack.show(
                                               "Please agree to the terms and conditions",
                                               context);
-                                        } else if (phoneNo.isNotEmpty &&
+                                        } else if (email.isNotEmpty &&
+                                            password.isNotEmpty &&
                                             _terms == true) {
                                           context.read<LoginBloc>().add(
-                                                phoneNoChanged(
-                                                    phoneNo: phoneNo),
+                                                EmailPasswordChanged(
+                                                  email: email,
+                                                  password: password,
+                                                ),
                                               );
                                           context
                                               .read<LoginBloc>()
-                                              .add(LoginApi());
+                                              .add(EmailLoginApi());
                                         } else {
                                           Snack.show(
-                                              "Please enter a valid phone number",
+                                              "Please enter valid credentials",
                                               context);
                                         }
                                       }
@@ -219,15 +261,15 @@ class _LoginScreenState extends State<LoginScreen> {
                                 children: [
                                   const TextSpan(text: "Login with "),
                                   TextSpan(
-                                    text: "Email",
+                                    text: "Phone",
                                     style: TextStyles.bodyStyle.copyWith(
                                       color: ColorsPalette.primaryColor,
                                       fontSize: width * 0.04,
                                     ),
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = () {
-                                        Navigator.pushReplacementNamed(context,
-                                            RoutesName.emailLoginScreen);
+                                        Navigator.pushReplacementNamed(
+                                            context, RoutesName.loginScreen);
                                       },
                                   ),
                                 ],

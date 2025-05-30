@@ -16,6 +16,8 @@ class phoneNoChanged extends LoginEvent {
   List<Object> get props => [phoneNo];
 }
 
+
+
 class otpChanged extends LoginEvent {
   const otpChanged({required this.otp});
 
@@ -26,9 +28,25 @@ class otpChanged extends LoginEvent {
 }
 
 class LoginApi extends LoginEvent {}
+// class EmailLoginApi extends LoginEvent {}
 
 class VerifyOtpApi extends LoginEvent {
-  final int  userID;
+  final int userID;
 
-  VerifyOtpApi(this.userID); 
-}  // New event for OTP verification
+  const VerifyOtpApi(this.userID);
+
+  @override
+  List<Object> get props => [userID];
+}
+
+class EmailPasswordChanged extends LoginEvent {
+  final String email;
+  final String password;
+
+  const EmailPasswordChanged({required this.email, required this.password});
+
+  @override
+  List<Object> get props => [email, password];
+}
+
+class EmailLoginApi extends LoginEvent {}

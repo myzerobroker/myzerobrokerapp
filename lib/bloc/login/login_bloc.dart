@@ -15,7 +15,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     on<phoneNoChanged>(_onPhoneNoChanged);
     on<otpChanged>(_onOtpChanged);
     on<LoginApi>(_onLoginApi);
-    on<VerifyOtpApi>(_onVerifyOtpApi); // New event to handle OTP verification
+    on<VerifyOtpApi>(_onVerifyOtpApi);
+    on<EmailPasswordChanged>(_onEmailPasswordChanged);
+    on<EmailLoginApi>(_onEmailLoginApi);
   }
 
   void _onPhoneNoChanged(phoneNoChanged event, Emitter<LoginState> emit) {
@@ -40,7 +42,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     print(state.phoneNo);
 
     Map data = {
-      'mobile_no':  "+91"+ state.phoneNo.toString(),
+      'mobile_no': "+91" + state.phoneNo.toString(),
     };
 
     try {
@@ -61,6 +63,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
             userId: int.tryParse(responseData['user_id'].toString()) ?? 0,
           ));
         } else {
+          print(responseData);
           emit(state.copyWith(
             loginStatus: LoginStatus.error,
             message: responseData['message'] ?? 'Failed to send OTP',
@@ -74,6 +77,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         ));
       }
     } catch (e) {
+      print(e);
       emit(state.copyWith(
         loginStatus: LoginStatus.error,
         message: e.toString(),
@@ -84,24 +88,19 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   void _onVerifyOtpApi(VerifyOtpApi event, Emitter<LoginState> emit) async {
     emit(state.copyWith(loginStatus: LoginStatus.loading));
 
-    // Ensure OTP is sent as String and userId as Integer
     Map<String, String> data = {
-      'otp': state.otp, // Send OTP as a string
-      'userId':
-          locator.get<UserId>().id.toString(), // Ensure userId is a string
+      'otp': state.otp,
+      'userId': locator.get<UserId>().id.toString(),
     };
     print(data);
 
     try {
-      // Ignore SSL errors (for development only)
       HttpOverrides.global = MyHttpOverrides();
 
-      // First, make a GET request to retrieve the CSRF token and cookies
       final getResponse =
           await http.get(Uri.parse('https://myzerobroker.com/login'));
 
       print('GET request status: ${getResponse.statusCode}');
-      // print('GET response body: ${getResponse.body}');
 
       if (getResponse.statusCode == 200) {
         final csrfToken = extractCsrfToken(getResponse.body);
@@ -158,7 +157,98 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     }
   }
 
-  // Extract CSRF Token from HTML response
+  void _onEmailPasswordChanged(
+      EmailPasswordChanged event, Emitter<LoginState> emit) {
+    emit(
+      state.copyWith(
+        email: event.email,
+        password: event.password,
+      ),
+    );
+  }
+
+  void _onEmailLoginApi(EmailLoginApi event, Emitter<LoginState> emit) async {
+    emit(state.copyWith(loginStatus: LoginStatus.loading));
+
+    Map<String, String> data = {
+      'email': state.email,
+      'password': state.password,
+    };
+
+    try {
+      HttpOverrides.global = MyHttpOverrides();
+
+      final getResponse =
+          await http.get(Uri.parse('https://myzerobroker.com/login-password'));
+
+      print('GET request status: ${getResponse.statusCode}');
+
+      if (getResponse.statusCode == 200) {
+        final csrfToken = extractCsrfToken(getResponse.body);
+        print('CSRF Token: $csrfToken');
+
+        if (csrfToken.isEmpty) {
+          emit(state.copyWith(
+            loginStatus: LoginStatus.error,
+            message: 'CSRF token not found.',
+          ));
+          return;
+        }
+
+        final cookies = getResponse.headers['set-cookie'];
+        print('Cookies: $cookies');
+
+        final response = await http.post(
+          Uri.parse('https://myzerobroker.com/api/email-login'),
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': csrfToken,
+            'Accept': 'application/json',
+            'Cookie': cookies ?? '',
+          },
+          body: jsonEncode(data),
+        );
+
+        print('POST request status: ${response.statusCode}');
+        print('POST response body: ${response.body}');
+
+        if (response.headers['content-type']?.contains('json') ?? false) {
+          var responseData = jsonDecode(response.body);
+
+          if (response.statusCode == 200) {
+            print(responseData);
+            emit(state.copyWith(
+              loginStatus: LoginStatus.success,
+              message: 'Login successful.',
+              userId: int.tryParse(responseData['user_id'].toString()) ?? 0,
+            ));
+          } else {
+            emit(state.copyWith(
+              loginStatus: LoginStatus.error,
+              message: responseData['message'] ?? 'Login failed.',
+            ));
+          }
+        } else {
+          emit(state.copyWith(
+            loginStatus: LoginStatus.error,
+            message:
+                'Unexpected response type: ${response.headers['content-type']}',
+          ));
+        }
+      } else {
+        emit(state.copyWith(
+          loginStatus: LoginStatus.error,
+          message: 'Failed to fetch CSRF token.',
+        ));
+      }
+    } catch (e) {
+      emit(state.copyWith(
+        loginStatus: LoginStatus.error,
+        message: e.toString(),
+      ));
+    }
+  }
+
   String extractCsrfToken(String html) {
     final csrfRegex = RegExp(r'<meta name="csrf-token" content="(.*?)">');
     final match = csrfRegex.firstMatch(html);
@@ -166,7 +256,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   }
 }
 
-// Custom HttpOverrides to ignore SSL certificate errors
 class MyHttpOverrides extends HttpOverrides {
   @override
   HttpClient createHttpClient(SecurityContext? context) {

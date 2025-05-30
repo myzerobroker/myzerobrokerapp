@@ -8,6 +8,8 @@ class Textfield extends StatelessWidget {
   final Icon? icon;
   final String hintText;
   final String? Function(String?)? validator;
+  final bool obscureText;
+  final Widget? suffixIcon;
 
   final void Function(String)? onChanged;
 
@@ -20,6 +22,8 @@ class Textfield extends StatelessWidget {
     required this.textInputType,
     required this.hintText,
     this.validator,
+    this.obscureText = false,
+    this.suffixIcon
   });
 
   @override
