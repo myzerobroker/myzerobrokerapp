@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_zero_broker/bloc/login/login_bloc.dart';
+import 'package:my_zero_broker/bloc/user_details/fetch_user_details_bloc.dart';
 import 'package:my_zero_broker/config/routes/routes_name.dart';
 import 'package:my_zero_broker/data/user_id.dart';
 import 'package:my_zero_broker/locator.dart';
@@ -10,6 +11,7 @@ import 'package:my_zero_broker/presentation/widgets/TextField.dart';
 // import 'package:my_zero_broker/presentation/widgets/TextField.dart';
 import 'package:my_zero_broker/presentation/widgets/custom_snack_bar.dart';
 import 'package:my_zero_broker/utils/constant/theme.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class EmailLoginScreen extends StatefulWidget {
   const EmailLoginScreen({super.key});
@@ -197,7 +199,7 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
                             ),
                             SizedBox(height: height * 0.02),
                             BlocListener<LoginBloc, LoginState>(
-                              listener: (context, state) {
+                              listener: (context, state) async {
                                 if (state.loginStatus == LoginStatus.error) {
                                   Snack.show(state.message, context);
                                 }
@@ -206,7 +208,18 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
                                 }
                                 if (state.loginStatus == LoginStatus.success) {
                                   Snack.show("Login successful", context);
+                                 
                                   locator.get<UserId>().id = state.userId;
+                                    print("Updated UserId: ${locator.get<UserId>().id}");
+
+                                    // Save the userId in SharedPreferences with the correct key
+                                    SharedPreferences sp =
+                                        await SharedPreferences.getInstance();
+                                    await sp.setInt("userId", state.userId);
+                                    print("Saved user_id: ${state.userId}");
+                                      context
+                                          .read<FetchUserDetailsBloc>()
+                                          .add(FetchDetailsEvent());
                                   Navigator.pushReplacementNamed(
                                       context, RoutesName.homeScreen);
                                 }
