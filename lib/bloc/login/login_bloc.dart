@@ -176,30 +176,31 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     };
 
     try {
-      HttpOverrides.global = MyHttpOverrides();
+       HttpOverrides.global = MyHttpOverrides();
 
+      // First, make a GET request to retrieve the CSRF token and cookies
       final getResponse =
-          await http.get(Uri.parse('https://myzerobroker.com/login-password'));
+          await http.get(Uri.parse('https://myzerobroker.com/login'));
 
       print('GET request status: ${getResponse.statusCode}');
+      // print('GET response body: ${getResponse.body}');
 
       if (getResponse.statusCode == 200) {
         final csrfToken = extractCsrfToken(getResponse.body);
-        print('CSRF Token: $csrfToken');
+        print(csrfToken);
 
         if (csrfToken.isEmpty) {
           emit(state.copyWith(
-            loginStatus: LoginStatus.error,
+            loginStatus: LoginStatus.otpVerificationFailure,
             message: 'CSRF token not found.',
           ));
           return;
         }
 
         final cookies = getResponse.headers['set-cookie'];
-        print('Cookies: $cookies');
 
         final response = await http.post(
-          Uri.parse('https://myzerobroker.com/api/email-login'),
+          Uri.parse('https://myzerobroker.com/api/login-password'),
           headers: {
             'Content-Type': 'application/json',
             'X-CSRF-TOKEN': csrfToken,
@@ -216,12 +217,19 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           var responseData = jsonDecode(response.body);
 
           if (response.statusCode == 200) {
+            final userId = int.tryParse(responseData['user']['id'].toString()) ?? 0;
+
+            // Save user ID in SharedPreferences
+            
+            print('User ID $userId saved in SharedPreferences');
             print(responseData);
             emit(state.copyWith(
               loginStatus: LoginStatus.success,
               message: 'Login successful.',
-              userId: int.tryParse(responseData['user_id'].toString()) ?? 0,
+              userId: userId ?? 0,
             ));
+
+        
           } else {
             emit(state.copyWith(
               loginStatus: LoginStatus.error,
@@ -249,6 +257,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     }
   }
 
+  // Extract CSRF Token from HTML response
   String extractCsrfToken(String html) {
     final csrfRegex = RegExp(r'<meta name="csrf-token" content="(.*?)">');
     final match = csrfRegex.firstMatch(html);
@@ -256,6 +265,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   }
 }
 
+// Custom HttpOverrides to ignore SSL certificate errors
 class MyHttpOverrides extends HttpOverrides {
   @override
   HttpClient createHttpClient(SecurityContext? context) {
