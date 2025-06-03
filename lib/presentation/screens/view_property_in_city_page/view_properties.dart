@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:http/http.dart' as http;
 import 'package:my_zero_broker/bloc/search_property/search_property_bloc.dart';
 import 'package:my_zero_broker/data/area_details_dependency.dart';
 import 'package:my_zero_broker/data/models/property_in_cities_model.dart';
@@ -622,22 +623,66 @@ class _ViewPropertiesState extends State<ViewProperties> {
                                             ),
                                           ),
                                         SizedBox(height: 12),
-                                        ElevatedButton(
-                                          onPressed: () {
-                                            // Action on press
-                                          },
-                                          style: ElevatedButton.styleFrom(
-                                            backgroundColor: Colors.black,
-                                            foregroundColor: Colors.white,
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(8),
-                                            ),
-                                            minimumSize:
-                                                Size(double.infinity, 40),
-                                          ),
-                                          child: Text('Get Owner Details'),
-                                        ),
+                                      ElevatedButton(
+  onPressed: () async {
+    // Fetch the token from SharedPreferences
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString("authToken");
+
+    if (token == null) {
+      // Handle the case where the token is not found (e.g., user not logged in)
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Please log in to get owner details")),
+      );
+      return;
+    }
+
+    // Prepare the payload and headers for the API call
+    Map<String, dynamic> payload = {
+      "property_id": property.id,
+    };
+
+    try {
+      final response = await http.post(
+        Uri.parse('https://myzerobroker.com/api/get-owner-details'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token', // Add Bearer token to the header
+        },
+        body: jsonEncode(payload),
+      );
+
+      if (response.statusCode == 200) {
+        var responseData = jsonDecode(response.body);
+        // Handle the successful response (e.g., show owner details)
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(responseData['message'] ?? "Details fetched successfully")),
+        );
+      } else {
+        // Handle error response
+        var responseData = jsonDecode(response.body);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(responseData['message'] ?? "Failed to fetch owner details")),
+        );
+      }
+    } catch (e) {
+      // Handle any errors during the API call
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error: $e")),
+      );
+    }
+  },
+  style: ElevatedButton.styleFrom(
+    backgroundColor: Colors.black,
+    foregroundColor: Colors.white,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(8),
+    ),
+    minimumSize: Size(double.infinity, 40),
+  ),
+  child: Text('Get Owner Details'),
+),
                                       ],
                                     ),
                                   ),
