@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:my_zero_broker/data/area_details_dependency.dart';
 import 'package:my_zero_broker/data/models/property_in_cities_model.dart';
 import 'package:my_zero_broker/locator.dart';
@@ -54,11 +55,10 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final List photos = jsonDecode(widget.property.photos!);
-    // Assuming CityDetails has fields id and cName
     final city = locator.get<AreaDetailsDependency>().cityDetails.firstWhere(
         (element) =>
             element.id.toString() == widget.property.cityId.toString());
-    final loc = city.cName; // Adjust based on actual field name
+    final loc = city.cName;
     final areas = locator.get<AreaDetailsDependency>().areas[loc];
     final area = areas!
         .where(
@@ -134,7 +134,7 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
                       ],
                     ),
                     Text(
-                       widget.peropertyStatus== 'Rent'
+                      widget.peropertyStatus == 'Rent'
                           ? 'Rent: ${formatPrice(widget.property.expectedRent.toString())}'
                           : 'Price: ${formatPrice(widget.property.expectedPrice.toString())}',
                       style: TextStyles.priceStyle,
@@ -189,9 +189,12 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
                     if (widget.property.facing != null &&
                         widget.property.facing!.isNotEmpty)
                       _detailRow('Facing:', widget.property.facing!),
-                    if (widget.property.expectedPrice != 0 || widget.property.expectedRent != 0 || widget.property.expectedPrice != null || widget.property.expectedRent != null)
+                    if (widget.property.expectedPrice != 0 ||
+                        widget.property.expectedRent != 0 ||
+                        widget.property.expectedPrice != null ||
+                        widget.property.expectedRent != null)
                       _detailRow(
-                       widget.peropertyStatus== 'Rent'? "Rent:" : "Offer:",
+                        widget.peropertyStatus == 'Rent' ? "Rent:" : "Offer:",
                         widget.peropertyStatus == 'Rent'
                             ? formatPrice(
                                 widget.property.expectedRent.toString())
@@ -204,7 +207,6 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
                                     widget.property.expectedPrice.toString()),
                         ColorsPalette.primaryColor,
                       ),
-
                     if (widget.property.maintenanceCost != null)
                       _detailRow('Maintenance:',
                           '₹' + widget.property.maintenanceCost.toString()),
@@ -229,9 +231,6 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
                     if (widget.property.property == "Plot")
                       _detailRow('Plot Front:',
                           widget.property.plotFront.toString() + " m"),
-                    // if (widget.property.property == "Plot")
-                    //   _detailRow('Main Road:',
-                    //       widget.property.mainRoad.toString() + " m"),
                     if (widget.property.property == "Plot")
                       _detailRow('Front Road:',
                           widget.property.frontRoad.toString() + " m"),
@@ -248,27 +247,85 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
                               fontStyle: FontStyle.italic,
                               color: ColorsPalette.textSecondaryColor)),
                     SizedBox(height: 16),
-                    FutureBuilder(
+                    FutureBuilder<bool>(
                       future: checkIfStringexist(
                           jsonEncode(widget.property.toJson())),
                       builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return Center(child: CircularProgressIndicator());
+                        }
+                        if (snapshot.hasError) {
+                          return Center(child: Text("Error: ${snapshot.error}"));
+                        }
                         if (snapshot.hasData) {
                           return Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                    backgroundColor: ColorsPalette.primaryColor,
+                              Expanded(
+                                child: ElevatedButton(
+                                  onPressed: () async {
+                                    SharedPreferences prefs =
+                                        await SharedPreferences.getInstance();
+                                    String? token = prefs.getString("authToken");
+
+                                    if (token == null) {
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                            content: Text(
+                                                "Please log in to get owner details")),
+                                      );
+                                      return;
+                                    }
+
+                                    Map<String, dynamic> payload = {
+                                      "property_id": widget.property.id,
+                                    };
+
+                                    try {
+                                      final response = await http.post(
+                                        Uri.parse(
+                                            'https://myzerobroker.com/api/get-owner-details'),
+                                        headers: {
+                                          'Content-Type': 'application/json',
+                                          'Accept': 'application/json',
+                                          'Authorization': 'Bearer $token',
+                                        },
+                                        body: jsonEncode(payload),
+                                      );
+
+                                      if (response.statusCode == 200) {
+                                        var responseData = jsonDecode(response.body);
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          SnackBar(
+                                              content: Text(responseData['message'] ??
+                                                  "Details fetched successfully")),
+                                        );
+                                      } else {
+                                        var responseData = jsonDecode(response.body);
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          SnackBar(
+                                              content: Text(responseData['message'] ??
+                                                  "Failed to fetch owner details")),
+                                        );
+                                      }
+                                    } catch (e) {
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(content: Text("Error: $e")),
+                                      );
+                                    }
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.black,
+                                    foregroundColor: Colors.white,
                                     shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(15))),
-                                onPressed: () {},
-                                child: Text('Get Owner Details',
-                                    style: TextStyles.buttonStyle.copyWith(
-                                      color: ColorsPalette.secondaryColor,
-                                      fontSize: 16,
-                                    )),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    minimumSize: Size(0, 40), // Adjusted size
+                                  ),
+                                  child: Text('Get Owner Details'),
+                                ),
                               ),
+                              SizedBox(width: 16), // Add spacing between button and icon
                               IconButton(
                                 icon: Icon(
                                   snapshot.data!
@@ -297,7 +354,7 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
                             ],
                           );
                         }
-                        return Container();
+                        return Center(child: Text("No data available"));
                       },
                     ),
                   ],

@@ -6,6 +6,7 @@ import 'package:equatable/equatable.dart';
 import 'package:http/http.dart' as http;
 import 'package:my_zero_broker/data/user_id.dart';
 import 'package:my_zero_broker/locator.dart';
+import 'package:shared_preferences/shared_preferences.dart'; // Add this import
 
 part 'login_event.dart';
 part 'login_state.dart';
@@ -176,14 +177,13 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     };
 
     try {
-       HttpOverrides.global = MyHttpOverrides();
+      HttpOverrides.global = MyHttpOverrides();
 
       // First, make a GET request to retrieve the CSRF token and cookies
       final getResponse =
           await http.get(Uri.parse('https://myzerobroker.com/login'));
 
       print('GET request status: ${getResponse.statusCode}');
-      // print('GET response body: ${getResponse.body}');
 
       if (getResponse.statusCode == 200) {
         final csrfToken = extractCsrfToken(getResponse.body);
@@ -218,18 +218,20 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
           if (response.statusCode == 200) {
             final userId = int.tryParse(responseData['user']['id'].toString()) ?? 0;
+            final String token = responseData['token']; // Extract token
 
-            // Save user ID in SharedPreferences
-            
-            print('User ID $userId saved in SharedPreferences');
-            print(responseData);
+            // Save token and user ID in SharedPreferences
+            final SharedPreferences sp = await SharedPreferences.getInstance();
+            await sp.setString("authToken", token); // Save token
+            await sp.setInt("userId", userId); // Save user ID
+            print("Saved token: $token");
+            print("Saved user ID: $userId");
+
             emit(state.copyWith(
               loginStatus: LoginStatus.success,
               message: 'Login successful.',
-              userId: userId ?? 0,
+              userId: userId,
             ));
-
-        
           } else {
             emit(state.copyWith(
               loginStatus: LoginStatus.error,
@@ -252,7 +254,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     } catch (e) {
       emit(state.copyWith(
         loginStatus: LoginStatus.error,
-        message: e.toString(),
+        message: 'Error during login: ${e.toString()}',
       ));
     }
   }
