@@ -66,8 +66,8 @@ class User {
         emailVerifiedAt: json["email_verified_at"],
         mobileNo: json["mobile_no"],
         deleteStatus: json["delete_status"],
-        createdAt: DateTime.parse(json["created_at"]),
-        updatedAt: DateTime.parse(json["updated_at"]),
+        createdAt: json["created_at"] == null ? null : DateTime.parse(json["created_at"]),
+        updatedAt: json["updated_at"] == null ? null : DateTime.parse(json["updated_at"]),
     );
 
     Map<String, dynamic> toJson() => {

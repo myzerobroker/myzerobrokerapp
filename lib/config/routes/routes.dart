@@ -3,6 +3,7 @@ import 'package:my_zero_broker/config/routes/routes_name.dart';
 import 'package:my_zero_broker/presentation/presentaion.dart';
 import 'package:my_zero_broker/presentation/screens/contacts/contacts.dart';
 import 'package:my_zero_broker/presentation/screens/home_screen.dart/home_screen.dart';
+import 'package:my_zero_broker/presentation/screens/invoice_page.dart';
 import 'package:my_zero_broker/presentation/screens/locations_fetch_widget.dart';
 import 'package:my_zero_broker/presentation/screens/login/email_login_screen.dart';
 import 'package:my_zero_broker/presentation/screens/login/otp_screen.dart';
@@ -72,6 +73,8 @@ class Routes {
         return _createRoute(PrivacyPolicyScreen());
       case RoutesName.emailLoginScreen:
         return _createRoute(EmailLoginScreen());
+      case RoutesName.invoicePage:
+        return _createRoute(InvoicesPage());
 
      
 
