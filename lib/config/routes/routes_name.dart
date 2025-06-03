@@ -4,6 +4,7 @@ class RoutesName {
   static const String signUpScreen = 'signup_screen';
   static const String contactsScreen = 'contacts_screen';
   static const String emailLoginScreen = 'email_login_screen';
+  static const String invoicePage = 'invoice_page';
 
   static const String homeScreen = 'home_screen';
   static const String otpScreen = 'otp_screen';

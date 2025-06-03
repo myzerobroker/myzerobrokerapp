@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:my_zero_broker/bloc/invoice/invoice_bloc.dart';
 import 'package:my_zero_broker/bloc/location/location_bloc.dart';
 import 'package:my_zero_broker/bloc/login/login_bloc.dart';
 import 'package:my_zero_broker/bloc/my_listing/my_listing_bloc.dart';
@@ -42,6 +43,7 @@ class MyApp extends StatelessWidget {
           BlocProvider(create: (context) => MyListingBloc()),
             BlocProvider(create: (context) => PostBuildersDetailsBloc()),
             BlocProvider(create: (context) => VideoBloc()),
+            BlocProvider(create: (context) => InvoiceBloc()),
       
       ],
       child: MaterialApp(

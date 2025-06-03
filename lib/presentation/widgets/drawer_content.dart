@@ -102,6 +102,9 @@ class _DrawerContentState extends State<DrawerContent> {
                 _drawerItem(context, 'My Listings', RoutesName.myListing,
                     Icon(Iconsax.menu5, color: ColorsPalette.primaryColor)),
                 Divider(color: Colors.grey.shade100),
+                _drawerItem(context, 'Invoices', RoutesName.invoicePage,
+                    Icon(Iconsax.document4, color: ColorsPalette.primaryColor)),
+                Divider(color: Colors.grey.shade100),
                 _drawerItem(
                   context,
                   'Post Property For Free',
