@@ -1,99 +1,120 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:my_zero_broker/presentation/widgets/custom_snack_bar.dart';
 import 'package:my_zero_broker/utils/constant/payments_colors.dart';
+
+import '../../../bloc/buyer/buyer_plan_bloc.dart';
 
 class TenantPlanScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-    
 
     return Scaffold(
       appBar: AppBar(title: const Text('Tenant Plan')),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-           
-            Container(
-              color: PaymentsColors.headerBackground,
-              child: Row(
+      body: BlocListener<BuyerPlanBloc, BuyerPlanState>(
+        listener: (context, state) {
+          if (state is BuyerPlanSuccess) {
+            Snack.show(state.message, context);
+          } else if (state is BuyerPlanError) {
+            Snack.show(state.message, context);
+          }
+        },
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Container(
+                color: PaymentsColors.headerBackground,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        padding: EdgeInsets.all(screenWidth * 0.02),
+                        alignment: Alignment.center,
+                        child: const Text(
+                          'TENANT PLAN',
+                          style: TextStyle(
+                            color: PaymentsColors.headerText,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(
+                        color: PaymentsColors.freePlan,
+                        padding: EdgeInsets.all(screenWidth * 0.02),
+                        alignment: Alignment.center,
+                        child: const Text(
+                          'GET STARTED',
+                          style: TextStyle(
+                            color: PaymentsColors.headerText,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(
+                        color: PaymentsColors.premiumPlan,
+                        padding: EdgeInsets.all(screenWidth * 0.02),
+                        alignment: Alignment.center,
+                        child: const Text(
+                          'PREMIUM PLANS',
+                          style: TextStyle(
+                            color: PaymentsColors.headerText,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              // Table
+              Table(
+                border: TableBorder.all(color: Colors.blue, width: 1),
+                columnWidths: const {
+                  0: FlexColumnWidth(1),
+                  1: FlexColumnWidth(1),
+                  2: FlexColumnWidth(1),
+                },
                 children: [
-                  Expanded(
-                    child: Container(
-                      padding: EdgeInsets.all(screenWidth * 0.02),
-                      alignment: Alignment.center,
-                      child: const Text(
-                        'TENANT PLAN',
-                        style: TextStyle(
-                          color: PaymentsColors.headerText,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: Container(
-                      color: PaymentsColors.freePlan,
-                      padding: EdgeInsets.all(screenWidth * 0.02),
-                      alignment: Alignment.center,
-                      child: const Text(
-                        'GET STARTED',
-                        style: TextStyle(
-                          color: PaymentsColors.headerText,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: Container(
-                      color: PaymentsColors.premiumPlan,
-                      padding: EdgeInsets.all(screenWidth * 0.02),
-                      alignment: Alignment.center,
-                      child: const Text(
-                        'PREMIUM PLANS',
-                        style: TextStyle(
-                          color: PaymentsColors.headerText,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                        ),
-                      ),
-                    ),
-                  ),
+                  _buildTableRow(
+                      'PLANS', 'FREE', 'PREPAID', 'POSTPAID', screenWidth),
+                  _buildTableRow('VALIDITY', 'Website Only', '3 Month',
+                      '12 Month', screenWidth),
+                  _buildTableRow('REGISTRATION CHARGES', '₹0/-', '₹500 + GST',
+                      '₹500 + GST', screenWidth),
+                  _buildTableRow('POSTPAID CHARGES', '₹0', '₹0',
+                      '₹1 Month Rent', screenWidth),
+                  _buildTableRow('Reference number or site visit', '1', '10',
+                      'Till RENT OF THE PROPERTY', screenWidth),
+                  _buildIconRow('100% privacy of your data', true, true, true,
+                      screenWidth),
+                  _buildIconRow(
+                      'Filtration of property', true, true, true, screenWidth),
+                  _buildIconRow('New property alert on mobile', false, true,
+                      true, screenWidth),
+                  _buildIconRow(
+                      'Home loan assistance', false, false, true, screenWidth),
+                  _buildIconRow(
+                      'Legal Assistance', false, false, true, screenWidth),
+                  _buildButtonRow(screenWidth, context),
                 ],
               ),
-            ),
-            // Table
-            Table(
-              border: TableBorder.all(color: Colors.blue, width: 1),
-              columnWidths: const {
-                0: FlexColumnWidth(1),
-                1: FlexColumnWidth(1),
-                2: FlexColumnWidth(1),
-              },
-              children: [
-                _buildTableRow('PLANS', 'FREE', 'PREPAID', 'POSTPAID', screenWidth),
-                _buildTableRow('VALIDITY', 'Website Only', '3 Month', '12 Month', screenWidth),
-                _buildTableRow('REGISTRATION CHARGES', '₹0/-', '₹500 + GST', '₹500 + GST', screenWidth),
-                _buildTableRow('POSTPAID CHARGES', '₹0', '₹0', '₹1 Month Rent', screenWidth),
-                _buildTableRow('Reference number or site visit', '1', '10', 'Till RENT OF THE PROPERTY', screenWidth),
-
-                _buildIconRow('100% privacy of your data', true, true, true, screenWidth),
-                _buildIconRow('Filtration of property', true, true, true, screenWidth),
-                _buildIconRow('New property alert on mobile', false, true, true, screenWidth),
-                _buildIconRow('Home loan assistance', false, false, true, screenWidth),
-                _buildIconRow('Legal Assistance', false, false, true, screenWidth),
-                _buildButtonRow(screenWidth),
-              ],
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
 
-  TableRow _buildTableRow(String title, String col1, String col2, String col3, double screenWidth) {
+  TableRow _buildTableRow(
+      String title, String col1, String col2, String col3, double screenWidth) {
     return TableRow(
       decoration: const BoxDecoration(color: PaymentsColors.cellBackground),
       children: [
@@ -105,7 +126,8 @@ class TenantPlanScreen extends StatelessWidget {
     );
   }
 
-  TableRow _buildIconRow(String title, bool free, bool prepaid, bool postpaid, double screenWidth) {
+  TableRow _buildIconRow(String title, bool free, bool prepaid, bool postpaid,
+      double screenWidth) {
     return TableRow(
       decoration: const BoxDecoration(color: PaymentsColors.cellBackground),
       children: [
@@ -117,7 +139,8 @@ class TenantPlanScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildTableCell(String text, {bool isHeader = true, required double screenWidth}) {
+  Widget _buildTableCell(String text,
+      {bool isHeader = true, required double screenWidth}) {
     return Padding(
       padding: EdgeInsets.all(screenWidth * 0.02),
       child: Text(
@@ -125,7 +148,9 @@ class TenantPlanScreen extends StatelessWidget {
         style: TextStyle(
           fontWeight: isHeader ? FontWeight.bold : FontWeight.normal,
           color: PaymentsColors.text,
-          fontSize: screenWidth > 600 ? 16 : 12.35, // Adjust font size based on screen width
+          fontSize: screenWidth > 600
+              ? 16
+              : 12.35, // Adjust font size based on screen width
         ),
         textAlign: TextAlign.center,
       ),
@@ -137,12 +162,13 @@ class TenantPlanScreen extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: Icon(
         isSuccess ? Icons.check_circle : Icons.cancel,
-        color: isSuccess ? PaymentsColors.successIcon : PaymentsColors.errorIcon,
+        color:
+            isSuccess ? PaymentsColors.successIcon : PaymentsColors.errorIcon,
       ),
     );
   }
 
-  TableRow _buildButtonRow(double screenWidth) {
+  TableRow _buildButtonRow(double screenWidth, context) {
     return TableRow(
       children: [
         const Padding(
@@ -153,48 +179,53 @@ class TenantPlanScreen extends StatelessWidget {
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
         ),
-        _buildButton(screenWidth, 0),
-        _buildButton(screenWidth, 1),
-        _buildButton(screenWidth, 2),
+        _buildButton(screenWidth, 0, context),
+        _buildButton(screenWidth, 1, context),
+        _buildButton(screenWidth, 2, context),
       ],
     );
   }
 
- Widget _buildButton(double screenWidth, int index) {
-  return Padding(
-    padding: EdgeInsets.all(screenWidth * 0.02),
-    child: ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        backgroundColor: PaymentsColors.buttonColor,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(9),  // Remove border radius to make it rectangular
+  Widget _buildButton(double screenWidth, int index, context) {
+    return Padding(
+      padding: EdgeInsets.all(screenWidth * 0.02),
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: PaymentsColors.buttonColor,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(
+                9), // Remove border radius to make it rectangular
+          ),
+        ),
+        onPressed: () {
+          handleButtonPress(index, context);
+        },
+        child: Text(
+          'Buy now',
+          style: TextStyle(color: PaymentsColors.buttonText, fontSize: 9),
         ),
       ),
-      onPressed: () {
-        handleButtonPress(index);
-      },
-      child: Text(
-        'Buy now',
-        style: TextStyle(color: PaymentsColors.buttonText,fontSize: 9),
-      ),
-    ),
-  );
-}
+    );
+  }
 
-  void handleButtonPress(int index) {
-   
+  void handleButtonPress(int index, context) {
+    String planType;
+
     switch (index) {
       case 0:
-        print("Free Plan Selected");
+        planType = "Free";
         break;
       case 1:
-        print("Prepaid Plan Selected");
+        planType = "Prepaid";
         break;
       case 2:
-        print("Postpaid Plan Selected");
+        planType = "Postpaid";
         break;
       default:
-        print("Invalid Selection");
+        planType = "Unknown";
     }
+    print("Selected Plan Type: $planType");
+    BlocProvider.of<BuyerPlanBloc>(context)
+        .add(FetchBuyerPlans(planType, "Tenants"));
   }
 }
