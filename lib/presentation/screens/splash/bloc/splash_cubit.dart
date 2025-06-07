@@ -6,7 +6,7 @@ class SplashCubit extends Cubit<SplashState> {
   SplashCubit() : super(SplashInitial());
 
   checkAuthentication() async {
-    Future.delayed(const Duration(seconds: 1), () async {
+    Future.delayed(const Duration(seconds: 3), () async {
       bool isAuthenticated = true;
       final sp = await SharedPreferences.getInstance();
       final token = sp.getString('authToken');
