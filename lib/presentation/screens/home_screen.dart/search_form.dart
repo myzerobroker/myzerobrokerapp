@@ -137,7 +137,7 @@ class _SearchFormState extends State<SearchForm> {
       child: Column(
         children: [
           _buildCategoryButtons(),
-          SizedBox(height: 20),
+          // SizedBox(height: 10),
           ValueListenableBuilder<int>(
             valueListenable: _indexNotifier,
             builder: (context, index, _) {

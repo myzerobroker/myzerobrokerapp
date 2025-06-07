@@ -8,6 +8,7 @@ import 'package:my_zero_broker/bloc/signup/signup_event.dart';
 import 'package:my_zero_broker/bloc/signup/signup_state.dart';
 import 'package:my_zero_broker/data/user_details_dependency.dart';
 import 'package:my_zero_broker/locator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 int id = locator.get<UserDetailsDependency>().id;
 
@@ -163,14 +164,18 @@ class SignupBloc extends Bloc<SignupEvent, SignUpState> {
         // Join the cleaned cookies into a formatted string
         String output = cleanedCookies.join(';');
         print(output);
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString("authToken");
+     
 
-        final response = await http.put(
-          Uri.parse('https://myzerobroker.com/api/user/profile/update/user_id=$id'),
+        final response = await http.post(
+          Uri.parse('https://myzerobroker.com/api/user/profile/update/$id'),
           headers: {
             'Content-Type': 'application/json',
             'X-CSRF-TOKEN': csrfToken,
             'Accept': 'application/json',
             'Cookie': output,
+             'Authorization': 'Bearer $token',
           },
           body: jsonEncode(data),
         );
