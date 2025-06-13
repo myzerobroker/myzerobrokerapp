@@ -1,12 +1,15 @@
+// all_properties_screen.dart
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:http/http.dart' as http;
 import 'package:my_zero_broker/bloc/search_property/search_property_bloc.dart';
 import 'package:my_zero_broker/data/area_details_dependency.dart';
 import 'package:my_zero_broker/data/models/property_in_cities_model.dart';
 import 'package:my_zero_broker/locator.dart';
 import 'package:my_zero_broker/presentation/screens/view_property_in_city_page/property_detail_screen.dart';
+import 'package:my_zero_broker/presentation/widgets/custom_snack_bar.dart';
 import 'package:my_zero_broker/presentation/widgets/image_carousel.dart';
 import 'package:my_zero_broker/utils/constant/theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -25,7 +28,7 @@ class AllPropertiesScreen extends StatefulWidget {
   final String city_id;
   final String tp;
   final String status;
-  final area;
+  final dynamic area;
   final String bhk;
   final String propertyType;
   final String priceRange;
@@ -111,8 +114,6 @@ class _AllPropertiesState extends State<AllPropertiesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // print(widget.priceRange);
-    print(widget.propertyType);
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -373,9 +374,7 @@ class _AllPropertiesState extends State<AllPropertiesScreen> {
                                                           loadingProgress) {
                                                         if (loadingProgress ==
                                                             null) return child;
-                                                        return Center(
-                                                            child:
-                                                                CircularProgressIndicator());
+                                                        return _buildShimmer();
                                                       },
                                                     ),
                                           Padding(
@@ -398,18 +397,111 @@ class _AllPropertiesState extends State<AllPropertiesScreen> {
                                                   style: TextStyles.priceStyle,
                                                 ),
                                                 Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
                                                   children: [
-                                                    Icon(Icons.star,
-                                                        color: ColorsPalette
-                                                            .starColor,
-                                                        size: 16),
-                                                    Text("4.5",
-                                                        style: TextStyles
-                                                            .bodyStyle),
-                                                    Text(
-                                                        " For ${widget.status}",
-                                                        style: TextStyles
-                                                            .bodyStyle),
+                                                    Row(
+                                                      children: [
+                                                        Icon(Icons.star,
+                                                            color: ColorsPalette
+                                                                .starColor,
+                                                            size: 16),
+                                                        Text("4.5",
+                                                            style: TextStyles
+                                                                .bodyStyle),
+                                                        Text(
+                                                            " For ${widget.status}",
+                                                            style: TextStyles
+                                                                .bodyStyle),
+                                                      ],
+                                                    ),
+                                                    ElevatedButton(
+                                                      onPressed: () async {
+                                                        SharedPreferences prefs =
+                                                            await SharedPreferences
+                                                                .getInstance();
+                                                        String? token = prefs
+                                                            .getString(
+                                                                "authToken");
+
+                                                        if (token == null) {
+                                                          Snack.show(
+                                                              "Please log in to get owner details",
+                                                              context);
+                                                          return;
+                                                        }
+
+                                                        Map<String, dynamic>
+                                                            payload = {
+                                                          "property_id":
+                                                              property.id,
+                                                        };
+
+                                                        try {
+                                                          final response =
+                                                              await http.post(
+                                                            Uri.parse(
+                                                                'https://myzerobroker.com/api/get-owner-details'),
+                                                            headers: {
+                                                              'Content-Type':
+                                                                  'application/json',
+                                                              'Accept':
+                                                                  'application/json',
+                                                              'Authorization':
+                                                                  'Bearer $token',
+                                                            },
+                                                            body: jsonEncode(
+                                                                payload),
+                                                          );
+
+                                                          if (response
+                                                                  .statusCode ==
+                                                              200) {
+                                                            var responseData =
+                                                                jsonDecode(
+                                                                    response
+                                                                        .body);
+                                                            Snack.show(
+                                                                responseData[
+                                                                        'message'] ??
+                                                                    "Details fetched successfully",
+                                                                context);
+                                                          } else {
+                                                            var responseData =
+                                                                jsonDecode(
+                                                                    response
+                                                                        .body);
+                                                            Snack.show(
+                                                                responseData[
+                                                                        'message'] ??
+                                                                    "Failed to fetch owner details",
+                                                                context);
+                                                          }
+                                                        } catch (e) {
+                                                          Snack.show(
+                                                              "Error: $e",
+                                                              context);
+                                                        }
+                                                      },
+                                                      style: ElevatedButton
+                                                          .styleFrom(
+                                                        backgroundColor:
+                                                            Colors.black,
+                                                        foregroundColor:
+                                                            Colors.white,
+                                                        shape:
+                                                            RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(8),
+                                                        ),
+                                                        minimumSize:
+                                                            Size(0, 40),
+                                                      ),
+                                                      child: Text(
+                                                          'Get Owner Details'),
+                                                    ),
                                                   ],
                                                 ),
                                               ],
@@ -492,11 +584,157 @@ class _AllPropertiesState extends State<AllPropertiesScreen> {
               return Center(
                   child: Text(state.message, style: TextStyles.bodyStyle));
             } else {
-              return Center(child: CircularProgressIndicator());
+              return SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: List.generate(5, (index) => _buildShimmerCard()),
+                  ),
+                ),
+              );
             }
           },
         ),
       ),
+    );
+  }
+
+  Widget _buildShimmer() {
+    return Container(
+      height: 200,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: ColorsPalette.cardBgColor.withOpacity(0.8),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: _buildShimmerEffect(),
+    );
+  }
+
+  Widget _buildShimmerCard() {
+    return Padding(
+      padding: const EdgeInsets.all(14.0),
+      child: Card(
+        color: ColorsPalette.cardBgColor,
+        margin: EdgeInsets.symmetric(vertical: 8.0),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        elevation: 0,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildShimmer(),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: 150,
+                    height: 20,
+                    decoration: BoxDecoration(
+                      color: ColorsPalette.secondaryColor.withOpacity(0.6),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: _buildShimmerEffect(),
+                  ),
+                  SizedBox(height: 8),
+                  Container(
+                    width: 200,
+                    height: 24,
+                    decoration: BoxDecoration(
+                      color: ColorsPalette.secondaryColor.withOpacity(0.6),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: _buildShimmerEffect(),
+                  ),
+                  SizedBox(height: 8),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Container(
+                            width: 20,
+                            height: 20,
+                            decoration: BoxDecoration(
+                              color: ColorsPalette.secondaryColor.withOpacity(0.6),
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            child: _buildShimmerEffect(),
+                          ),
+                          SizedBox(width: 8),
+                          Container(
+                            width: 50,
+                            height: 20,
+                            decoration: BoxDecoration(
+                              color: ColorsPalette.secondaryColor.withOpacity(0.6),
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            child: _buildShimmerEffect(),
+                          ),
+                          SizedBox(width: 8),
+                          Container(
+                            width: 100,
+                            height: 20,
+                            decoration: BoxDecoration(
+                              color: ColorsPalette.secondaryColor.withOpacity(0.6),
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            child: _buildShimmerEffect(),
+                          ),
+                        ],
+                      ),
+                      Container(
+                        width: 120,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: ColorsPalette.secondaryColor.withOpacity(0.6),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: _buildShimmerEffect(),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildShimmerEffect() {
+    return Stack(
+      children: [
+        Container(
+          width: double.infinity,
+          height: double.infinity,
+          color: ColorsPalette.cardBgColor.withOpacity(0.8),
+        ),
+        Positioned.fill(
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  ColorsPalette.bgColor.withOpacity(0.3),
+                  ColorsPalette.secondaryColor.withOpacity(0.5),
+                  ColorsPalette.bgColor.withOpacity(0.3),
+                ],
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+                stops: [0.0, 0.5, 1.0],
+              ),
+            ),
+            child: AnimatedContainer(
+              duration: Duration(milliseconds: 1000),
+              onEnd: () {
+                setState(() {});
+              },
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

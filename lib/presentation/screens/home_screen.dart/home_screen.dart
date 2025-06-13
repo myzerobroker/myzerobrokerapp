@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:awesome_drawer_bar/awesome_drawer_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:http/http.dart' as http;
 import 'package:my_zero_broker/bloc/drawer/drawer_cubit.dart';
 import 'package:my_zero_broker/presentation/screens/home_screen.dart/advertisements_carousel.dart';
 import 'package:my_zero_broker/presentation/screens/home_screen.dart/enquiry_form.dart'; // Ensure correct import
@@ -14,7 +15,6 @@ import 'package:my_zero_broker/presentation/screens/home_screen.dart/video_playe
 import 'package:my_zero_broker/presentation/widgets/drawer_content.dart';
 import 'package:my_zero_broker/presentation/widgets/footer.dart';
 import 'package:my_zero_broker/utils/constant/colors.dart';
-import 'package:http/http.dart' as http;
 
 class HomeScreen extends StatefulWidget {
   @override

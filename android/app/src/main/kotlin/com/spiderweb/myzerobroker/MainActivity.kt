@@ -1,4 +1,4 @@
-package com.example.my_zero_broker
+package com.spiderweb.myzerobroker
 
 import io.flutter.embedding.android.FlutterActivity
 

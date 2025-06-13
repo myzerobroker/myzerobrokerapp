@@ -147,7 +147,7 @@ class _FooterWidgetState extends State<FooterWidget> {
                 ),
               ),
               GestureDetector(
-                onTap: () => Navigator.pushNamed(context, '/plans'),
+                onTap: () => Navigator.pushNamed(context, RoutesName.buyersPlanScreen),
                 child: const Text(
                   'Plans',
                   style: TextStyle(
