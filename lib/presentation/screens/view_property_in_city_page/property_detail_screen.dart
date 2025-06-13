@@ -10,13 +10,10 @@ import 'package:my_zero_broker/utils/code_generator.dart';
 import 'package:my_zero_broker/utils/constant/theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../widgets/custom_snack_bar.dart';
-
 class PropertyDetailScreen extends StatefulWidget {
   final Property property;
   final String? peropertyStatus;
-  const PropertyDetailScreen(
-      {super.key, required this.property, this.peropertyStatus});
+  const PropertyDetailScreen({super.key, required this.property, this.peropertyStatus});
 
   @override
   State<PropertyDetailScreen> createState() => _PropertyDetailScreenState();
@@ -254,13 +251,11 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
                       future: checkIfStringexist(
                           jsonEncode(widget.property.toJson())),
                       builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
                           return Center(child: CircularProgressIndicator());
                         }
                         if (snapshot.hasError) {
-                          return Center(
-                              child: Text("Error: ${snapshot.error}"));
+                          return Center(child: Text("Error: ${snapshot.error}"));
                         }
                         if (snapshot.hasData) {
                           return Row(
@@ -271,12 +266,10 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
                                   onPressed: () async {
                                     SharedPreferences prefs =
                                         await SharedPreferences.getInstance();
-                                    String? token =
-                                        prefs.getString("authToken");
+                                    String? token = prefs.getString("authToken");
 
                                     if (token == null) {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
+                                      ScaffoldMessenger.of(context).showSnackBar(
                                         SnackBar(
                                             content: Text(
                                                 "Please log in to get owner details")),
@@ -301,22 +294,22 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
                                       );
 
                                       if (response.statusCode == 200) {
-                                        var responseData =
-                                            jsonDecode(response.body);
-                                        Snack.show(
-                                            responseData["message"], context);
+                                        var responseData = jsonDecode(response.body);
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          SnackBar(
+                                              content: Text(responseData['message'] ??
+                                                  "Details fetched successfully")),
+                                        );
                                       } else {
-                                        var responseData =
-                                            jsonDecode(response.body);
-
-                                        Snack.show(
-                                            responseData["message"] ??
-                                                "Failed to get owner details",
-                                            context);
+                                        var responseData = jsonDecode(response.body);
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          SnackBar(
+                                              content: Text(responseData['message'] ??
+                                                  "Failed to fetch owner details")),
+                                        );
                                       }
                                     } catch (e) {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
+                                      ScaffoldMessenger.of(context).showSnackBar(
                                         SnackBar(content: Text("Error: $e")),
                                       );
                                     }
@@ -332,9 +325,7 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
                                   child: Text('Get Owner Details'),
                                 ),
                               ),
-                              SizedBox(
-                                  width:
-                                      16), // Add spacing between button and icon
+                              SizedBox(width: 16), // Add spacing between button and icon
                               IconButton(
                                 icon: Icon(
                                   snapshot.data!
